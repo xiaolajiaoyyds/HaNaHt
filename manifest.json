@@ -1,7 +1,7 @@
 {
   "name": "心率广播",
   "short_name": "HeartRate",
-  "start_url": "./1-今天.html",
+  "start_url": "./1-today.html",
   "display": "standalone",
   "background_color": "#F2F2F7",
   "theme_color": "#F2F2F7",

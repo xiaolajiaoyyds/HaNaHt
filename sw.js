@@ -1,9 +1,10 @@
 const CACHE_NAME = 'heart-rate-app-v1';
 const urlsToCache = [
-  './1-今天.html',
-  './2-设备.html',
-  './3-广播.html',
-  './4-设置.html',
+  './index.html',
+  './1-today.html',
+  './2-device.html',
+  './3-broadcast.html',
+  './4-settings.html',
   'https://cdn.tailwindcss.com',
   'https://code.iconify.design/3/3.1.1/iconify.min.js',
   'https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js'

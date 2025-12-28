@@ -1,0 +1,981 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>心率监测 - 今天</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="error-handler.js"></script>
+    <script src="gesture-handler.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        @font-face {
+            font-family: 'SFPro';
+            src: local('SF Pro Display'), local('SF Pro Text');
+        }
+        body {
+            font-family: 'SFPro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 0.2; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+        .pulse-effect {
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="bg-[#F2F2F7] flex items-center justify-center min-h-screen p-4 font-[-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,Helvetica,Arial,sans-serif]">
+<!-- APP Container (375x812) -->
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden flex flex-col relative">
+<!-- Header -->
+<header class="px-5 pt-14 pb-2 bg-[#F2F2F7]">
+<div class="flex items-center justify-between">
+<div class="flex items-baseline gap-2">
+<h1 class="text-[28px] font-bold text-black tracking-tight">今天</h1>
+<span class="text-[13px] font-medium text-gray-400">12月26日</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm" onclick="cycleState()" aria-label="刷新状态">
+<span class="iconify text-blue-500" data-icon="heroicons:arrow-path-20-solid" aria-hidden="true"></span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-white rounded-full shadow-sm" aria-label="切换主题">
+<span class="iconify text-blue-500" data-icon="heroicons:moon-20-solid" aria-hidden="true"></span>
+</button>
+</div>
+</div>
+</header>
+
+<!-- 内容区 -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-5 py-4 space-y-5" id="mainContent">
+
+<!-- 下拉刷新指示器 -->
+<div class="hidden flex-col items-center justify-center py-4 transition-all duration-300" id="pullRefreshIndicator">
+<div class="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full" id="refreshSpinner"></div>
+<span class="text-[12px] text-gray-400 mt-2" id="refreshText">下拉刷新</span>
+</div>
+
+<!-- 空状态 (默认隐藏，可切换显示) -->
+<div class="hidden flex-col items-center justify-center py-12 px-6" id="emptyTodayState">
+<div class="w-32 h-32 bg-rose-50 rounded-full flex items-center justify-center mb-6 relative">
+<span class="iconify text-rose-200 text-7xl" data-icon="heroicons:heart-20-solid"></span>
+<div class="absolute -bottom-2 -right-2 w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center border-4 border-white">
+<span class="iconify text-gray-400 text-xl" data-icon="heroicons:signal-slash-20-solid"></span>
+</div>
+</div>
+<h3 class="text-[22px] font-bold text-gray-800 mb-2">暂无心率数据</h3>
+<p class="text-[14px] text-gray-500 text-center mb-6 leading-relaxed">请连接您的心率监测设备，<br/>开始实时心率追踪</p>
+<a href="2-device.html" class="px-6 py-3 bg-blue-600 text-white rounded-2xl text-[15px] font-semibold flex items-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95 transition-transform mb-3">
+<span class="iconify" data-icon="heroicons:cpu-chip-20-solid"></span>
+连接设备
+</a>
+<p class="text-[12px] text-gray-400">或尝试 <a href="device-pairing.html" class="text-blue-500 font-medium">添加新设备</a></p>
+<button class="mt-6 text-[13px] text-gray-400 font-medium" onclick="toggleTodayEmptyState()">切换展示状态</button>
+</div>
+
+<!-- 错误状态 (默认隐藏，可切换显示) -->
+<div class="hidden flex-col items-center justify-center py-12 px-6" id="errorTodayState">
+<div class="w-28 h-28 bg-red-50 rounded-full flex items-center justify-center mb-6">
+<span class="iconify text-red-400 text-6xl" data-icon="heroicons:exclamation-triangle-20-solid"></span>
+</div>
+<h3 class="text-[20px] font-bold text-gray-800 mb-2">连接出现问题</h3>
+<p class="text-[14px] text-gray-500 text-center mb-4 leading-relaxed">无法与心率设备建立连接，<br/>请检查以下问题</p>
+<div class="w-full bg-white rounded-2xl p-4 mb-6 space-y-3 border border-gray-100">
+<div class="flex items-start gap-3">
+<span class="iconify text-gray-400 mt-0.5" data-icon="material-symbols:bluetooth"></span>
+<div>
+<p class="text-[13px] font-medium text-gray-700">检查蓝牙状态</p>
+<p class="text-[11px] text-gray-400">确保蓝牙已开启且设备在范围内</p>
+</div>
+</div>
+<div class="h-px bg-gray-100"></div>
+<div class="flex items-start gap-3">
+<span class="iconify text-gray-400 mt-0.5" data-icon="heroicons:shield-check-20-solid"></span>
+<div>
+<p class="text-[13px] font-medium text-gray-700">检查权限授权</p>
+<p class="text-[11px] text-gray-400">确保健康与蓝牙权限已授予</p>
+</div>
+</div>
+<div class="h-px bg-gray-100"></div>
+<div class="flex items-start gap-3">
+<span class="iconify text-gray-400 mt-0.5" data-icon="heroicons:battery-50-20-solid"></span>
+<div>
+<p class="text-[13px] font-medium text-gray-700">检查设备电量</p>
+<p class="text-[11px] text-gray-400">确保心率设备电量充足</p>
+</div>
+</div>
+</div>
+<button class="px-6 py-3 bg-blue-600 text-white rounded-2xl text-[15px] font-semibold flex items-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95 transition-transform" onclick="retryConnection()">
+<span class="iconify" data-icon="heroicons:arrow-path-20-solid"></span>
+重新连接
+</button>
+<button class="mt-4 text-[13px] text-gray-400 font-medium" onclick="toggleTodayErrorState()">切换展示状态</button>
+</div>
+
+<!-- 骨架屏加载状态 (默认隐藏) -->
+<div class="hidden space-y-5" id="skeletonState">
+<!-- 心率主卡骨架 -->
+<div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100">
+<div class="skeleton h-4 w-16 rounded mb-4"></div>
+<div class="skeleton h-20 w-32 rounded-lg mb-4"></div>
+<div class="flex gap-1 mt-6 h-1.5">
+<div class="flex-1 skeleton rounded-full"></div>
+<div class="flex-1 skeleton rounded-full"></div>
+<div class="flex-1 skeleton rounded-full"></div>
+<div class="flex-1 skeleton rounded-full"></div>
+<div class="flex-1 skeleton rounded-full"></div>
+</div>
+</div>
+<!-- 训练卡片骨架 -->
+<div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+<div class="flex justify-between mb-3">
+<div class="skeleton h-4 w-20 rounded"></div>
+<div class="skeleton h-4 w-16 rounded"></div>
+</div>
+<div class="flex justify-center py-4">
+<div class="skeleton w-14 h-14 rounded-full"></div>
+</div>
+</div>
+<!-- 设备卡片骨架 -->
+<div class="bg-white rounded-2xl px-4 py-3 shadow-sm border border-gray-100">
+<div class="flex justify-between items-center">
+<div class="skeleton h-6 w-24 rounded-full"></div>
+<div class="skeleton h-4 w-16 rounded"></div>
+</div>
+</div>
+<!-- 网格卡片骨架 -->
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 aspect-square">
+<div class="skeleton h-3 w-16 rounded mb-4"></div>
+<div class="skeleton w-24 h-24 rounded-full mx-auto"></div>
+</div>
+<div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 aspect-square">
+<div class="skeleton h-3 w-20 rounded mb-4"></div>
+<div class="skeleton h-16 w-full rounded mt-2"></div>
+<div class="flex justify-between mt-4">
+<div class="skeleton h-8 w-12 rounded"></div>
+<div class="skeleton h-8 w-12 rounded"></div>
+</div>
+</div>
+</div>
+<button class="w-full text-[13px] text-gray-400 font-medium py-2" onclick="toggleSkeletonState()">隐藏骨架屏</button>
+</div>
+
+<!-- 数据内容容器 -->
+<div id="todayContent" class="space-y-5">
+<!-- 心率主卡 -->
+<section class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 relative overflow-hidden group">
+<div class="flex z-10 flex flex-col">
+<div class="gap-2 mb-2">
+</div>
+<div class="flex items-baseline gap-1">
+<span class="text-8xl font-black text-gray-900 tracking-tighter" id="heartRateValue">72</span>
+<span class="text-xl font-bold text-gray-400">BPM</span>
+</div>
+<!-- 分段色条 -->
+<div class="w-full flex gap-1 mt-6 h-1.5">
+<div class="flex-1 bg-blue-400 rounded-full h-full opacity-30"></div>
+<div class="flex-1 bg-green-400 rounded-full h-full relative">
+<div class="absolute -top-1 left-1/2 w-4 h-4 bg-white border-2 border-green-500 rounded-full -translate-x-1/2 shadow-sm"></div>
+</div>
+<div class="flex-1 bg-yellow-400 rounded-full h-full opacity-30"></div>
+<div class="flex-1 bg-orange-400 rounded-full h-full opacity-30"></div>
+<div class="flex-1 bg-rose-500 rounded-full h-full opacity-30"></div>
+</div>
+<div class="w-full flex justify-between mt-2">
+<span class="text-[10px] font-bold text-gray-400">静息</span>
+<span class="text-[10px] font-bold text-green-600">有氧耐力</span>
+<span class="text-[10px] font-bold text-gray-400">极限</span>
+</div>
+</div>
+<!-- 装饰贴纸 Pro Layer -->
+<div class="absolute -right-4 -top-4 opacity-5 pointer-events-none rotate-12">
+<span class="iconify w-32 h-32" data-icon="heroicons:heart-solid"></span>
+</div>
+</section>
+
+<!-- 训练会话控制卡片 (新增) -->
+<div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-gray-400">训练会话</span>
+<span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full" id="sessionStatus">未开始</span>
+</div>
+<span class="text-[10px] text-gray-400" id="sessionTimer">00:00:00</span>
+</div>
+<!-- 目标区间快速设置 -->
+<div class="flex items-center justify-between mb-2 px-2">
+<div class="flex items-center gap-1">
+<span class="text-[10px] font-bold text-gray-500">目标:</span>
+<span class="text-sm font-bold text-green-600">120-160</span>
+</div>
+<button class="text-[10px] text-blue-600 font-medium flex items-center gap-0.5" onclick="alert('打开目标区间设置')">
+<span class="iconify" data-icon="solar:settings-linear"></span>调整
+</button>
+</div>
+<!-- 控制按钮 -->
+<div class="flex items-center justify-center gap-4">
+<button class="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-200 active:scale-95 transition-transform" onclick="toggleSession()" id="sessionToggle" aria-label="开始训练会话">
+<span class="iconify text-white text-2xl" data-icon="solar:play-circle-bold" id="playIcon" aria-hidden="true"></span>
+</button>
+</div>
+<div class="flex justify-center mt-1">
+<p class="text-[9px] text-gray-400">点击开始训练会话记录</p>
+</div>
+</div>
+
+<!-- 设备状态卡片 -->
+<div class="bg-white rounded-2xl px-4 py-3 flex items-center justify-between shadow-sm border border-gray-100">
+<div class="flex items-center bg-gray-100 px-2 py-1 rounded-full gap-1">
+<span class="iconify text-blue-500 w-3 h-3" data-icon="heroicons:bolt-20-solid"></span>
+<span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Apple Watch</span>
+</div>
+        <div class="flex items-center gap-2">
+          <div class="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+          <span class="text-xs font-semibold text-gray-400">已连接</span>
+        </div>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-1">
+          <span class="iconify text-gray-400 w-4 h-4" data-icon="heroicons:battery-50"></span>
+          <span class="text-[10px] font-medium text-gray-400">85%</span>
+        </div>
+        <div class="bg-gradient-to-tr from-amber-400 to-orange-500 text-white text-[10px] px-2 py-0.5 rounded-md font-bold shadow-sm">PRO</div>
+      </div>
+</div>
+
+
+
+
+
+
+<!-- 二级卡片网格 -->
+<div class="grid grid-cols-2 gap-3">
+<!-- 圆形区间环 -->
+<div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 flex flex-col items-center justify-between h-[160px]">
+<span class="text-xs font-bold text-gray-400 self-start">目标区间</span>
+<div class="relative flex items-center justify-center">
+<div class="w-20 h-20 rounded-full border-[6px] border-gray-100"></div>
+<svg class="absolute w-20 h-20 -rotate-90">
+<circle cx="40" cy="40" fill="transparent" r="34" stroke="url(#gradient)" stroke-dasharray="214" stroke-dashoffset="56" stroke-linecap="round" stroke-width="6"></circle>
+<defs>
+<lineargradient id="gradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#4ade80"></stop>
+<stop offset="100%" stop-color="#2dd4bf"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="text-base font-black text-gray-900">74%</span>
+</div>
+</div>
+<span class="text-[10px] font-bold text-green-500">有氧燃脂中</span>
+</div>
+<!-- 迷你趋势 -->
+<div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 flex flex-col h-[160px]">
+<div class="flex justify-between items-center mb-1">
+<span class="text-xs font-bold text-gray-400">近15分钟</span>
+<span class="iconify text-gray-300 w-4 h-4" data-icon="heroicons:chart-bar-solid"></span>
+</div>
+<div class="flex-1 w-full" id="miniChart"></div>
+<div class="flex justify-between items-end mt-1">
+<div class="flex flex-col">
+<span class="text-[10px] text-gray-400 font-bold">均值</span>
+<span class="text-sm font-black text-gray-900">68</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] text-gray-400 font-bold">峰值</span>
+<span class="text-sm font-black text-rose-500">114</span>
+</div>
+</div>
+</div>
+</div>
+
+<div class="bg-white border border-gray-100 rounded-3xl p-5">
+<div class="flex justify-between items-center mb-3">
+<h3 class="text-sm font-bold flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+            实时趋势
+          </h3>
+<span class="text-[10px] font-mono text-slate-500">2025-12-27 14:30:05</span>
+</div>
+<div class="h-24 rounded-xl relative overflow-hidden bg-gray-50">
+<div class="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:10px_10px]"></div>
+<div class="w-full h-full" id="waveChart"></div>
+</div>
+</div>
+
+      <section class="px-0 space-y-2">
+        <h3 class="text-sm font-black text-slate-800 flex items-center justify-between">
+          <span>最近动态</span>
+          <a href="history.html" class="text-xs font-medium text-blue-500 flex items-center gap-1">
+            查看全部
+            <span class="iconify" data-icon="heroicons:chevron-right-20-solid"></span>
+          </a>
+        </h3>
+        <!-- Activity List -->
+        <div class="space-y-3">
+          <div data-gesture="swipe" onclick="showActivitySheet('heartSession')" class="flex items-center bg-white p-3 rounded-2xl shadow-sm border border-slate-100 group transition-all hover:scale-[1.02] cursor-pointer active:scale-[0.98] touch-pan-y relative overflow-hidden">
+            <div class="w-10 h-10 bg-rose-50 text-rose-500 rounded-xl flex items-center justify-center shrink-0">
+              <span class="iconify" data-icon="heroicons:heart-20-solid" data-width="24"></span>
+            </div>
+            <div class="ml-3 flex-1">
+              <p class="text-xs font-bold text-slate-800">心率会话已完成</p>
+              <p class="text-[10px] text-slate-400">今天 09:30 · 时长 45分钟 · 均值 78 BPM</p>
+            </div>
+            <span class="iconify text-slate-300" data-icon="solar:alt-arrow-right-linear"></span>
+          </div>
+          <div data-gesture="swipe" onclick="showActivitySheet('broadcast')" class="flex items-center bg-white p-3 rounded-2xl shadow-sm border border-slate-100 group transition-all hover:scale-[1.02] cursor-pointer active:scale-[0.98] touch-pan-y relative overflow-hidden">
+            <div class="w-10 h-10 bg-indigo-50 text-indigo-500 rounded-xl flex items-center justify-center shrink-0">
+              <span class="iconify" data-icon="solar:broadcast-bold-duotone" data-width="24"></span>
+            </div>
+            <div class="ml-3 flex-1">
+              <p class="text-xs font-bold text-slate-800">心率广播已启动</p>
+              <p class="text-[10px] text-slate-400">10:42 · 通过腕部设备同步</p>
+            </div>
+            <span class="iconify text-slate-300" data-icon="solar:alt-arrow-right-linear"></span>
+          </div>
+          <div data-gesture="swipe" onclick="showActivitySheet('archive')" class="flex items-center bg-white p-3 rounded-2xl shadow-sm border border-slate-100 group transition-all hover:scale-[1.02] cursor-pointer active:scale-[0.98] touch-pan-y relative overflow-hidden">
+            <div class="w-10 h-10 bg-emerald-50 text-emerald-500 rounded-xl flex items-center justify-center shrink-0">
+              <span class="iconify" data-icon="heroicons:archive-box-20-solid" data-width="24"></span>
+            </div>
+            <div class="ml-3 flex-1">
+              <p class="text-xs font-bold text-slate-800">本地归档完成</p>
+              <p class="text-[10px] text-slate-400">09:15 · 已保存到本机历史记录</p>
+            </div>
+            <span class="iconify text-slate-300" data-icon="solar:check-read-linear"></span>
+          </div>
+        </div>
+      </section>
+</div>
+
+</main>
+<!-- 底部会话控制条 (80px) -->
+    <!-- Tab Bar -->
+    <nav class="h-20 bg-white/80 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-4 pb-4" role="navigation" aria-label="主导航">
+      <a href="1-today.html" class="flex flex-col items-center space-y-1 text-blue-500" aria-current="page">
+        <span class="iconify text-2xl" data-icon="heroicons:calendar-days-solid" aria-hidden="true"></span>
+        <span class="text-[10px] font-medium">今天</span>
+      </a>
+      <a href="2-device.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+        <span class="iconify text-2xl" data-icon="heroicons:cpu-chip-20-solid" aria-hidden="true"></span>
+        <span class="text-[10px] font-medium">设备</span>
+      </a>
+      <a href="3-broadcast.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+        <span class="iconify text-2xl" data-icon="solar:graph-up-bold-duotone" aria-hidden="true"></span>
+        <span class="text-[10px] font-medium">广播</span>
+      </a>
+      <a href="4-settings.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+        <span class="iconify text-2xl" data-icon="heroicons:cog-8-tooth-20-solid" aria-hidden="true"></span>
+        <span class="text-[10px] font-medium">设置</span>
+      </a>
+    </nav>
+    <!-- Home Indicator -->
+    <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+  </div>
+<!-- 紧急报警层 (Hidden by default) -->
+<div class="absolute inset-0 bg-rose-600 z-[100] flex-col items-center justify-center p-8 hidden" id="alertOverlay">
+<div class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mb-6 animate-ping">
+<span class="iconify text-white w-12 h-12" data-icon="heroicons:exclamation-triangle-solid"></span>
+</div>
+<h2 class="text-3xl font-black text-white mb-2">心率过高</h2>
+<p class="text-white/80 text-center text-lg font-medium mb-12">当前心率已突破报警阈值，请立即停止高强度运动并深呼吸。</p>
+<button class="w-full bg-white text-rose-600 py-4 rounded-2xl font-black text-xl shadow-xl" onclick="dismissAlert()">我已经知道</button>
+</div>
+
+<!-- 动态详情 Sheet -->
+<div class="absolute inset-0 z-[80] invisible pointer-events-none transition-all duration-300" id="activitySheet">
+  <div class="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300" id="activityOverlay" onclick="hideActivitySheet()"></div>
+  <div class="absolute bottom-0 w-full h-[75%] bg-white rounded-t-[24px] shadow-2xl translate-y-full transition-transform duration-300 flex flex-col overflow-hidden" id="activityContent">
+    <div class="h-1.5 w-10 bg-gray-300 rounded-full mx-auto mt-3"></div>
+    <div class="flex justify-between items-center px-5 py-3 border-b border-gray-100">
+      <h2 class="text-[17px] font-bold" id="activitySheetTitle">活动详情</h2>
+      <button class="text-blue-600 font-medium text-[16px]" onclick="hideActivitySheet()">完成</button>
+    </div>
+    <div class="flex-1 overflow-y-auto hide-scrollbar p-5 space-y-4" id="activitySheetBody">
+      <!-- 动态内容由 JS 填充 -->
+    </div>
+  </div>
+</div>
+</div>
+<script>
+        // 空状态切换
+        function toggleTodayEmptyState() {
+          const emptyState = document.getElementById('emptyTodayState');
+          const errorState = document.getElementById('errorTodayState');
+          const todayContent = document.getElementById('todayContent');
+          if (emptyState.classList.contains('hidden')) {
+            emptyState.classList.remove('hidden');
+            emptyState.classList.add('flex');
+            errorState.classList.add('hidden');
+            errorState.classList.remove('flex');
+            todayContent.classList.add('hidden');
+          } else {
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+            todayContent.classList.remove('hidden');
+          }
+        }
+
+        // 错误状态切换
+        function toggleTodayErrorState() {
+          const emptyState = document.getElementById('emptyTodayState');
+          const errorState = document.getElementById('errorTodayState');
+          const todayContent = document.getElementById('todayContent');
+          if (errorState.classList.contains('hidden')) {
+            errorState.classList.remove('hidden');
+            errorState.classList.add('flex');
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+            todayContent.classList.add('hidden');
+          } else {
+            errorState.classList.add('hidden');
+            errorState.classList.remove('flex');
+            todayContent.classList.remove('hidden');
+          }
+        }
+
+        // 重试连接
+        function retryConnection() {
+          toggleTodayErrorState();
+          // 模拟重连逻辑
+        }
+
+        // 骨架屏切换
+        function toggleSkeletonState() {
+          const skeletonState = document.getElementById('skeletonState');
+          const todayContent = document.getElementById('todayContent');
+          const emptyState = document.getElementById('emptyTodayState');
+          const errorState = document.getElementById('errorTodayState');
+          if (skeletonState.classList.contains('hidden')) {
+            skeletonState.classList.remove('hidden');
+            todayContent.classList.add('hidden');
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+            errorState.classList.add('hidden');
+            errorState.classList.remove('flex');
+          } else {
+            skeletonState.classList.add('hidden');
+            todayContent.classList.remove('hidden');
+          }
+        }
+
+        // 下拉刷新逻辑
+        let startY = 0;
+        let isPulling = false;
+        const mainContent = document.getElementById('mainContent');
+        const pullIndicator = document.getElementById('pullRefreshIndicator');
+        const refreshSpinner = document.getElementById('refreshSpinner');
+        const refreshText = document.getElementById('refreshText');
+
+        mainContent.addEventListener('touchstart', (e) => {
+          if (mainContent.scrollTop === 0) {
+            startY = e.touches[0].clientY;
+            isPulling = true;
+          }
+        });
+
+        mainContent.addEventListener('touchmove', (e) => {
+          if (!isPulling) return;
+          const currentY = e.touches[0].clientY;
+          const pullDistance = Math.min(currentY - startY, 80);
+
+          if (pullDistance > 0 && mainContent.scrollTop === 0) {
+            const progress = Math.min(pullDistance / 60, 1);
+            pullIndicator.style.opacity = progress;
+            pullIndicator.style.transform = `translateY(${pullDistance - 20}px)`;
+
+            if (pullDistance > 60) {
+              refreshText.textContent = '释放刷新';
+            } else {
+              refreshText.textContent = '下拉刷新';
+            }
+          }
+        });
+
+        mainContent.addEventListener('touchend', () => {
+          if (!isPulling) return;
+          isPulling = false;
+
+          const opacity = parseFloat(pullIndicator.style.opacity);
+          if (opacity >= 1) {
+            // 触发刷新
+            refreshText.textContent = '正在刷新...';
+            refreshSpinner.classList.add('animate-spin');
+
+            setTimeout(() => {
+              pullIndicator.style.opacity = 0;
+              pullIndicator.style.transform = 'translateY(-20px)';
+              refreshSpinner.classList.remove('animate-spin');
+              refreshText.textContent = '下拉刷新';
+            }, 1500);
+          } else {
+            pullIndicator.style.opacity = 0;
+            pullIndicator.style.transform = 'translateY(-20px)';
+          }
+        });
+
+        // 初始化图表
+        const chartDom = document.getElementById('miniChart');
+        const myChart = echarts.init(chartDom);
+        const option = {
+            grid: { top: 5, bottom: 5, left: 0, right: 0 },
+            xAxis: { type: 'category', show: false },
+            yAxis: { type: 'value', show: false, min: 40 },
+            series: [{
+                data: [62, 65, 63, 68, 72, 70, 75, 85, 92, 110, 114, 105, 95, 88, 82, 78, 72],
+                type: 'line',
+                smooth: true,
+                symbol: 'none',
+                lineStyle: { color: '#3b82f6', width: 3 },
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(59, 130, 246, 0.3)' },
+                        { offset: 1, color: 'rgba(59, 130, 246, 0)' }
+                    ])
+                }
+            }]
+        };
+        myChart.setOption(option);
+
+        // 模拟实时心率
+        let currentHeartRate = 72;
+        const hrElement = document.getElementById('heartRateValue');
+        
+        setInterval(() => {
+            const change = Math.floor(Math.random() * 5) - 2;
+            currentHeartRate = Math.max(60, Math.min(180, currentHeartRate + change));
+            hrElement.innerText = currentHeartRate;
+            
+            // 触发警报模拟
+            if (currentHeartRate > 150) {
+                showAlert();
+            }
+        }, 3000);
+
+        // 会话控制逻辑
+        const sessionBtn = document.getElementById('sessionToggle');
+        const playIcon = document.getElementById('playIcon');
+        let isStarted = false;
+
+        sessionBtn.onclick = () => {
+            isStarted = !isStarted;
+            if (isStarted) {
+                playIcon.setAttribute('data-icon', 'heroicons:stop-solid');
+                sessionBtn.classList.replace('bg-blue-600', 'bg-rose-600');
+                sessionBtn.setAttribute('aria-label', '停止训练会话');
+            } else {
+                playIcon.setAttribute('data-icon', 'heroicons:play-solid');
+                sessionBtn.classList.replace('bg-rose-600', 'bg-blue-600');
+                sessionBtn.setAttribute('aria-label', '开始训练会话');
+            }
+        };
+
+        function showAlert() {
+            document.getElementById('alertOverlay').classList.remove('hidden');
+            document.getElementById('alertOverlay').classList.add('flex');
+        }
+
+        function dismissAlert() {
+            document.getElementById('alertOverlay').classList.add('hidden');
+            document.getElementById('alertOverlay').classList.remove('flex');
+            currentHeartRate = 80; // 重置模拟数据以防止立刻再次触发
+        }
+
+        // 动态详情 Sheet 数据
+        const activityData = {
+          heartSession: {
+            title: '心率会话详情',
+            content: `
+              <div class="text-center py-4">
+                <div class="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span class="iconify text-rose-500 text-4xl" data-icon="heroicons:heart-20-solid"></span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-1">心率会话已完成</h3>
+                <p class="text-sm text-gray-500">今天 09:30 - 10:15</p>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="bg-blue-50 p-4 rounded-2xl text-center">
+                  <p class="text-[11px] text-blue-600 font-bold uppercase mb-1">时长</p>
+                  <p class="text-2xl font-black text-blue-900">45<span class="text-sm">分钟</span></p>
+                </div>
+                <div class="bg-rose-50 p-4 rounded-2xl text-center">
+                  <p class="text-[11px] text-rose-600 font-bold uppercase mb-1">均值</p>
+                  <p class="text-2xl font-black text-rose-900">78<span class="text-sm">BPM</span></p>
+                </div>
+                <div class="bg-green-50 p-4 rounded-2xl text-center">
+                  <p class="text-[11px] text-green-600 font-bold uppercase mb-1">峰值</p>
+                  <p class="text-2xl font-black text-green-900">142<span class="text-sm">BPM</span></p>
+                </div>
+                <div class="bg-orange-50 p-4 rounded-2xl text-center">
+                  <p class="text-[11px] text-orange-600 font-bold uppercase mb-1">区间占比</p>
+                  <p class="text-2xl font-black text-orange-900">82<span class="text-sm">%</span></p>
+                </div>
+              </div>
+              <div class="bg-gray-50 rounded-2xl p-4 mt-4">
+                <h4 class="text-sm font-bold text-gray-800 mb-3">会话摘要</h4>
+                <p class="text-[13px] text-gray-600 leading-relaxed">本次训练心率保持稳定，大部分时间处于有氧燃脂区间。共检测到 2 次心率越界事件，建议适当调整运动强度。</p>
+              </div>
+              <div class="grid grid-cols-2 gap-3 mt-4">
+                <button class="py-3 bg-gray-100 rounded-xl text-[14px] font-semibold text-gray-700 flex items-center justify-center gap-2">
+                  <span class="iconify w-5 h-5" data-icon="heroicons:document-arrow-down-20-solid"></span>
+                  导出数据
+                </button>
+                <button class="py-3 bg-blue-600 rounded-xl text-[14px] font-semibold text-white flex items-center justify-center gap-2">
+                  <span class="iconify w-5 h-5" data-icon="heroicons:share-20-solid"></span>
+                  分享记录
+                </button>
+              </div>
+            `
+          },
+          broadcast: {
+            title: '广播详情',
+            content: `
+              <div class="text-center py-4">
+                <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span class="iconify text-indigo-500 text-4xl" data-icon="solar:broadcast-bold-duotone"></span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-1">心率广播已启动</h3>
+                <p class="text-sm text-gray-500">10:42 开始广播</p>
+              </div>
+              <div class="bg-indigo-50 rounded-2xl p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-sm font-medium text-indigo-800">广播状态</span>
+                  <span class="flex items-center text-xs text-green-600 font-bold bg-green-100 px-2 py-1 rounded-full">
+                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1 animate-pulse"></span> 进行中
+                  </span>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex justify-between text-[13px]">
+                    <span class="text-gray-500">数据来源</span>
+                    <span class="font-medium text-gray-800">Apple Watch Series 9</span>
+                  </div>
+                  <div class="flex justify-between text-[13px]">
+                    <span class="text-gray-500">接收设备</span>
+                    <span class="font-medium text-gray-800">2 台设备</span>
+                  </div>
+                  <div class="flex justify-between text-[13px]">
+                    <span class="text-gray-500">传输延迟</span>
+                    <span class="font-medium text-green-600">18ms</span>
+                  </div>
+                </div>
+              </div>
+              <button class="w-full mt-4 py-3 bg-indigo-600 rounded-xl text-[14px] font-semibold text-white flex items-center justify-center gap-2">
+                <span class="iconify w-5 h-5" data-icon="heroicons:cog-6-tooth-20-solid"></span>
+                广播设置
+              </button>
+            `
+          },
+          sync: {
+            title: '同步详情',
+            content: `
+              <div class="text-center py-4">
+                <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span class="iconify text-emerald-500 text-4xl" data-icon="solar:cloud-upload-bold-duotone"></span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-1">自动同步完成</h3>
+                <p class="text-sm text-gray-500">09:15 完成同步</p>
+              </div>
+              <div class="bg-emerald-50 rounded-2xl p-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="text-sm font-medium text-emerald-800">同步状态</span>
+                  <span class="flex items-center text-xs text-emerald-600 font-bold bg-emerald-100 px-2 py-1 rounded-full">
+                    <span class="iconify mr-1" data-icon="heroicons:check-20-solid"></span> 已完成
+                  </span>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex justify-between text-[13px]">
+                    <span class="text-gray-500">同步数据量</span>
+                    <span class="font-medium text-gray-800">2.3 MB</span>
+                  </div>
+                  <div class="flex justify-between text-[13px]">
+                    <span class="text-gray-500">云端存储</span>
+                    <span class="font-medium text-gray-800">iCloud</span>
+                  </div>
+                  <div class="flex justify-between text-[13px]">
+                    <span class="text-gray-500">上次同步</span>
+                    <span class="font-medium text-gray-800">今天 09:15</span>
+                  </div>
+                </div>
+              </div>
+              <button class="w-full mt-4 py-3 bg-emerald-600 rounded-xl text-[14px] font-semibold text-white flex items-center justify-center gap-2">
+                <span class="iconify w-5 h-5" data-icon="heroicons:arrow-path-20-solid"></span>
+                立即同步
+              </button>
+            `
+          }
+        };
+
+        // 显示动态详情 Sheet
+        function showActivitySheet(type) {
+          const sheet = document.getElementById('activitySheet');
+          const overlay = document.getElementById('activityOverlay');
+          const content = document.getElementById('activityContent');
+          const title = document.getElementById('activitySheetTitle');
+          const body = document.getElementById('activitySheetBody');
+
+          const data = activityData[type];
+          if (data) {
+            title.textContent = data.title;
+            body.innerHTML = data.content;
+          }
+
+          sheet.classList.remove('invisible');
+          sheet.classList.add('pointer-events-auto');
+          overlay.classList.remove('opacity-0');
+          overlay.classList.add('opacity-100');
+          content.classList.remove('translate-y-full');
+          content.classList.add('translate-y-0');
+        }
+
+        // 隐藏动态详情 Sheet
+        function hideActivitySheet() {
+          const sheet = document.getElementById('activitySheet');
+          const overlay = document.getElementById('activityOverlay');
+          const content = document.getElementById('activityContent');
+
+          overlay.classList.remove('opacity-100');
+          overlay.classList.add('opacity-0');
+          content.classList.remove('translate-y-0');
+          content.classList.add('translate-y-full');
+
+          setTimeout(() => {
+            sheet.classList.add('invisible');
+            sheet.classList.remove('pointer-events-auto');
+          }, 300);
+        }
+
+
+    let chart;
+    const states = ['Default', 'Loading', 'Empty', 'Error', 'Degraded', 'Retrying', 'Disconnected'];
+    let currentStateIndex = 0;
+
+    function initChart() {
+      const chartDom = document.getElementById('waveChart');
+      chart = echarts.init(chartDom);
+      const data = Array.from({
+        length: 20
+      }, () => Math.floor(Math.random() * 20) + 60);
+
+      const option = {
+        grid: {
+          left: 0,
+          right: 0,
+          top: 10,
+          bottom: 10
+        },
+        xAxis: {
+          type: 'category',
+          show: false
+        },
+        yAxis: {
+          type: 'value',
+          show: false,
+          min: 40,
+          max: 100
+        },
+        series: [{
+          data: data,
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          lineStyle: {
+            width: 3,
+            color: '#F43F5E'
+          },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: 'rgba(244, 63, 94, 0.2)'
+              },
+              {
+                offset: 1,
+                color: 'rgba(244, 63, 94, 0)'
+              }
+            ])
+          }
+        }]
+      };
+      chart.setOption(option);
+
+      setInterval(() => {
+        if (states[currentStateIndex] === 'Default') {
+          data.shift();
+          data.push(Math.floor(Math.random() * 25) + 65);
+          chart.setOption({
+            series: [{
+              data: data
+            }]
+          });
+        }
+      }, 500);
+    }
+
+    function cycleState() {
+      currentStateIndex = (currentStateIndex + 1) % states.length;
+      const state = states[currentStateIndex];
+      const banner = document.getElementById('stateBanner');
+      const icon = document.getElementById('stateIcon');
+      const title = document.getElementById('stateTitle');
+      const desc = document.getElementById('stateDesc');
+      const btn = document.getElementById('stateAction');
+      const main = document.getElementById('mainContent');
+      const hrCard = document.getElementById('hrCard');
+
+      banner.classList.remove('hidden', 'bg-blue-500', 'bg-orange-500', 'bg-red-500', 'text-white');
+      hrCard.classList.remove('opacity-40', 'animate-pulse-soft');
+
+      console.log("Current State:", state);
+
+      switch (state) {
+        case 'Default':
+          banner.classList.add('hidden');
+          break;
+        case 'Loading':
+          banner.classList.remove('hidden');
+          banner.classList.add('bg-blue-500', 'text-white');
+          icon.setAttribute('data-icon', 'heroicons:arrow-path-20-solid');
+          icon.classList.add('animate-spin');
+          title.innerText = '正在初始化';
+          desc.innerText = '正在连接心率传感器...';
+          btn.classList.add('hidden');
+          hrCard.classList.add('animate-pulse-soft');
+          break;
+        case 'Error':
+          banner.classList.remove('hidden');
+          banner.classList.add('bg-red-500', 'text-white');
+          icon.setAttribute('data-icon', 'heroicons:x-circle-20-solid');
+          icon.classList.remove('animate-spin');
+          title.innerText = '连接失败';
+          desc.innerText = '未检测到蓝牙心率带，请检查电源';
+          btn.classList.remove('hidden');
+          btn.innerText = '重试';
+          break;
+        case 'Degraded':
+          banner.classList.remove('hidden');
+          banner.classList.add('bg-orange-500', 'text-white');
+          icon.setAttribute('data-icon', 'heroicons:exclamation-triangle-20-solid');
+          icon.classList.remove('animate-spin');
+          title.innerText = '信号弱';
+          desc.innerText = '数据延迟增加，请靠近接收器';
+          btn.classList.add('hidden');
+          break;
+        case 'Retrying':
+          banner.classList.remove('hidden');
+          banner.classList.add('bg-blue-500', 'text-white');
+          icon.setAttribute('data-icon', 'heroicons:arrow-path-20-solid');
+          icon.classList.add('animate-spin');
+          title.innerText = '自动重连中';
+          desc.innerText = '尝试次数: 2/5';
+          btn.classList.add('hidden');
+          break;
+        case 'Disconnected':
+          banner.classList.remove('hidden');
+          banner.classList.add('bg-slate-500', 'text-white');
+          icon.setAttribute('data-icon', 'heroicons:no-symbol-20-solid');
+          icon.classList.remove('animate-spin');
+          title.innerText = '已断开连接';
+          desc.innerText = '设备已离线。';
+          btn.classList.remove('hidden');
+          btn.innerText = '连接';
+          break;
+        case 'Empty':
+          banner.classList.add('hidden');
+          // Simple hack for illustration
+          hrCard.classList.add('opacity-40');
+          break;
+      }
+    }
+
+    window.onload = () => {
+      initChart();
+      window.addEventListener('resize', () => chart.resize());
+    };
+
+    // 初始化 ECharts 趋势图
+    const miniChart = echarts.init(document.getElementById('miniChart'));
+    const waveChart = echarts.init(document.getElementById('waveChart'));
+
+    const miniOption = {
+      grid: { left: 0, right: 0, top: 4, bottom: 0 },
+      xAxis: { type: 'category', show: false },
+      yAxis: { type: 'value', show: false },
+      series: [{
+        data: [110, 115, 112, 118, 122, 120, 124],
+        type: 'line',
+        smooth: true,
+        symbol: 'none',
+        lineStyle: { color: '#fbbf24', width: 2 },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(251, 191, 36, 0.3)' },
+            { offset: 1, color: 'rgba(251, 191, 36, 0)' }
+          ])
+        }
+      }]
+    };
+
+    // 动态波形模拟
+    const waveData = Array.from({length: 40}, () => Math.random() * 20 + 40);
+    const waveOption = {
+      grid: { left: 0, right: 0, top: 0, bottom: 0 },
+      xAxis: { type: 'category', show: false },
+      yAxis: { type: 'value', min: 30, max: 70, show: false },
+      series: [{
+        data: [...waveData, ...waveData],
+        type: 'line',
+        smooth: true,
+        symbol: 'none',
+        lineStyle: { color: '#ef4444', width: 1.5 },
+      }]
+    };
+
+    miniChart.setOption(miniOption);
+    waveChart.setOption(waveOption);
+
+    // 模拟数据滚动
+    let currentHR = 124;
+    setInterval(() => {
+      const change = Math.floor(Math.random() * 3) - 1;
+      currentHR += change;
+      if(currentHR < 120) currentHR = 120;
+      if(currentHR > 135) currentHR = 135;
+      document.getElementById('heartRate').innerText = currentHR;
+    }, 1500);
+
+    // Service Worker 注册
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+          }, err => {
+            console.log('ServiceWorker registration failed: ', err);
+          });
+      });
+    }
+
+    </script>
+</body>
+</html>
