@@ -4,7 +4,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
 <title>订阅 Pro</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
@@ -34,11 +34,13 @@
     .animate-float {
       animation: float 3s ease-in-out infinite;
     }
+  
+    html, body { overscroll-behavior: none; }
   </style>
 </head>
-<body class="bg-[#F2F2F7] min-h-screen flex justify-center items-center p-4">
+<body class="bg-[#F2F2F7] h-[100dvh] w-full overflow-hidden md:flex md:items-center md:justify-center md:min-h-screen md:p-4 p-0 font-[-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,Helvetica,Arial,sans-serif]">
 <!-- iPhone 15 Pro Canvas -->
-<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<div class="w-full h-full md:w-[375px] md:h-[812px] bg-[#F2F2F7] md:rounded-[3rem] md:shadow-2xl md:border-[8px] border-0 border-gray-900 overflow-hidden flex flex-col relative">
 <!-- Status Bar -->
 <div class="h-11 w-full flex justify-between items-center px-8 pt-4">
 <span class="text-[15px] font-semibold text-black">9:41</span>

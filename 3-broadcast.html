@@ -36,11 +36,13 @@
     .animate-slide-in {
       animation: slideIn 0.4s ease-out forwards;
     }
+  
+    html, body { overscroll-behavior: none; }
   </style>
 </head>
-<body class="bg-[#F2F2F7] flex justify-center items-center min-h-screen p-4">
+<body class="bg-[#F2F2F7] h-[100dvh] w-full overflow-hidden md:flex md:items-center md:justify-center md:min-h-screen md:p-4 p-0 font-[-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,Helvetica,Arial,sans-serif]">
 <!-- iPhone 15 Pro Canvas -->
-<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<div class="w-full h-full md:w-[375px] md:h-[812px] bg-[#F2F2F7] md:rounded-[3rem] md:shadow-2xl md:border-[8px] border-0 border-gray-900 overflow-hidden flex flex-col relative">
 <!-- Header -->
 <header class="px-5 pt-14 pb-2 bg-[#F2F2F7]">
 <div class="flex items-center justify-between">

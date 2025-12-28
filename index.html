@@ -20,6 +20,10 @@
         body {
             font-family: 'SFPro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
+            overscroll-behavior: none; /* Prevent bounce */
+        }
+        html {
+            overscroll-behavior: none; /* Prevent bounce */
         }
         .hide-scrollbar::-webkit-scrollbar {
             display: none;
@@ -47,9 +51,9 @@
         }
     </style>
 </head>
-<body class="bg-[#F2F2F7] flex items-center justify-center min-h-screen p-4 font-[-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,Helvetica,Arial,sans-serif]">
-<!-- APP Container (375x812) -->
-<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden flex flex-col relative">
+<body class="bg-[#F2F2F7] h-[100dvh] w-full overflow-hidden md:flex md:items-center md:justify-center md:min-h-screen md:p-4 p-0 font-[-apple-system,BlinkMacSystemFont,'Segoe_UI',Roboto,Helvetica,Arial,sans-serif]">
+<!-- APP Container (375x812 on Desktop, Full Screen on Mobile) -->
+<div class="w-full h-full md:w-[375px] md:h-[812px] bg-[#F2F2F7] md:rounded-[3rem] md:shadow-2xl md:border-[8px] border-0 border-gray-900 overflow-hidden flex flex-col relative">
 <!-- Header -->
 <header class="px-5 pt-14 pb-2 bg-[#F2F2F7]">
 <div class="flex items-center justify-between">
@@ -186,7 +190,7 @@
 <!-- 数据内容容器 -->
 <div id="todayContent" class="space-y-5">
 <!-- 心率主卡 -->
-<section class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 relative overflow-hidden group">
+<section id="hrCard" class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 relative overflow-hidden group">
 <div class="flex z-10 flex flex-col">
 <div class="gap-2 mb-2">
 </div>
@@ -494,14 +498,20 @@
             startY = e.touches[0].clientY;
             isPulling = true;
           }
-        });
+        }, { passive: true });
 
         mainContent.addEventListener('touchmove', (e) => {
           if (!isPulling) return;
           const currentY = e.touches[0].clientY;
-          const pullDistance = Math.min(currentY - startY, 80);
+          // 增加阻尼感
+          const diff = currentY - startY;
+          if (diff <= 0) return; // 只有向下拉才处理
+          
+          const pullDistance = Math.min(diff * 0.5, 80); // 0.5 系数增加阻尼
 
-          if (pullDistance > 0 && mainContent.scrollTop === 0) {
+          if (pullDistance > 0 && mainContent.scrollTop <= 0) {
+            if (e.cancelable) e.preventDefault(); // 阻止原生滚动
+            
             const progress = Math.min(pullDistance / 60, 1);
             pullIndicator.style.opacity = progress;
             pullIndicator.style.transform = `translateY(${pullDistance - 20}px)`;
@@ -512,7 +522,7 @@
               refreshText.textContent = '下拉刷新';
             }
           }
-        });
+        }, { passive: false });
 
         mainContent.addEventListener('touchend', () => {
           if (!isPulling) return;
@@ -843,6 +853,11 @@
       const main = document.getElementById('mainContent');
       const hrCard = document.getElementById('hrCard');
 
+      if (!banner || !icon || !title || !desc || !btn || !hrCard) {
+        console.warn('Some state elements are missing in the DOM.');
+        return;
+      }
+
       banner.classList.remove('hidden', 'bg-blue-500', 'bg-orange-500', 'bg-red-500', 'text-white');
       hrCard.classList.remove('opacity-40', 'animate-pulse-soft');
 
@@ -912,57 +927,6 @@
       initChart();
       window.addEventListener('resize', () => chart.resize());
     };
-
-    // 初始化 ECharts 趋势图
-    const miniChart = echarts.init(document.getElementById('miniChart'));
-    const waveChart = echarts.init(document.getElementById('waveChart'));
-
-    const miniOption = {
-      grid: { left: 0, right: 0, top: 4, bottom: 0 },
-      xAxis: { type: 'category', show: false },
-      yAxis: { type: 'value', show: false },
-      series: [{
-        data: [110, 115, 112, 118, 122, 120, 124],
-        type: 'line',
-        smooth: true,
-        symbol: 'none',
-        lineStyle: { color: '#fbbf24', width: 2 },
-        areaStyle: {
-          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'rgba(251, 191, 36, 0.3)' },
-            { offset: 1, color: 'rgba(251, 191, 36, 0)' }
-          ])
-        }
-      }]
-    };
-
-    // 动态波形模拟
-    const waveData = Array.from({length: 40}, () => Math.random() * 20 + 40);
-    const waveOption = {
-      grid: { left: 0, right: 0, top: 0, bottom: 0 },
-      xAxis: { type: 'category', show: false },
-      yAxis: { type: 'value', min: 30, max: 70, show: false },
-      series: [{
-        data: [...waveData, ...waveData],
-        type: 'line',
-        smooth: true,
-        symbol: 'none',
-        lineStyle: { color: '#ef4444', width: 1.5 },
-      }]
-    };
-
-    miniChart.setOption(miniOption);
-    waveChart.setOption(waveOption);
-
-    // 模拟数据滚动
-    let currentHR = 124;
-    setInterval(() => {
-      const change = Math.floor(Math.random() * 3) - 1;
-      currentHR += change;
-      if(currentHR < 120) currentHR = 120;
-      if(currentHR > 135) currentHR = 135;
-      document.getElementById('heartRate').innerText = currentHR;
-    }, 1500);
 
     // Service Worker 注册
     if ('serviceWorker' in navigator) {
