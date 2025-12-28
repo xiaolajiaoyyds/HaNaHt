@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>小组件预览</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .animate-heartbeat { animation: heartbeat 1s infinite; }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in { animation: slideIn 0.4s ease-out forwards; }
+</style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden flex flex-col relative">
+
+<!-- Header -->
+<header class="px-5 pt-14 pb-2 bg-[#F2F2F7]">
+  <div class="flex items-center justify-between">
+    <a href="4-设置.html" class="w-8 h-8 flex items-center justify-center">
+      <span class="iconify text-2xl text-gray-800" data-icon="solar:alt-arrow-left-linear"></span>
+    </a>
+    <h1 class="text-lg font-bold text-gray-900">小组件预览</h1>
+    <div class="w-8"></div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-5 space-y-5 pb-4">
+
+<!-- 说明卡片 -->
+<section class="animate-slide-in" style="animation-delay: 0.1s;">
+  <div class="bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl p-5 text-white">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="iconify text-2xl" data-icon="solar:widget-5-bold-duotone"></span>
+      <span class="font-bold">WidgetKit</span>
+      <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">iOS 18</span>
+    </div>
+    <p class="text-sm text-white/80 leading-relaxed">
+      将心率数据添加到主屏幕或锁屏，无需打开 App 即可查看实时状态。
+    </p>
+  </div>
+</section>
+
+<!-- 小尺寸组件 -->
+<section class="animate-slide-in" style="animation-delay: 0.15s;">
+  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2 mb-3">小尺寸 (Small)</h3>
+  <div class="flex gap-3">
+    <!-- 样式1: 简约数字 -->
+    <div class="w-[155px] h-[155px] bg-white rounded-[22px] p-4 shadow-sm border border-gray-100 flex flex-col justify-between">
+      <div class="flex items-center gap-1.5">
+        <span class="iconify text-rose-500 animate-heartbeat" data-icon="solar:heart-bold"></span>
+        <span class="text-[10px] text-gray-400 font-medium">心率嘀嗒</span>
+      </div>
+      <div class="text-center">
+        <p class="text-5xl font-black text-gray-900 tabular-nums">128</p>
+        <p class="text-xs text-gray-400">BPM</p>
+      </div>
+      <div class="flex items-center justify-center gap-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+        <span class="text-[10px] text-gray-400">有氧区间</span>
+      </div>
+    </div>
+
+    <!-- 样式2: 带区间环 -->
+    <div class="w-[155px] h-[155px] bg-gradient-to-br from-rose-500 to-pink-600 rounded-[22px] p-4 shadow-sm flex flex-col justify-between">
+      <div class="flex items-center justify-between">
+        <span class="iconify text-white/80" data-icon="solar:heart-bold"></span>
+        <span class="text-[10px] text-white/60">实时</span>
+      </div>
+      <div class="flex items-center justify-center">
+        <div class="relative w-16 h-16">
+          <svg class="w-full h-full -rotate-90">
+            <circle cx="32" cy="32" r="28" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="6"/>
+            <circle cx="32" cy="32" r="28" fill="none" stroke="white" stroke-width="6" stroke-linecap="round" stroke-dasharray="176" stroke-dashoffset="44"/>
+          </svg>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span class="text-2xl font-black text-white">128</span>
+          </div>
+        </div>
+      </div>
+      <p class="text-center text-[10px] text-white/80">目标区间 75%</p>
+    </div>
+  </div>
+</section>
+
+<!-- 中尺寸组件 -->
+<section class="animate-slide-in" style="animation-delay: 0.2s;">
+  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2 mb-3">中尺寸 (Medium)</h3>
+  <div class="w-full h-[155px] bg-white rounded-[22px] p-4 shadow-sm border border-gray-100">
+    <div class="flex h-full">
+      <!-- 左侧心率 -->
+      <div class="flex-1 flex flex-col justify-between pr-4 border-r border-gray-100">
+        <div class="flex items-center gap-1.5">
+          <span class="iconify text-rose-500 animate-heartbeat" data-icon="solar:heart-bold"></span>
+          <span class="text-[10px] text-gray-400 font-medium">心率嘀嗒</span>
+        </div>
+        <div>
+          <p class="text-4xl font-black text-gray-900 tabular-nums">128</p>
+          <p class="text-xs text-gray-400">BPM · 有氧燃脂</p>
+        </div>
+        <div class="flex gap-1 h-1.5">
+          <div class="flex-1 bg-blue-400 rounded-full opacity-40"></div>
+          <div class="flex-1 bg-green-400 rounded-full relative">
+            <div class="absolute top-1/2 left-[60%] -translate-y-1/2 w-2 h-2 bg-white border border-green-500 rounded-full"></div>
+          </div>
+          <div class="flex-1 bg-yellow-400 rounded-full opacity-40"></div>
+          <div class="flex-1 bg-rose-500 rounded-full opacity-40"></div>
+        </div>
+      </div>
+      <!-- 右侧统计 -->
+      <div class="flex-1 pl-4 flex flex-col justify-between">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] text-gray-400">今日统计</span>
+          <span class="text-[10px] text-gray-300">12:30</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="bg-gray-50 rounded-lg p-2 text-center">
+            <p class="text-lg font-bold text-gray-900">118</p>
+            <p class="text-[9px] text-gray-400">均值</p>
+          </div>
+          <div class="bg-gray-50 rounded-lg p-2 text-center">
+            <p class="text-lg font-bold text-rose-500">156</p>
+            <p class="text-[9px] text-gray-400">峰值</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+          <span class="text-[10px] text-gray-400">广播中 · 2台设备</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 锁屏组件 -->
+<section class="animate-slide-in" style="animation-delay: 0.25s;">
+  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2 mb-3">锁屏组件</h3>
+  <div class="bg-gradient-to-b from-gray-800 to-gray-900 rounded-3xl p-4">
+    <p class="text-white/40 text-[10px] text-center mb-2">锁屏小组件预览</p>
+    <div class="flex justify-center gap-4">
+      <!-- 圆形 -->
+      <div class="w-14 h-14 bg-white/10 rounded-full flex flex-col items-center justify-center">
+        <span class="iconify text-rose-400 text-sm" data-icon="solar:heart-bold"></span>
+        <span class="text-white text-xs font-bold">128</span>
+      </div>
+      <!-- 矩形 -->
+      <div class="h-14 px-3 bg-white/10 rounded-2xl flex items-center gap-2">
+        <span class="iconify text-rose-400" data-icon="solar:heart-bold"></span>
+        <div>
+          <p class="text-white text-sm font-bold">128 BPM</p>
+          <p class="text-white/50 text-[9px]">有氧区间</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- watchOS 组件 -->
+<section class="animate-slide-in" style="animation-delay: 0.3s;">
+  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2 mb-3">watchOS 11 交互组件</h3>
+  <div class="flex justify-center">
+    <div class="w-[160px] bg-black rounded-[36px] p-2">
+      <div class="bg-gradient-to-b from-gray-900 to-black rounded-[28px] p-3">
+        <div class="bg-rose-500/20 rounded-2xl p-3 border border-rose-500/30">
+          <div class="flex items-center justify-between mb-2">
+            <span class="iconify text-rose-500 animate-heartbeat" data-icon="solar:heart-bold"></span>
+            <span class="text-[8px] text-green-400">广播中</span>
+          </div>
+          <p class="text-white text-2xl font-black text-center tabular-nums">128</p>
+          <p class="text-white/50 text-[8px] text-center">BPM</p>
+          <!-- 交互按钮 -->
+          <div class="flex gap-1 mt-2">
+            <button class="flex-1 bg-white/10 rounded-lg py-1 text-[8px] text-white/80">暂停</button>
+            <button class="flex-1 bg-rose-500 rounded-lg py-1 text-[8px] text-white">结束</button>
+          </div>
+        </div>
+        <p class="text-white/30 text-[7px] text-center mt-2">Interactive Widget</p>
+      </div>
+    </div>
+  </div>
+  <p class="text-center text-xs text-gray-400 mt-2">watchOS 11 支持可交互小组件</p>
+</section>
+
+<!-- 配置选项 -->
+<section class="animate-slide-in" style="animation-delay: 0.35s;">
+  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2 mb-3">组件配置</h3>
+  <div class="bg-white rounded-2xl overflow-hidden border border-gray-100">
+    <div class="flex items-center justify-between p-4 border-b border-gray-50">
+      <div>
+        <p class="text-sm font-medium">默认样式</p>
+        <p class="text-[11px] text-gray-400">选择小组件外观</p>
+      </div>
+      <select class="bg-gray-50 text-xs font-medium rounded-lg px-2 py-1.5 outline-none">
+        <option>简约数字</option>
+        <option selected>区间环形</option>
+        <option>渐变背景</option>
+      </select>
+    </div>
+    <div class="flex items-center justify-between p-4 border-b border-gray-50">
+      <div>
+        <p class="text-sm font-medium">显示统计</p>
+        <p class="text-[11px] text-gray-400">在中尺寸组件显示均值/峰值</p>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input checked class="sr-only peer" type="checkbox"/>
+        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+      </label>
+    </div>
+    <div class="flex items-center justify-between p-4">
+      <div>
+        <p class="text-sm font-medium">刷新频率</p>
+        <p class="text-[11px] text-gray-400">受系统限制，最快 15 分钟</p>
+      </div>
+      <span class="text-xs text-gray-400">系统控制</span>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Tab Bar -->
+<nav class="h-20 bg-white/80 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-4 pb-4">
+  <a href="1-今天.html" class="flex flex-col items-center space-y-1 text-gray-400">
+    <span class="iconify text-2xl" data-icon="heroicons:calendar-days-solid"></span>
+    <span class="text-[10px] font-medium">今天</span>
+  </a>
+  <a href="2-设备.html" class="flex flex-col items-center space-y-1 text-gray-400">
+    <span class="iconify text-2xl" data-icon="heroicons:cpu-chip-20-solid"></span>
+    <span class="text-[10px] font-medium">设备</span>
+  </a>
+  <a href="3-广播.html" class="flex flex-col items-center space-y-1 text-gray-400">
+    <span class="iconify text-2xl" data-icon="solar:graph-up-bold-duotone"></span>
+    <span class="text-[10px] font-medium">广播</span>
+  </a>
+  <a href="4-设置.html" class="flex flex-col items-center space-y-1 text-blue-500">
+    <span class="iconify text-2xl" data-icon="heroicons:cog-8-tooth-20-solid"></span>
+    <span class="text-[10px] font-medium">设置</span>
+  </a>
+</nav>
+
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+</body>
+</html>

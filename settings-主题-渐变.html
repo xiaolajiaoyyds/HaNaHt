@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>全局渐变色</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-[#F2F2F7] flex justify-center items-center min-h-screen">
+<!-- iPhone 15 Pro Container -->
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- 状态栏 -->
+<div class="h-11 flex justify-between items-center px-8 bg-[#F2F2F7]">
+<span class="text-[15px] font-semibold">9:41</span>
+<div class="flex space-x-1.5 items-center">
+<span class="iconify w-4 h-4" data-icon="heroicons:signal-20-solid"></span>
+<span class="iconify w-4 h-4" data-icon="heroicons:wifi-20-solid"></span>
+<span class="iconify w-5 h-5" data-icon="heroicons:battery-100-20-solid"></span>
+</div>
+</div>
+<!-- 标题栏 -->
+<header class="h-14 flex items-center px-4 bg-[#F2F2F7]">
+<a href="settings-主题.html" class="flex items-center text-blue-500">
+<span class="iconify w-6 h-6" data-icon="heroicons:chevron-left-20-solid"></span>
+<span class="text-[17px]">主题</span>
+</a>
+<h1 class="flex-1 text-center text-[17px] font-semibold pr-16">全局渐变色</h1>
+</header>
+<!-- 主内容区 -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-4 pb-8 space-y-6">
+<!-- 实时预览 -->
+<section class="animate-slide-in" style="animation-delay: 0.1s;">
+<div class="rounded-2xl p-6 shadow-lg" id="gradientPreview" style="background: linear-gradient(135deg, #3b82f6, #6366f1);">
+<div class="text-center">
+<p class="text-white/60 text-[13px] font-medium tracking-wider uppercase mb-2">预览效果</p>
+<p class="text-white text-[56px] font-black leading-none" id="previewText">128</p>
+<p class="text-white/80 text-[15px] mt-2">BPM</p>
+</div>
+</div>
+</section>
+
+<!-- 快速预设 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.2s;">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-1">快速预设</h2>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
+<button class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 border-2 border-blue-500 shadow-md flex-shrink-0" onclick="applyPreset('blue')"></button>
+<button class="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400 to-red-500 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('orange')"></button>
+<button class="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('green')"></button>
+<button class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-violet-700 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('purple')"></button>
+<button class="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-400 to-rose-600 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('pink')"></button>
+<button class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-700 to-gray-900 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('dark')"></button>
+<button class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('cyan')"></button>
+<button class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('amber')"></button>
+</div>
+</section>
+
+<!-- 颜色设置 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.3s;">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-1">颜色设置</h2>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+<!-- 主色调 -->
+<div class="flex items-center justify-between px-4 py-4 border-b border-gray-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl shadow-inner" id="primaryColorPreview" style="background: #3b82f6;"></div>
+<div>
+<p class="text-[15px] font-semibold">主色调</p>
+<p class="text-[12px] text-gray-400 font-mono" id="primaryHex">#3b82f6</p>
+</div>
+</div>
+<input type="color" id="primaryColor" value="#3b82f6" class="w-10 h-10 rounded-lg cursor-pointer border-0" onchange="updateGradient()">
+</div>
+<!-- 副色调 -->
+<div class="flex items-center justify-between px-4 py-4 border-b border-gray-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl shadow-inner" id="secondaryColorPreview" style="background: #6366f1;"></div>
+<div>
+<p class="text-[15px] font-semibold">副色调</p>
+<p class="text-[12px] text-gray-400 font-mono" id="secondaryHex">#6366f1</p>
+</div>
+</div>
+<input type="color" id="secondaryColor" value="#6366f1" class="w-10 h-10 rounded-lg cursor-pointer border-0" onchange="updateGradient()">
+</div>
+<!-- 文字颜色 -->
+<div class="flex items-center justify-between px-4 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl shadow-inner border border-gray-200" id="textColorPreview" style="background: #ffffff;"></div>
+<div>
+<p class="text-[15px] font-semibold">文字颜色</p>
+<p class="text-[12px] text-gray-400 font-mono" id="textHex">#ffffff</p>
+</div>
+</div>
+<input type="color" id="textColor" value="#ffffff" class="w-10 h-10 rounded-lg cursor-pointer border-0" onchange="updateGradient()">
+</div>
+</div>
+</section>
+
+<!-- 渐变方向 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.4s;">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-1">渐变方向</h2>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm p-4">
+<div class="grid grid-cols-4 gap-3">
+<button class="aspect-square rounded-xl bg-gray-100 flex items-center justify-center text-[16px] text-gray-600" onclick="setDirection('90deg', '→')">→</button>
+<button class="aspect-square rounded-xl bg-gray-100 flex items-center justify-center text-[16px] text-gray-600" onclick="setDirection('180deg', '↓')">↓</button>
+<button class="aspect-square rounded-xl bg-blue-100 flex items-center justify-center text-[16px] text-blue-600 border-2 border-blue-500" onclick="setDirection('135deg', '↘')" id="dir-135">↘</button>
+<button class="aspect-square rounded-xl bg-gray-100 flex items-center justify-center text-[16px] text-gray-600" onclick="setDirection('225deg', '↙')">↙</button>
+<button class="aspect-square rounded-xl bg-gray-100 flex items-center justify-center text-[16px] text-gray-600" onclick="setDirection('270deg', '←')">←</button>
+<button class="aspect-square rounded-xl bg-gray-100 flex items-center justify-center text-[16px] text-gray-600" onclick="setDirection('0deg', '↑')">↑</button>
+<button class="aspect-square rounded-xl bg-gray-100 flex items-center justify-center text-[16px] text-gray-600" onclick="setDirection('315deg', '↗')">↗</button>
+<button class="aspect-square rounded-xl bg-gray-100 flex items-center justify-center text-[16px] text-gray-600" onclick="setDirection('45deg', '↖')">↖</button>
+</div>
+<p class="text-center text-[12px] text-gray-400 mt-3">当前方向：<span id="directionLabel" class="text-blue-600 font-medium">右下 (135°)</span></p>
+</div>
+</section>
+
+<!-- 高级设置 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.5s;">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-1">高级设置</h2>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+<!-- 背景透明度 -->
+<div class="px-4 py-4 border-b border-gray-100">
+<div class="flex items-center justify-between mb-3">
+<p class="text-[15px] font-medium">背景透明度</p>
+<span class="text-[13px] text-gray-400" id="opacityLabel">100%</span>
+</div>
+<input type="range" min="50" max="100" value="100" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" id="opacitySlider" oninput="updateOpacity()">
+</div>
+<!-- 渐变位置 -->
+<div class="px-4 py-4">
+<div class="flex items-center justify-between mb-3">
+<p class="text-[15px] font-medium">颜色过渡位置</p>
+<span class="text-[13px] text-gray-400" id="transitionLabel">50%</span>
+</div>
+<input type="range" min="20" max="80" value="50" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" id="transitionSlider" oninput="updateTransition()">
+</div>
+</div>
+</section>
+
+<!-- 应用范围 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.6s;">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-1">应用范围</h2>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+<!-- 应用到 App -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-blue-100 rounded-lg flex items-center justify-center">
+<span class="iconify w-5 h-5 text-blue-500" data-icon="heroicons:device-phone-mobile-20-solid"></span>
+</div>
+<p class="text-[15px] font-medium">应用到 App</p>
+</div>
+<div class="w-12 h-7 bg-blue-500 rounded-full relative cursor-pointer" onclick="this.classList.toggle('bg-blue-500'); this.classList.toggle('bg-gray-300'); this.querySelector('div').classList.toggle('translate-x-5');">
+<div class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-transform translate-x-5"></div>
+</div>
+</div>
+<!-- 应用到桌面端 -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-indigo-100 rounded-lg flex items-center justify-center">
+<span class="iconify w-5 h-5 text-indigo-500" data-icon="heroicons:computer-desktop-20-solid"></span>
+</div>
+<p class="text-[15px] font-medium">应用到桌面端</p>
+</div>
+<div class="w-12 h-7 bg-blue-500 rounded-full relative cursor-pointer" onclick="this.classList.toggle('bg-blue-500'); this.classList.toggle('bg-gray-300'); this.querySelector('div').classList.toggle('translate-x-5');">
+<div class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-transform translate-x-5"></div>
+</div>
+</div>
+<!-- 应用到小组件 -->
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-purple-100 rounded-lg flex items-center justify-center">
+<span class="iconify w-5 h-5 text-purple-500" data-icon="heroicons:squares-2x2-20-solid"></span>
+</div>
+<p class="text-[15px] font-medium">应用到小组件</p>
+</div>
+<div class="w-12 h-7 bg-blue-500 rounded-full relative cursor-pointer" onclick="this.classList.toggle('bg-blue-500'); this.classList.toggle('bg-gray-300'); this.querySelector('div').classList.toggle('translate-x-5');">
+<div class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-transform translate-x-5"></div>
+</div>
+</div>
+</div>
+<!-- 表盘说明 -->
+<div class="bg-amber-50/80 rounded-xl p-3 border border-amber-100 flex items-start gap-2">
+<span class="iconify w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" data-icon="heroicons:exclamation-triangle-20-solid"></span>
+<p class="text-[11px] text-amber-700 leading-relaxed">Apple Watch 表盘主题需单独设置，无法应用全局渐变色。</p>
+</div>
+</section>
+
+<!-- 贴纸动画 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.7s;">
+<div class="flex justify-between items-center px-1">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider">贴纸动画</h2>
+<button class="text-[12px] text-blue-500 font-medium" onclick="showStickerSheet()">更多贴纸</button>
+</div>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm p-4">
+<p class="text-[12px] text-gray-500 mb-3">选择动态贴纸作为心率显示的装饰</p>
+<div class="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
+<div class="relative flex-shrink-0 cursor-pointer" onclick="selectSticker(this, 'none')">
+<div class="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center border-2 border-blue-500">
+<span class="iconify w-5 h-5 text-gray-400" data-icon="heroicons:x-mark-20-solid"></span>
+</div>
+<div class="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+<span class="iconify w-2.5 h-2.5 text-white" data-icon="heroicons:check-20-solid"></span>
+</div>
+<p class="text-[9px] text-center text-gray-500 mt-1">无</p>
+</div>
+<div class="relative flex-shrink-0 cursor-pointer" onclick="selectSticker(this, 'heartbeat')">
+<div class="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center border-2 border-transparent">
+<span class="iconify w-7 h-7 text-red-500 animate-pulse" data-icon="heroicons:heart-20-solid"></span>
+</div>
+<p class="text-[9px] text-center text-gray-500 mt-1">心跳</p>
+</div>
+<div class="relative flex-shrink-0 cursor-pointer" onclick="selectSticker(this, 'sparkle')">
+<div class="w-14 h-14 bg-yellow-50 rounded-xl flex items-center justify-center border-2 border-transparent">
+<span class="iconify w-7 h-7 text-yellow-500" data-icon="heroicons:sparkles-20-solid"></span>
+</div>
+<p class="text-[9px] text-center text-gray-500 mt-1">闪烁</p>
+</div>
+<div class="relative flex-shrink-0 cursor-pointer" onclick="selectSticker(this, 'fire')">
+<div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center border-2 border-transparent">
+<span class="iconify w-7 h-7 text-orange-500" data-icon="heroicons:fire-20-solid"></span>
+</div>
+<p class="text-[9px] text-center text-gray-500 mt-1">火焰</p>
+</div>
+<div class="relative flex-shrink-0 cursor-pointer opacity-50" onclick="showStickerSheet()">
+<div class="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300">
+<span class="iconify w-5 h-5 text-gray-400" data-icon="heroicons:plus-20-solid"></span>
+</div>
+<p class="text-[9px] text-center text-gray-400 mt-1">更多</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 保存为自定义主题 -->
+<section class="animate-slide-in" style="animation-delay: 0.7s;">
+<button class="w-full py-4 bg-blue-600 text-white rounded-2xl text-[17px] font-semibold shadow-lg active:scale-98 transition-transform" onclick="saveAsTheme()">
+保存为自定义主题
+</button>
+</section>
+</main>
+
+<!-- Toast 提示 -->
+<div class="absolute bottom-24 left-1/2 -translate-x-1/2 bg-gray-900/90 text-white text-[14px] px-5 py-2.5 rounded-full font-medium opacity-0 transition-opacity pointer-events-none" id="toast">
+已保存
+</div>
+
+<!-- TG风格贴纸选择面板 -->
+<div class="absolute inset-0 z-40 invisible pointer-events-none transition-all duration-300" id="stickerSheet">
+<div class="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300" id="stickerOverlay" onclick="hideStickerSheet()"></div>
+<div class="absolute bottom-0 w-full h-[70%] bg-[#F2F2F7] rounded-t-[20px] shadow-2xl translate-y-full transition-transform duration-300 flex flex-col overflow-hidden" id="stickerContent">
+<div class="h-1.5 w-10 bg-gray-300 rounded-full mx-auto mt-2"></div>
+<div class="flex justify-between items-center px-4 py-3 bg-white border-b border-gray-100">
+<button class="text-blue-500 font-medium text-[16px]" onclick="hideStickerSheet()">关闭</button>
+<h2 class="text-[17px] font-bold">贴纸商店</h2>
+<button class="text-blue-500 font-medium text-[16px]" onclick="goToStickerStore()">商店</button>
+</div>
+<div class="flex gap-2 px-4 py-3 bg-white border-b border-gray-100 overflow-x-auto hide-scrollbar">
+<button class="px-3 py-1.5 bg-blue-500 text-white rounded-full text-[12px] font-medium flex-shrink-0">全部</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full text-[12px] font-medium flex-shrink-0">已下载</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full text-[12px] font-medium flex-shrink-0">热门</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full text-[12px] font-medium flex-shrink-0">运动</button>
+</div>
+<div class="flex-1 overflow-y-auto hide-scrollbar p-4">
+<div class="mb-6">
+<h3 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider mb-3">已下载</h3>
+<div class="grid grid-cols-4 gap-3">
+<div class="relative cursor-pointer" onclick="selectStickerFromSheet('heartbeat')">
+<div class="aspect-square bg-red-50 rounded-xl flex items-center justify-center border-2 border-transparent hover:border-blue-500">
+<span class="iconify w-10 h-10 text-red-500 animate-pulse" data-icon="heroicons:heart-20-solid"></span>
+</div>
+<p class="text-[10px] text-center text-gray-500 mt-1">心跳</p>
+</div>
+<div class="relative cursor-pointer" onclick="selectStickerFromSheet('sparkle')">
+<div class="aspect-square bg-yellow-50 rounded-xl flex items-center justify-center border-2 border-transparent hover:border-blue-500">
+<span class="iconify w-10 h-10 text-yellow-500" data-icon="heroicons:sparkles-20-solid"></span>
+</div>
+<p class="text-[10px] text-center text-gray-500 mt-1">闪烁</p>
+</div>
+<div class="relative cursor-pointer" onclick="selectStickerFromSheet('fire')">
+<div class="aspect-square bg-orange-50 rounded-xl flex items-center justify-center border-2 border-transparent hover:border-blue-500">
+<span class="iconify w-10 h-10 text-orange-500" data-icon="heroicons:fire-20-solid"></span>
+</div>
+<p class="text-[10px] text-center text-gray-500 mt-1">火焰</p>
+</div>
+<div class="relative cursor-pointer" onclick="selectStickerFromSheet('bolt')">
+<div class="aspect-square bg-blue-50 rounded-xl flex items-center justify-center border-2 border-transparent hover:border-blue-500">
+<span class="iconify w-10 h-10 text-blue-500" data-icon="heroicons:bolt-20-solid"></span>
+</div>
+<p class="text-[10px] text-center text-gray-500 mt-1">闪电</p>
+</div>
+</div>
+</div>
+<div class="text-center py-4">
+<button class="px-6 py-3 bg-blue-600 text-white rounded-full text-[15px] font-semibold shadow-lg" onclick="goToStickerStore()">
+<span class="iconify w-5 h-5 inline mr-2" data-icon="heroicons:shopping-bag-20-solid"></span>前往贴纸商店
+</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+<script>
+    // 当前渐变设置
+    let gradientSettings = {
+      primary: '#3b82f6',
+      secondary: '#6366f1',
+      text: '#ffffff',
+      direction: '135deg',
+      opacity: 100,
+      transition: 50
+    };
+
+    // 预设配色
+    const presets = {
+      blue: { primary: '#3b82f6', secondary: '#6366f1' },
+      orange: { primary: '#fb923c', secondary: '#ef4444' },
+      green: { primary: '#34d399', secondary: '#0d9488' },
+      purple: { primary: '#a855f7', secondary: '#7c3aed' },
+      pink: { primary: '#f472b6', secondary: '#e11d48' },
+      dark: { primary: '#374151', secondary: '#111827' },
+      cyan: { primary: '#22d3ee', secondary: '#3b82f6' },
+      amber: { primary: '#fbbf24', secondary: '#f97316' }
+    };
+
+    // 方向名称映射
+    const directionNames = {
+      '90deg': '向右 (90°)',
+      '180deg': '向下 (180°)',
+      '135deg': '右下 (135°)',
+      '225deg': '左下 (225°)',
+      '270deg': '向左 (270°)',
+      '0deg': '向上 (0°)',
+      '315deg': '右上 (315°)',
+      '45deg': '左上 (45°)'
+    };
+
+    function applyPreset(presetName) {
+      const preset = presets[presetName];
+      gradientSettings.primary = preset.primary;
+      gradientSettings.secondary = preset.secondary;
+
+      document.getElementById('primaryColor').value = preset.primary;
+      document.getElementById('secondaryColor').value = preset.secondary;
+
+      // 更新预设按钮选中状态
+      document.querySelectorAll('.flex.gap-2 button').forEach(btn => {
+        btn.classList.remove('border-blue-500');
+        btn.classList.add('border-transparent');
+      });
+      event.target.classList.remove('border-transparent');
+      event.target.classList.add('border-blue-500');
+
+      updateGradient();
+      showToast('预设已应用');
+    }
+
+    function updateGradient() {
+      const primary = document.getElementById('primaryColor').value;
+      const secondary = document.getElementById('secondaryColor').value;
+      const text = document.getElementById('textColor').value;
+
+      gradientSettings.primary = primary;
+      gradientSettings.secondary = secondary;
+      gradientSettings.text = text;
+
+      // 更新颜色预览块
+      document.getElementById('primaryColorPreview').style.background = primary;
+      document.getElementById('secondaryColorPreview').style.background = secondary;
+      document.getElementById('textColorPreview').style.background = text;
+
+      // 更新 HEX 显示
+      document.getElementById('primaryHex').textContent = primary;
+      document.getElementById('secondaryHex').textContent = secondary;
+      document.getElementById('textHex').textContent = text;
+
+      // 更新预览
+      applyPreview();
+    }
+
+    function setDirection(deg, symbol) {
+      gradientSettings.direction = deg;
+      document.getElementById('directionLabel').textContent = directionNames[deg];
+
+      // 更新按钮样式
+      document.querySelectorAll('.grid.grid-cols-4 button').forEach(btn => {
+        btn.classList.remove('bg-blue-100', 'text-blue-600', 'border-2', 'border-blue-500');
+        btn.classList.add('bg-gray-100', 'text-gray-600');
+      });
+      event.target.classList.remove('bg-gray-100', 'text-gray-600');
+      event.target.classList.add('bg-blue-100', 'text-blue-600', 'border-2', 'border-blue-500');
+
+      applyPreview();
+    }
+
+    function updateOpacity() {
+      const value = document.getElementById('opacitySlider').value;
+      gradientSettings.opacity = value;
+      document.getElementById('opacityLabel').textContent = value + '%';
+      applyPreview();
+    }
+
+    function updateTransition() {
+      const value = document.getElementById('transitionSlider').value;
+      gradientSettings.transition = value;
+      document.getElementById('transitionLabel').textContent = value + '%';
+      applyPreview();
+    }
+
+    function applyPreview() {
+      const preview = document.getElementById('gradientPreview');
+      const opacity = gradientSettings.opacity / 100;
+      const transition = gradientSettings.transition;
+
+      preview.style.background = `linear-gradient(${gradientSettings.direction}, ${gradientSettings.primary} 0%, ${gradientSettings.secondary} 100%)`;
+      preview.style.opacity = opacity;
+
+      // 更新文字颜色
+      document.getElementById('previewText').style.color = gradientSettings.text;
+      preview.querySelectorAll('p').forEach(p => {
+        if (!p.id) p.style.color = gradientSettings.text;
+      });
+    }
+
+    function saveAsTheme() {
+      showToast('渐变主题已保存');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.remove('opacity-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+      }, 1500);
+    }
+
+    // 贴纸相关函数
+    function showStickerSheet() {
+      const sheet = document.getElementById('stickerSheet');
+      const overlay = document.getElementById('stickerOverlay');
+      const content = document.getElementById('stickerContent');
+
+      sheet.classList.remove('invisible');
+      sheet.classList.add('pointer-events-auto');
+      overlay.classList.remove('opacity-0');
+      overlay.classList.add('opacity-100');
+      content.classList.remove('translate-y-full');
+      content.classList.add('translate-y-0');
+    }
+
+    function hideStickerSheet() {
+      const sheet = document.getElementById('stickerSheet');
+      const overlay = document.getElementById('stickerOverlay');
+      const content = document.getElementById('stickerContent');
+
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0');
+      content.classList.remove('translate-y-0');
+      content.classList.add('translate-y-full');
+
+      setTimeout(() => {
+        sheet.classList.add('invisible');
+        sheet.classList.remove('pointer-events-auto');
+      }, 300);
+    }
+
+    function selectSticker(element, stickerName) {
+      // 移除所有选中状态
+      document.querySelectorAll('.flex.gap-3 > div').forEach(div => {
+        const card = div.querySelector('.w-14');
+        if (card) {
+          card.classList.remove('border-blue-500');
+          card.classList.add('border-transparent');
+        }
+        const check = div.querySelector('.bg-blue-500.rounded-full.w-4');
+        if (check) check.remove();
+      });
+
+      // 添加选中状态
+      const card = element.querySelector('.w-14');
+      card.classList.remove('border-transparent');
+      card.classList.add('border-blue-500');
+
+      // 添加勾选图标
+      const checkDiv = document.createElement('div');
+      checkDiv.className = 'absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center';
+      checkDiv.innerHTML = '<span class="iconify w-2.5 h-2.5 text-white" data-icon="heroicons:check-20-solid"></span>';
+      element.appendChild(checkDiv);
+
+      showToast('贴纸已应用');
+    }
+
+    function selectStickerFromSheet(stickerName) {
+      hideStickerSheet();
+      showToast('贴纸「' + stickerName + '」已应用');
+    }
+
+    function goToStickerStore() {
+      hideStickerSheet();
+      showToast('正在前往贴纸商店...');
+    }
+  </script>
+</body>
+</html>

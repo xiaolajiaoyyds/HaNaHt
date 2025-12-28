@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>心率提醒设置</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    @keyframes alert-pulse {
+      0% { background-color: rgba(239, 68, 68, 0.1); }
+      50% { background-color: rgba(239, 68, 68, 0.4); }
+      100% { background-color: rgba(239, 68, 68, 0.1); }
+    }
+    .animate-alert { animation: alert-pulse 1s infinite; }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 flex items-center justify-center min-h-screen p-4">
+<!-- APP Container (375x812) -->
+<div class="w-[375px] h-[812px] bg-white rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden flex flex-col relative">
+<!-- 标题栏: 56px -->
+<header class="h-[56px] flex items-center justify-between px-6 border-b border-gray-100 shrink-0">
+<a href="4-设置.html" class="w-8 h-8 flex items-center justify-center">
+<span class="iconify text-2xl text-gray-800" data-icon="solar:alt-arrow-left-linear"></span>
+</a>
+<h1 class="text-lg font-bold text-gray-900">提醒设置</h1>
+<button class="text-sm font-medium text-blue-600">保存</button>
+</header>
+<!-- 内容区: 676px -->
+<main class="h-[676px] overflow-y-auto hide-scrollbar bg-gray-50 pb-10">
+<!-- 预览区 -->
+<section class="p-4 animate-slide-in" style="animation-delay: 0.1s;">
+<div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 transition-all duration-300" id="previewCard">
+<div class="flex justify-between items-center mb-4">
+<span class="text-sm font-medium text-gray-500">模拟预览</span>
+<span class="text-xs px-2 py-1 bg-green-100 text-green-600 rounded-full" id="previewStatus">正常范围内</span>
+</div>
+<div class="flex items-center justify-center py-4">
+<div class="relative">
+<span class="iconify text-6xl text-rose-500 transition-transform duration-300 scale-100" data-icon="solar:heart-bold" id="heartIcon"></span>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-2xl font-black text-white" id="heartRateValue">75</span>
+</div>
+</div>
+<div class="ml-6">
+<div class="text-4xl font-black text-gray-900 tabular-nums"><span id="liveHR">75</span><span class="text-sm font-medium text-gray-400 ml-1">BPM</span></div>
+<p class="text-xs text-gray-400 mt-1">检测到: 运动设备 (Pro)</p>
+</div>
+</div>
+<input class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600 mt-4" id="hrSimulator" max="200" min="40" type="range" value="75"/>
+<div class="flex justify-between text-[10px] text-gray-400 mt-1">
+<span>40</span>
+<span>模拟实时心率</span>
+<span>200</span>
+</div>
+</div>
+</section>
+<!-- 核心开关 -->
+<section class="px-4 mb-6 animate-slide-in" style="animation-delay: 0.2s;">
+<div class="bg-white rounded-2xl p-4 flex items-center justify-between border border-gray-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
+<span class="iconify text-xl text-blue-600" data-icon="solar:bell-bing-bold-duotone"></span>
+</div>
+<div>
+<p class="font-bold text-gray-900">开启越界提醒</p>
+<p class="text-xs text-gray-400">当心率偏离目标时提示</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+</label>
+</div>
+</section>
+<!-- 阈值设置 -->
+<section class="px-4 space-y-3 mb-6 animate-slide-in" style="animation-delay: 0.3s;">
+<h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2">目标区间</h3>
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-white p-4 rounded-2xl border border-gray-100">
+<p class="text-xs text-blue-500 font-bold mb-2">下限 (MIN)</p>
+<div class="flex items-center justify-between">
+<button class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center active:scale-95 transition-transform" onclick="changeVal('min', -1)"><span class="iconify" data-icon="solar:minus-linear"></span></button>
+<input class="w-12 text-center font-bold text-gray-900 bg-transparent focus:outline-none" id="minHR" type="number" value="60"/>
+<button class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center active:scale-95 transition-transform" onclick="changeVal('min', 1)"><span class="iconify" data-icon="solar:add-linear"></span></button>
+</div>
+</div>
+<div class="bg-white p-4 rounded-2xl border border-gray-100">
+<p class="text-xs text-rose-500 font-bold mb-2">上限 (MAX)</p>
+<div class="flex items-center justify-between">
+<button class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center active:scale-95 transition-transform" onclick="changeVal('max', -1)"><span class="iconify" data-icon="solar:minus-linear"></span></button>
+<input class="w-12 text-center font-bold text-gray-900 bg-transparent focus:outline-none" id="maxHR" type="number" value="150"/>
+<button class="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center active:scale-95 transition-transform" onclick="changeVal('max', 1)"><span class="iconify" data-icon="solar:add-linear"></span></button>
+</div>
+</div>
+</div>
+<p class="text-[11px] text-gray-400 px-2 leading-relaxed">抖动保护：心率越界需持续≥2秒方可触发，避免因数据波动导致的频繁误报。</p>
+</section>
+<!-- 提醒方式 -->
+<section class="px-4 space-y-3 mb-6 animate-slide-in" style="animation-delay: 0.4s;">
+<h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2">提醒形式</h3>
+<div class="bg-white overflow-hidden rounded-2xl border border-gray-100">
+<div class="flex items-center justify-between p-4 border-b border-gray-50">
+<div class="flex items-center gap-3">
+<span class="iconify text-xl text-gray-400" data-icon="solar:mask-happly-linear"></span>
+<span class="text-sm font-medium">视觉闪烁效果</span>
+</div>
+<input checked="" class="w-5 h-5 accent-blue-600 rounded" type="checkbox"/>
+</div>
+<div class="flex items-center justify-between p-4 border-b border-gray-50">
+<div class="flex items-center gap-3">
+<span class="iconify text-xl text-gray-400" data-icon="solar:vibrate-linear"></span>
+<span class="text-sm font-medium">设备震动反馈</span>
+</div>
+<input checked="" class="w-5 h-5 accent-blue-600 rounded" type="checkbox"/>
+</div>
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center gap-3">
+<span class="iconify text-xl text-gray-400" data-icon="solar:volume-loud-linear"></span>
+<span class="text-sm font-medium">声音语音播报</span>
+</div>
+<input class="w-5 h-5 accent-blue-600 rounded" type="checkbox"/>
+</div>
+</div>
+</section>
+<!-- 高级设置 -->
+<section class="px-4 space-y-3 mb-6 animate-slide-in" style="animation-delay: 0.5s;">
+<h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2">智能策略</h3>
+<div class="bg-white rounded-2xl overflow-hidden border border-gray-100">
+<div class="p-4 border-b border-gray-50 flex items-center justify-between">
+<div>
+<p class="text-sm font-medium">提醒冷却时间</p>
+<p class="text-[11px] text-gray-400">同类提醒触发后的静默间隔</p>
+</div>
+<select class="bg-gray-50 text-xs font-bold rounded-lg px-2 py-1 outline-none border-none">
+<option>30秒</option>
+<option selected="">1分钟</option>
+<option>3分钟</option>
+<option>永久</option>
+</select>
+</div>
+<div class="p-4 border-b border-gray-50 flex items-center justify-between">
+<div>
+<p class="text-sm font-medium">断连提醒</p>
+<p class="text-[11px] text-gray-400 text-rose-500">优先级：极高</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer scale-75">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+</label>
+</div>
+<div class="p-4 flex items-center justify-between">
+<div>
+<p class="text-sm font-medium text-gray-400">电量低提醒 (Pro)</p>
+<p class="text-[11px] text-gray-300 italic">升级版本后可用</p>
+</div>
+<span class="iconify text-amber-400" data-icon="solar:crown-minimalistic-bold"></span>
+</div>
+</div>
+</section>
+<!-- 时间段控制 -->
+<section class="px-4 mb-6 animate-slide-in" style="animation-delay: 0.6s;">
+<button class="w-full bg-white p-4 rounded-2xl border border-gray-100 flex items-center justify-between active:bg-gray-50">
+<div class="flex items-center gap-3">
+<span class="iconify text-xl text-indigo-500" data-icon="solar:moon-sleep-bold-duotone"></span>
+<div class="text-left">
+<p class="text-sm font-medium">夜间/勿扰模式</p>
+<p class="text-xs text-gray-400">22:00 - 07:00 自动静音</p>
+</div>
+</div>
+<span class="iconify text-gray-300" data-icon="solar:alt-arrow-right-linear"></span>
+</button>
+</section>
+</main>
+<!-- 底部导航 -->
+<nav class="h-20 bg-white/80 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-4 pb-4 shrink-0">
+<a href="1-今天.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="heroicons:calendar-days-solid"></span>
+<span class="text-[10px] font-medium">今天</span>
+</a>
+<a href="2-设备.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="heroicons:cpu-chip-20-solid"></span>
+<span class="text-[10px] font-medium">设备</span>
+</a>
+<a href="3-广播.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="solar:graph-up-bold-duotone"></span>
+<span class="text-[10px] font-medium">广播</span>
+</a>
+<a href="4-设置.html" class="flex flex-col items-center space-y-1 text-blue-500">
+<span class="iconify text-2xl" data-icon="heroicons:cog-8-tooth-20-solid"></span>
+<span class="text-[10px] font-medium">设置</span>
+</a>
+</nav>
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+<script>
+    const hrSim = document.getElementById('hrSimulator');
+    const liveHR = document.getElementById('liveHR');
+    const heartVal = document.getElementById('heartRateValue');
+    const heartIcon = document.getElementById('heartIcon');
+    const previewCard = document.getElementById('previewCard');
+    const previewStatus = document.getElementById('previewStatus');
+    const minHRInput = document.getElementById('minHR');
+    const maxHRInput = document.getElementById('maxHR');
+
+    function updatePreview() {
+      const val = parseInt(hrSim.value);
+      const min = parseInt(minHRInput.value);
+      const max = parseInt(maxHRInput.value);
+      
+      liveHR.innerText = val;
+      heartVal.innerText = val;
+
+      if (val > max) {
+        previewCard.classList.add('animate-alert', 'border-rose-500');
+        previewStatus.innerText = '⚠️ 心率过高';
+        previewStatus.classList.replace('bg-green-100', 'bg-rose-100');
+        previewStatus.classList.replace('text-green-600', 'text-rose-600');
+        heartIcon.classList.replace('text-rose-500', 'text-rose-600');
+        heartIcon.style.transform = 'scale(1.25)';
+      } else if (val < min) {
+        previewCard.classList.add('animate-alert', 'border-blue-500');
+        previewStatus.innerText = '⚠️ 心率过低';
+        previewStatus.classList.replace('bg-green-100', 'bg-blue-100');
+        previewStatus.classList.replace('text-green-600', 'text-blue-600');
+        heartIcon.classList.replace('text-rose-500', 'text-blue-400');
+        heartIcon.style.transform = 'scale(0.85)';
+      } else {
+        previewCard.classList.remove('animate-alert', 'border-rose-500', 'border-blue-500');
+        previewStatus.innerText = '正常范围内';
+        previewStatus.classList.remove('bg-rose-100', 'bg-blue-100');
+        previewStatus.classList.add('bg-green-100');
+        previewStatus.classList.remove('text-rose-600', 'text-blue-600');
+        previewStatus.classList.add('text-green-600');
+        heartIcon.classList.remove('text-blue-400', 'text-rose-600');
+        heartIcon.classList.add('text-rose-500');
+        heartIcon.style.transform = 'scale(1)';
+      }
+    }
+
+    function changeVal(type, delta) {
+      const input = type === 'min' ? minHRInput : maxHRInput;
+      let newVal = parseInt(input.value) + delta;
+      
+      // 范围校验
+      if (type === 'min') {
+        newVal = Math.max(40, Math.min(newVal, parseInt(maxHRInput.value) - 1));
+      } else {
+        newVal = Math.max(parseInt(minHRInput.value) + 1, Math.min(newVal, 220));
+      }
+      
+      input.value = newVal;
+      updatePreview();
+    }
+
+    hrSim.addEventListener('input', updatePreview);
+    minHRInput.addEventListener('change', updatePreview);
+    maxHRInput.addEventListener('change', updatePreview);
+
+    // 初始化
+    updatePreview();
+  </script>
+</body>
+</html>

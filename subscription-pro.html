@@ -1,0 +1,347 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>订阅 Pro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .animate-shimmer {
+      background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #3b82f6 100%);
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#F2F2F7] min-h-screen flex justify-center items-center p-4">
+<!-- iPhone 15 Pro Canvas -->
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- Status Bar -->
+<div class="h-11 w-full flex justify-between items-center px-8 pt-4">
+<span class="text-[15px] font-semibold text-black">9:41</span>
+<div class="flex items-center space-x-1">
+<span class="iconify text-black" data-icon="heroicons:signal-20-solid"></span>
+<span class="iconify text-black" data-icon="heroicons:wifi-20-solid"></span>
+<span class="iconify text-black" data-icon="heroicons:battery-100-20-solid"></span>
+</div>
+</div>
+<!-- Header -->
+<header class="h-14 flex items-center px-4 bg-[#F2F2F7]">
+<a href="4-设置.html" class="flex items-center text-blue-500">
+<span class="iconify w-6 h-6" data-icon="heroicons:chevron-left-20-solid"></span>
+<span class="text-[17px]">设置</span>
+</a>
+<h1 class="flex-1 text-center text-[17px] font-semibold pr-16">订阅</h1>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-4 pb-8 space-y-4">
+<!-- Hero Section -->
+<section class="animate-slide-in" style="animation-delay: 0.1s;">
+<div class="bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-600 rounded-3xl p-6 text-center relative overflow-hidden">
+<!-- Decorative Elements -->
+<div class="absolute top-4 right-4 w-20 h-20 bg-white/10 rounded-full blur-xl"></div>
+<div class="absolute bottom-4 left-4 w-16 h-16 bg-white/10 rounded-full blur-xl"></div>
+<!-- Content -->
+<div class="relative z-10">
+<div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 animate-float">
+<span class="iconify text-white text-4xl" data-icon="heroicons:sparkles-20-solid"></span>
+</div>
+<h2 class="text-[24px] font-bold text-white mb-2">心率广播 Pro</h2>
+<p class="text-[14px] text-white/80 leading-relaxed">解锁全部高级功能，获得专业级心率监测体验</p>
+</div>
+</div>
+</section>
+
+<!-- Subscription Plans -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.2s;">
+<h2 class="text-[13px] font-semibold text-gray-500 uppercase tracking-wider px-1">选择订阅方案</h2>
+<div class="space-y-3">
+<!-- Yearly Plan (Recommended) -->
+<div class="bg-white rounded-2xl p-4 shadow-sm border-2 border-blue-500 relative cursor-pointer active:scale-[0.98] transition-transform" id="planYearly" onclick="selectPlan('yearly')">
+<div class="absolute -top-2.5 right-4 bg-blue-500 text-white text-[10px] font-bold px-3 py-1 rounded-full">推荐</div>
+<div class="flex items-center justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="text-[17px] font-bold text-gray-900">年度订阅</h3>
+<span class="text-[11px] bg-green-100 text-green-600 px-2 py-0.5 rounded-full font-medium">省 50%</span>
+</div>
+<p class="text-[13px] text-gray-500">¥98/年，平均每月仅 ¥8.2</p>
+</div>
+<div class="text-right">
+<p class="text-[24px] font-bold text-blue-600">¥98</p>
+<p class="text-[11px] text-gray-400 line-through">¥198/年</p>
+</div>
+</div>
+<div class="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center absolute top-4 left-4">
+<span class="iconify text-white text-sm" data-icon="heroicons:check-20-solid"></span>
+</div>
+</div>
+
+<!-- Monthly Plan -->
+<div class="bg-white rounded-2xl p-4 shadow-sm border-2 border-transparent cursor-pointer active:scale-[0.98] transition-transform" id="planMonthly" onclick="selectPlan('monthly')">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="text-[17px] font-bold text-gray-900">月度订阅</h3>
+<p class="text-[13px] text-gray-500">按月付费，随时取消</p>
+</div>
+<div class="text-right">
+<p class="text-[24px] font-bold text-gray-700">¥18</p>
+<p class="text-[11px] text-gray-400">/月</p>
+</div>
+</div>
+<div class="w-5 h-5 border-2 border-gray-300 rounded-full absolute top-4 left-4" id="monthlyCheck"></div>
+</div>
+
+<!-- Lifetime -->
+<div class="bg-white rounded-2xl p-4 shadow-sm border-2 border-transparent cursor-pointer active:scale-[0.98] transition-transform" id="planLifetime" onclick="selectPlan('lifetime')">
+<div class="flex items-center justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="text-[17px] font-bold text-gray-900">终身买断</h3>
+<span class="text-[11px] bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-medium">一次付费</span>
+</div>
+<p class="text-[13px] text-gray-500">永久使用，包含未来所有更新</p>
+</div>
+<div class="text-right">
+<p class="text-[24px] font-bold text-gray-700">¥298</p>
+<p class="text-[11px] text-gray-400">一次性</p>
+</div>
+</div>
+<div class="w-5 h-5 border-2 border-gray-300 rounded-full absolute top-4 left-4" id="lifetimeCheck"></div>
+</div>
+</div>
+</section>
+
+<!-- Feature Comparison -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.3s;">
+<h2 class="text-[13px] font-semibold text-gray-500 uppercase tracking-wider px-1">功能对比</h2>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+<!-- Header -->
+<div class="grid grid-cols-3 bg-gray-50 border-b border-gray-100">
+<div class="p-3 text-[12px] font-medium text-gray-500">功能</div>
+<div class="p-3 text-center text-[12px] font-medium text-gray-500">免费版</div>
+<div class="p-3 text-center text-[12px] font-medium text-blue-600">Pro</div>
+</div>
+<!-- Features -->
+<div class="divide-y divide-gray-100">
+<!-- Feature 1 -->
+<div class="grid grid-cols-3 items-center">
+<div class="p-3 text-[13px] text-gray-700">基础心率监测</div>
+<div class="p-3 text-center"><span class="iconify text-green-500" data-icon="heroicons:check-20-solid"></span></div>
+<div class="p-3 text-center"><span class="iconify text-green-500" data-icon="heroicons:check-20-solid"></span></div>
+</div>
+<!-- Feature 2 -->
+<div class="grid grid-cols-3 items-center">
+<div class="p-3 text-[13px] text-gray-700">OBS 直播推流</div>
+<div class="p-3 text-center"><span class="iconify text-green-500" data-icon="heroicons:check-20-solid"></span></div>
+<div class="p-3 text-center"><span class="iconify text-green-500" data-icon="heroicons:check-20-solid"></span></div>
+</div>
+<!-- Feature 3 -->
+<div class="grid grid-cols-3 items-center bg-blue-50/50">
+<div class="p-3 text-[13px] text-gray-700">多设备切换</div>
+<div class="p-3 text-center"><span class="iconify text-gray-300" data-icon="heroicons:x-mark-20-solid"></span></div>
+<div class="p-3 text-center"><span class="iconify text-green-500" data-icon="heroicons:check-20-solid"></span></div>
+</div>
+<!-- Feature 4 -->
+<div class="grid grid-cols-3 items-center bg-blue-50/50">
+<div class="p-3 text-[13px] text-gray-700">设备优先级</div>
+<div class="p-3 text-center"><span class="iconify text-gray-300" data-icon="heroicons:x-mark-20-solid"></span></div>
+<div class="p-3 text-center"><span class="iconify text-green-500" data-icon="heroicons:check-20-solid"></span></div>
+</div>
+<!-- Feature 5 -->
+<div class="grid grid-cols-3 items-center bg-blue-50/50">
+<div class="p-3 text-[13px] text-gray-700">自定义渐变主题</div>
+<div class="p-3 text-center"><span class="iconify text-gray-300" data-icon="heroicons:x-mark-20-solid"></span></div>
+<div class="p-3 text-center"><span class="iconify text-green-500" data-icon="heroicons:check-20-solid"></span></div>
+</div>
+<!-- Feature 6 -->
+<div class="grid grid-cols-3 items-center bg-blue-50/50">
+<div class="p-3 text-[13px] text-gray-700">高级字体</div>
+<div class="p-3 text-center"><span class="iconify text-gray-300" data-icon="heroicons:x-mark-20-solid"></span></div>
+<div class="p-3 text-center"><span class="iconify text-green-500" data-icon="heroicons:check-20-solid"></span></div>
+</div>
+<!-- Feature 7 -->
+<div class="grid grid-cols-3 items-center bg-blue-50/50">
+<div class="p-3 text-[13px] text-gray-700">付费贴纸</div>
+<div class="p-3 text-center"><span class="iconify text-gray-300" data-icon="heroicons:x-mark-20-solid"></span></div>
+<div class="p-3 text-center"><span class="iconify text-green-500" data-icon="heroicons:check-20-solid"></span></div>
+</div>
+<!-- Feature 8 -->
+<div class="grid grid-cols-3 items-center bg-blue-50/50">
+<div class="p-3 text-[13px] text-gray-700">历史记录导出</div>
+<div class="p-3 text-center"><span class="iconify text-gray-300" data-icon="heroicons:x-mark-20-solid"></span></div>
+<div class="p-3 text-center"><span class="iconify text-green-500" data-icon="heroicons:check-20-solid"></span></div>
+</div>
+<!-- Feature 9 -->
+<div class="grid grid-cols-3 items-center bg-blue-50/50">
+<div class="p-3 text-[13px] text-gray-700">去除广告</div>
+<div class="p-3 text-center"><span class="iconify text-gray-300" data-icon="heroicons:x-mark-20-solid"></span></div>
+<div class="p-3 text-center"><span class="iconify text-green-500" data-icon="heroicons:check-20-solid"></span></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Trust Badges -->
+<section class="animate-slide-in" style="animation-delay: 0.4s;">
+<div class="flex justify-center gap-6 py-4">
+<div class="flex flex-col items-center">
+<span class="iconify text-gray-400 text-2xl" data-icon="heroicons:shield-check-20-solid"></span>
+<span class="text-[10px] text-gray-500 mt-1">安全支付</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="iconify text-gray-400 text-2xl" data-icon="heroicons:arrow-path-20-solid"></span>
+<span class="text-[10px] text-gray-500 mt-1">随时取消</span>
+</div>
+<div class="flex flex-col items-center">
+<span class="iconify text-gray-400 text-2xl" data-icon="heroicons:clock-20-solid"></span>
+<span class="text-[10px] text-gray-500 mt-1">7天退款</span>
+</div>
+</div>
+</section>
+
+<!-- Legal Links -->
+<section class="animate-slide-in" style="animation-delay: 0.5s;">
+<div class="text-center space-y-2">
+<button class="text-[12px] text-blue-500 font-medium" onclick="restorePurchase()">恢复购买</button>
+<p class="text-[10px] text-gray-400 leading-relaxed px-4">
+订阅将自动续费，可在 App Store 设置中管理。
+<a href="legal.html" class="text-blue-500">服务条款</a> ·
+<a href="privacy.html" class="text-blue-500">隐私政策</a>
+</p>
+</div>
+</section>
+</main>
+
+<!-- Subscribe Button -->
+<div class="px-4 pb-6 pt-2 bg-gradient-to-t from-[#F2F2F7] via-[#F2F2F7] to-transparent">
+<button class="w-full py-4 rounded-2xl text-[17px] font-bold text-white animate-shimmer shadow-lg shadow-blue-500/30 active:scale-[0.98] transition-transform" onclick="subscribe()">
+开始订阅 · ¥98/年
+</button>
+<p class="text-center text-[11px] text-gray-400 mt-2">首次订阅享 3 天免费试用</p>
+</div>
+
+<!-- Toast -->
+<div class="absolute bottom-32 left-1/2 -translate-x-1/2 bg-gray-900/90 text-white text-[14px] px-5 py-2.5 rounded-full font-medium opacity-0 transition-opacity pointer-events-none" id="toast">
+正在恢复购买...
+</div>
+
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+<script>
+    let selectedPlan = 'yearly';
+
+    function selectPlan(plan) {
+      selectedPlan = plan;
+
+      // 重置所有选项
+      ['planYearly', 'planMonthly', 'planLifetime'].forEach(id => {
+        document.getElementById(id).classList.remove('border-blue-500');
+        document.getElementById(id).classList.add('border-transparent');
+      });
+
+      // 选中当前
+      const selected = document.getElementById('plan' + plan.charAt(0).toUpperCase() + plan.slice(1));
+      selected.classList.remove('border-transparent');
+      selected.classList.add('border-blue-500');
+
+      // 更新按钮文字
+      const btn = document.querySelector('.animate-shimmer');
+      const prices = {
+        yearly: '开始订阅 · ¥98/年',
+        monthly: '开始订阅 · ¥18/月',
+        lifetime: '立即购买 · ¥298'
+      };
+      btn.textContent = prices[plan];
+
+      // 更新选中标记
+      updateCheckmarks(plan);
+    }
+
+    function updateCheckmarks(plan) {
+      // 年度
+      const yearlyCheck = document.querySelector('#planYearly > div:last-child');
+      if (plan === 'yearly') {
+        yearlyCheck.className = 'w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center absolute top-4 left-4';
+        yearlyCheck.innerHTML = '<span class="iconify text-white text-sm" data-icon="heroicons:check-20-solid"></span>';
+      } else {
+        yearlyCheck.className = 'w-5 h-5 border-2 border-gray-300 rounded-full absolute top-4 left-4';
+        yearlyCheck.innerHTML = '';
+      }
+
+      // 月度
+      const monthlyEl = document.getElementById('planMonthly');
+      let monthlyCheck = monthlyEl.querySelector('.absolute');
+      if (!monthlyCheck) {
+        monthlyCheck = document.createElement('div');
+        monthlyCheck.className = 'w-5 h-5 border-2 border-gray-300 rounded-full absolute top-4 left-4';
+        monthlyEl.appendChild(monthlyCheck);
+      }
+      if (plan === 'monthly') {
+        monthlyCheck.className = 'w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center absolute top-4 left-4';
+        monthlyCheck.innerHTML = '<span class="iconify text-white text-sm" data-icon="heroicons:check-20-solid"></span>';
+      } else {
+        monthlyCheck.className = 'w-5 h-5 border-2 border-gray-300 rounded-full absolute top-4 left-4';
+        monthlyCheck.innerHTML = '';
+      }
+
+      // 终身
+      const lifetimeEl = document.getElementById('planLifetime');
+      let lifetimeCheck = lifetimeEl.querySelector('.absolute');
+      if (!lifetimeCheck) {
+        lifetimeCheck = document.createElement('div');
+        lifetimeCheck.className = 'w-5 h-5 border-2 border-gray-300 rounded-full absolute top-4 left-4';
+        lifetimeEl.appendChild(lifetimeCheck);
+      }
+      if (plan === 'lifetime') {
+        lifetimeCheck.className = 'w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center absolute top-4 left-4';
+        lifetimeCheck.innerHTML = '<span class="iconify text-white text-sm" data-icon="heroicons:check-20-solid"></span>';
+      } else {
+        lifetimeCheck.className = 'w-5 h-5 border-2 border-gray-300 rounded-full absolute top-4 left-4';
+        lifetimeCheck.innerHTML = '';
+      }
+    }
+
+    function subscribe() {
+      showToast('正在跳转 App Store...');
+    }
+
+    function restorePurchase() {
+      showToast('正在恢复购买...');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.remove('opacity-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

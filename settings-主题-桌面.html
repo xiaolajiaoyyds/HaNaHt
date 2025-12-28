@@ -1,0 +1,660 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>桌面端主题</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-[#F2F2F7] flex justify-center items-center min-h-screen">
+<!-- iPhone 15 Pro Container -->
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- 状态栏 -->
+<div class="h-11 flex justify-between items-center px-8 bg-[#F2F2F7]">
+<span class="text-[15px] font-semibold">9:41</span>
+<div class="flex space-x-1.5 items-center">
+<span class="iconify w-4 h-4" data-icon="heroicons:signal-20-solid"></span>
+<span class="iconify w-4 h-4" data-icon="heroicons:wifi-20-solid"></span>
+<span class="iconify w-5 h-5" data-icon="heroicons:battery-100-20-solid"></span>
+</div>
+</div>
+<!-- 标题栏 -->
+<header class="h-14 flex items-center px-4 bg-[#F2F2F7]">
+<a href="settings-主题.html" class="flex items-center text-blue-500">
+<span class="iconify w-6 h-6" data-icon="heroicons:chevron-left-20-solid"></span>
+<span class="text-[17px]">主题</span>
+</a>
+<h1 class="flex-1 text-center text-[17px] font-semibold pr-16">桌面端主题</h1>
+</header>
+<!-- 主内容区 -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-4 pb-8 space-y-6">
+<!-- 同步状态提示 -->
+<div class="bg-green-50/80 rounded-xl p-3 border border-green-100 flex items-start gap-2 animate-slide-in">
+<span class="iconify w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" data-icon="heroicons:check-circle-20-solid"></span>
+<p class="text-[11px] text-green-700 leading-relaxed">已开启主题同步，App 主题变更时将自动同步到 OBS、Web 和桌面端。</p>
+</div>
+
+<!-- 桌面端预览 -->
+<section class="animate-slide-in" style="animation-delay: 0.1s;">
+<div class="bg-gray-800 rounded-2xl p-4 shadow-lg">
+<!-- 模拟桌面窗口 -->
+<div class="bg-gray-900 rounded-xl overflow-hidden">
+<!-- 窗口标题栏 -->
+<div class="h-8 bg-gray-800 flex items-center px-3 gap-2">
+<div class="flex gap-1.5">
+<div class="w-3 h-3 bg-red-500 rounded-full"></div>
+<div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
+<div class="w-3 h-3 bg-green-500 rounded-full"></div>
+</div>
+<span class="text-[10px] text-gray-400 ml-2">心律显示 - OBS 浏览器源</span>
+</div>
+<!-- 内容区域 -->
+<div class="p-6 flex items-center justify-center" id="desktopPreview" style="background: linear-gradient(135deg, #3b82f6, #6366f1);">
+<div class="text-center">
+<p class="text-white text-[48px] font-black leading-none">128</p>
+<p class="text-white/80 text-[14px] mt-2">BPM</p>
+</div>
+</div>
+</div>
+<p class="text-center text-[11px] text-gray-400 mt-3">OBS / Web 浏览器源预览</p>
+</div>
+</section>
+
+<!-- 应用场景 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.2s;">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-1">应用场景</h2>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+<!-- OBS 直播源 -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center">
+<span class="iconify w-6 h-6 text-purple-500" data-icon="heroicons:video-camera-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-semibold">OBS 直播源</p>
+<p class="text-[12px] text-gray-400">直播推流画面叠加</p>
+</div>
+</div>
+<span class="text-[12px] text-green-600 bg-green-50 px-2 py-0.5 rounded-full font-medium">已配置</span>
+</div>
+<!-- Web 网页组件 -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+<span class="iconify w-6 h-6 text-blue-500" data-icon="heroicons:globe-alt-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-semibold">Web 网页组件</p>
+<p class="text-[12px] text-gray-400">嵌入任意网页展示</p>
+</div>
+</div>
+<span class="text-[12px] text-green-600 bg-green-50 px-2 py-0.5 rounded-full font-medium">已配置</span>
+</div>
+<!-- 桌面端应用 -->
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
+<span class="iconify w-6 h-6 text-indigo-500" data-icon="heroicons:computer-desktop-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-semibold">桌面端应用</p>
+<p class="text-[12px] text-gray-400">Windows / macOS 客户端</p>
+</div>
+</div>
+<span class="text-[12px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full font-medium">未安装</span>
+</div>
+</div>
+</section>
+
+<!-- 预设主题 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.3s;">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-1">预设主题</h2>
+<div class="grid grid-cols-3 gap-3">
+<!-- 经典蓝 (选中) -->
+<div class="relative cursor-pointer" onclick="selectDesktopTheme(this, 'blue', '经典蓝')">
+<div class="aspect-[4/3] bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-md border-2 border-blue-500">
+<span class="text-white font-bold text-[18px]">128</span>
+</div>
+<div class="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
+<span class="iconify w-3 h-3 text-white" data-icon="heroicons:check-20-solid"></span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-1.5 font-medium">经典蓝</p>
+</div>
+<!-- 日落橙 -->
+<div class="relative cursor-pointer" onclick="selectDesktopTheme(this, 'orange', '日落橙')">
+<div class="aspect-[4/3] bg-gradient-to-br from-orange-400 to-red-500 rounded-xl flex items-center justify-center shadow-md border-2 border-transparent">
+<span class="text-white font-bold text-[18px]">128</span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-1.5 font-medium">日落橙</p>
+</div>
+<!-- 森林绿 -->
+<div class="relative cursor-pointer" onclick="selectDesktopTheme(this, 'green', '森林绿')">
+<div class="aspect-[4/3] bg-gradient-to-br from-emerald-400 to-teal-600 rounded-xl flex items-center justify-center shadow-md border-2 border-transparent">
+<span class="text-white font-bold text-[18px]">128</span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-1.5 font-medium">森林绿</p>
+</div>
+<!-- 午夜紫 -->
+<div class="relative cursor-pointer" onclick="selectDesktopTheme(this, 'purple', '午夜紫')">
+<div class="aspect-[4/3] bg-gradient-to-br from-purple-500 to-violet-700 rounded-xl flex items-center justify-center shadow-md border-2 border-transparent">
+<span class="text-white font-bold text-[18px]">128</span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-1.5 font-medium">午夜紫</p>
+</div>
+<!-- 暗夜黑 -->
+<div class="relative cursor-pointer" onclick="selectDesktopTheme(this, 'dark', '暗夜黑')">
+<div class="aspect-[4/3] bg-gradient-to-br from-gray-700 to-gray-900 rounded-xl flex items-center justify-center shadow-md border-2 border-transparent">
+<span class="text-white font-bold text-[18px]">128</span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-1.5 font-medium">暗夜黑</p>
+</div>
+<!-- 透明 -->
+<div class="relative cursor-pointer" onclick="selectDesktopTheme(this, 'transparent', '透明')">
+<div class="aspect-[4/3] bg-white/10 backdrop-blur rounded-xl flex items-center justify-center shadow-md border-2 border-dashed border-gray-300">
+<span class="text-gray-600 font-bold text-[18px]">128</span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-1.5 font-medium">透明</p>
+</div>
+</div>
+</section>
+
+<!-- 显示设置 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.4s;">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-1">显示设置</h2>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+<!-- 显示单位 -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-blue-100 rounded-lg flex items-center justify-center">
+<span class="iconify w-5 h-5 text-blue-500" data-icon="heroicons:hashtag-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-medium">显示单位</p>
+<p class="text-[11px] text-gray-400">在数值旁显示 BPM</p>
+</div>
+</div>
+<div class="w-12 h-7 bg-blue-500 rounded-full relative cursor-pointer" onclick="this.classList.toggle('bg-blue-500'); this.classList.toggle('bg-gray-300'); this.querySelector('div').classList.toggle('translate-x-5');">
+<div class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-transform translate-x-5"></div>
+</div>
+</div>
+<!-- 圆角边框 -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-purple-100 rounded-lg flex items-center justify-center">
+<span class="iconify w-5 h-5 text-purple-500" data-icon="heroicons:square-2-stack-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-medium">圆角边框</p>
+<p class="text-[11px] text-gray-400">为显示区域添加圆角</p>
+</div>
+</div>
+<div class="w-12 h-7 bg-blue-500 rounded-full relative cursor-pointer" onclick="this.classList.toggle('bg-blue-500'); this.classList.toggle('bg-gray-300'); this.querySelector('div').classList.toggle('translate-x-5');">
+<div class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-transform translate-x-5"></div>
+</div>
+</div>
+<!-- 背景透明度 -->
+<div class="px-4 py-4">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center">
+<span class="iconify w-5 h-5 text-gray-500" data-icon="heroicons:eye-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-medium">背景透明度</p>
+</div>
+</div>
+<span class="text-[13px] text-gray-400" id="opacityValue">100%</span>
+</div>
+<input type="range" min="0" max="100" value="100" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" id="opacitySlider" oninput="updateOpacity()">
+</div>
+</div>
+</section>
+
+<!-- 尺寸设置 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.5s;">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-1">尺寸设置</h2>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+<div class="p-4">
+<div class="grid grid-cols-3 gap-2 mb-4">
+<button class="py-2 bg-gray-100 rounded-lg text-[13px] font-medium text-gray-600" onclick="setSize('small')">小</button>
+<button class="py-2 bg-blue-600 text-white rounded-lg text-[13px] font-semibold" onclick="setSize('medium')">中</button>
+<button class="py-2 bg-gray-100 rounded-lg text-[13px] font-medium text-gray-600" onclick="setSize('large')">大</button>
+</div>
+<div class="text-center">
+<p class="text-[12px] text-gray-400">当前尺寸：<span id="currentSize">320 × 180 px</span></p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 快捷操作 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.6s;">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-1">快捷操作</h2>
+<div class="grid grid-cols-2 gap-3">
+<button class="bg-white p-4 rounded-2xl shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-transform">
+<span class="iconify w-8 h-8 text-blue-500" data-icon="heroicons:link-20-solid"></span>
+<span class="text-[13px] font-medium text-gray-700">复制链接</span>
+<span class="text-[10px] text-gray-400">浏览器源 URL</span>
+</button>
+<button class="bg-white p-4 rounded-2xl shadow-sm flex flex-col items-center gap-2 active:scale-95 transition-transform">
+<span class="iconify w-8 h-8 text-purple-500" data-icon="heroicons:qr-code-20-solid"></span>
+<span class="text-[13px] font-medium text-gray-700">生成二维码</span>
+<span class="text-[10px] text-gray-400">扫码快速访问</span>
+</button>
+</div>
+</section>
+
+<!-- 贴纸动画 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.7s;">
+<div class="flex justify-between items-center px-1">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider">贴纸动画</h2>
+<button class="text-[12px] text-blue-500 font-medium" onclick="showStickerSheet()">更多贴纸</button>
+</div>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm p-4">
+<p class="text-[12px] text-gray-500 mb-3">选择动态贴纸作为心率显示的装饰</p>
+<div class="flex gap-3 overflow-x-auto hide-scrollbar pb-2">
+<div class="relative flex-shrink-0 cursor-pointer" onclick="selectSticker(this, 'none')">
+<div class="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center border-2 border-blue-500">
+<span class="iconify w-5 h-5 text-gray-400" data-icon="heroicons:x-mark-20-solid"></span>
+</div>
+<div class="absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
+<span class="iconify w-2.5 h-2.5 text-white" data-icon="heroicons:check-20-solid"></span>
+</div>
+<p class="text-[9px] text-center text-gray-500 mt-1">无</p>
+</div>
+<div class="relative flex-shrink-0 cursor-pointer" onclick="selectSticker(this, 'heartbeat')">
+<div class="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center border-2 border-transparent">
+<span class="iconify w-7 h-7 text-red-500 animate-pulse" data-icon="heroicons:heart-20-solid"></span>
+</div>
+<p class="text-[9px] text-center text-gray-500 mt-1">心跳</p>
+</div>
+<div class="relative flex-shrink-0 cursor-pointer" onclick="selectSticker(this, 'sparkle')">
+<div class="w-14 h-14 bg-yellow-50 rounded-xl flex items-center justify-center border-2 border-transparent">
+<span class="iconify w-7 h-7 text-yellow-500" data-icon="heroicons:sparkles-20-solid"></span>
+</div>
+<p class="text-[9px] text-center text-gray-500 mt-1">闪烁</p>
+</div>
+<div class="relative flex-shrink-0 cursor-pointer" onclick="selectSticker(this, 'fire')">
+<div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center border-2 border-transparent">
+<span class="iconify w-7 h-7 text-orange-500" data-icon="heroicons:fire-20-solid"></span>
+</div>
+<p class="text-[9px] text-center text-gray-500 mt-1">火焰</p>
+</div>
+<div class="relative flex-shrink-0 cursor-pointer opacity-50" onclick="showStickerSheet()">
+<div class="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center border-2 border-dashed border-gray-300">
+<span class="iconify w-5 h-5 text-gray-400" data-icon="heroicons:plus-20-solid"></span>
+</div>
+<p class="text-[9px] text-center text-gray-400 mt-1">更多</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 可视化编辑器入口 -->
+<section class="animate-slide-in" style="animation-delay: 0.8s;">
+<button class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 p-4 rounded-2xl shadow-lg flex items-center justify-between active:scale-98 transition-transform" onclick="showEditorSheet()">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+<span class="iconify w-6 h-6 text-white" data-icon="heroicons:pencil-square-20-solid"></span>
+</div>
+<div class="text-left">
+<p class="text-[15px] font-semibold text-white">打开可视化编辑器</p>
+<p class="text-[11px] text-white/70">拖拽、缩放、自由调整布局</p>
+</div>
+</div>
+<span class="iconify w-5 h-5 text-white/60" data-icon="heroicons:chevron-right-20-solid"></span>
+</button>
+</section>
+</main>
+
+<!-- Toast 提示 -->
+<div class="absolute bottom-24 left-1/2 -translate-x-1/2 bg-gray-900/90 text-white text-[14px] px-5 py-2.5 rounded-full font-medium opacity-0 transition-opacity pointer-events-none" id="toast">
+主题已更新
+</div>
+
+<!-- TG风格贴纸选择面板 -->
+<div class="absolute inset-0 z-40 invisible pointer-events-none transition-all duration-300" id="stickerSheet">
+<div class="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300" id="stickerOverlay" onclick="hideStickerSheet()"></div>
+<div class="absolute bottom-0 w-full h-[70%] bg-[#F2F2F7] rounded-t-[20px] shadow-2xl translate-y-full transition-transform duration-300 flex flex-col overflow-hidden" id="stickerContent">
+<div class="h-1.5 w-10 bg-gray-300 rounded-full mx-auto mt-2"></div>
+<div class="flex justify-between items-center px-4 py-3 bg-white border-b border-gray-100">
+<button class="text-blue-500 font-medium text-[16px]" onclick="hideStickerSheet()">关闭</button>
+<h2 class="text-[17px] font-bold">贴纸商店</h2>
+<button class="text-blue-500 font-medium text-[16px]" onclick="goToStickerStore()">商店</button>
+</div>
+<div class="flex gap-2 px-4 py-3 bg-white border-b border-gray-100 overflow-x-auto hide-scrollbar">
+<button class="px-3 py-1.5 bg-blue-500 text-white rounded-full text-[12px] font-medium flex-shrink-0">全部</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full text-[12px] font-medium flex-shrink-0">已下载</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full text-[12px] font-medium flex-shrink-0">热门</button>
+<button class="px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full text-[12px] font-medium flex-shrink-0">运动</button>
+</div>
+<div class="flex-1 overflow-y-auto hide-scrollbar p-4">
+<div class="mb-6">
+<h3 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider mb-3">已下载</h3>
+<div class="grid grid-cols-4 gap-3">
+<div class="relative cursor-pointer" onclick="selectStickerFromSheet('heartbeat')">
+<div class="aspect-square bg-red-50 rounded-xl flex items-center justify-center border-2 border-transparent hover:border-blue-500">
+<span class="iconify w-10 h-10 text-red-500 animate-pulse" data-icon="heroicons:heart-20-solid"></span>
+</div>
+<p class="text-[10px] text-center text-gray-500 mt-1">心跳</p>
+</div>
+<div class="relative cursor-pointer" onclick="selectStickerFromSheet('sparkle')">
+<div class="aspect-square bg-yellow-50 rounded-xl flex items-center justify-center border-2 border-transparent hover:border-blue-500">
+<span class="iconify w-10 h-10 text-yellow-500" data-icon="heroicons:sparkles-20-solid"></span>
+</div>
+<p class="text-[10px] text-center text-gray-500 mt-1">闪烁</p>
+</div>
+<div class="relative cursor-pointer" onclick="selectStickerFromSheet('fire')">
+<div class="aspect-square bg-orange-50 rounded-xl flex items-center justify-center border-2 border-transparent hover:border-blue-500">
+<span class="iconify w-10 h-10 text-orange-500" data-icon="heroicons:fire-20-solid"></span>
+</div>
+<p class="text-[10px] text-center text-gray-500 mt-1">火焰</p>
+</div>
+<div class="relative cursor-pointer" onclick="selectStickerFromSheet('bolt')">
+<div class="aspect-square bg-blue-50 rounded-xl flex items-center justify-center border-2 border-transparent hover:border-blue-500">
+<span class="iconify w-10 h-10 text-blue-500" data-icon="heroicons:bolt-20-solid"></span>
+</div>
+<p class="text-[10px] text-center text-gray-500 mt-1">闪电</p>
+</div>
+</div>
+</div>
+<div class="text-center py-4">
+<button class="px-6 py-3 bg-blue-600 text-white rounded-full text-[15px] font-semibold shadow-lg" onclick="goToStickerStore()">
+<span class="iconify w-5 h-5 inline mr-2" data-icon="heroicons:shopping-bag-20-solid"></span>前往贴纸商店
+</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- 可视化编辑器面板 -->
+<div class="absolute inset-0 z-50 invisible pointer-events-none transition-all duration-300" id="editorSheet">
+<div class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300" id="editorOverlay" onclick="hideEditorSheet()"></div>
+<div class="absolute inset-0 bg-[#1a1a2e] translate-y-full transition-transform duration-300 flex flex-col overflow-hidden" id="editorContent">
+<!-- 编辑器头部 -->
+<div class="flex justify-between items-center px-4 py-3 bg-[#16213e] border-b border-white/10">
+<button class="text-white/80 font-medium text-[16px]" onclick="hideEditorSheet()">取消</button>
+<h2 class="text-[17px] font-bold text-white">可视化编辑器</h2>
+<button class="text-blue-400 font-medium text-[16px]" onclick="saveEditorChanges()">保存</button>
+</div>
+<!-- 缩放控制条 -->
+<div class="flex items-center justify-center gap-4 py-3 bg-[#16213e]/50">
+<button class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center" onclick="zoomEditor(-10)">
+<span class="iconify w-5 h-5 text-white" data-icon="heroicons:minus-20-solid"></span>
+</button>
+<div class="flex items-center gap-2">
+<span class="iconify w-4 h-4 text-white/60" data-icon="heroicons:magnifying-glass-minus-20-solid"></span>
+<input type="range" min="50" max="150" value="100" class="w-24 h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer" id="zoomSlider" oninput="updateZoom()">
+<span class="iconify w-4 h-4 text-white/60" data-icon="heroicons:magnifying-glass-plus-20-solid"></span>
+</div>
+<span class="text-white/60 text-[13px] w-12" id="zoomValue">100%</span>
+<button class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center" onclick="zoomEditor(10)">
+<span class="iconify w-5 h-5 text-white" data-icon="heroicons:plus-20-solid"></span>
+</button>
+</div>
+<!-- 编辑画布区域 -->
+<div class="flex-1 flex items-center justify-center p-6 overflow-hidden">
+<div class="relative bg-gray-900 rounded-xl shadow-2xl transition-transform" id="editorCanvas" style="width: 280px; height: 160px;">
+<!-- 可编辑的心率显示组件 -->
+<div class="absolute inset-0 flex items-center justify-center cursor-move" id="heartRateWidget" style="background: linear-gradient(135deg, #3b82f6, #6366f1);">
+<div class="text-center select-none">
+<p class="text-white text-[36px] font-black leading-none" id="editorBPM">128</p>
+<p class="text-white/80 text-[12px] mt-1">BPM</p>
+</div>
+<!-- 调整大小手柄 -->
+<div class="absolute -right-2 -bottom-2 w-5 h-5 bg-blue-500 rounded-full cursor-se-resize flex items-center justify-center">
+<span class="iconify w-3 h-3 text-white" data-icon="heroicons:arrows-pointing-out-20-solid"></span>
+</div>
+</div>
+</div>
+</div>
+<!-- 编辑工具栏 -->
+<div class="bg-[#16213e] border-t border-white/10 p-4">
+<div class="flex justify-around">
+<button class="flex flex-col items-center gap-1 text-white/60 hover:text-white transition-colors">
+<span class="iconify w-6 h-6" data-icon="heroicons:arrows-pointing-out-20-solid"></span>
+<span class="text-[10px]">尺寸</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-white/60 hover:text-white transition-colors">
+<span class="iconify w-6 h-6" data-icon="heroicons:paint-brush-20-solid"></span>
+<span class="text-[10px]">配色</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-white/60 hover:text-white transition-colors">
+<span class="iconify w-6 h-6" data-icon="heroicons:viewfinder-circle-20-solid"></span>
+<span class="text-[10px]">对齐</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-white/60 hover:text-white transition-colors">
+<span class="iconify w-6 h-6" data-icon="heroicons:adjustments-horizontal-20-solid"></span>
+<span class="text-[10px]">字体</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-white/60 hover:text-white transition-colors" onclick="resetEditor()">
+<span class="iconify w-6 h-6" data-icon="heroicons:arrow-path-20-solid"></span>
+<span class="text-[10px]">重置</span>
+</button>
+</div>
+</div>
+<!-- Home Indicator -->
+<div class="h-8 flex items-center justify-center">
+<div class="w-32 h-1.5 bg-white/30 rounded-full"></div>
+</div>
+</div>
+</div>
+
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+<script>
+    // 配色方案
+    const themes = {
+      blue: { primary: '#3b82f6', secondary: '#6366f1' },
+      orange: { primary: '#fb923c', secondary: '#ef4444' },
+      green: { primary: '#34d399', secondary: '#0d9488' },
+      purple: { primary: '#a855f7', secondary: '#7c3aed' },
+      dark: { primary: '#374151', secondary: '#111827' },
+      transparent: { primary: 'rgba(255,255,255,0.1)', secondary: 'rgba(255,255,255,0.05)' }
+    };
+
+    const sizes = {
+      small: '240 × 135 px',
+      medium: '320 × 180 px',
+      large: '480 × 270 px'
+    };
+
+    function selectDesktopTheme(element, themeKey, themeName) {
+      // 移除所有选中状态
+      document.querySelectorAll('.grid > div').forEach(div => {
+        const card = div.querySelector('.aspect-\\[4\\/3\\]');
+        if (card) {
+          card.classList.remove('border-blue-500');
+          card.classList.add('border-transparent');
+        }
+        const check = div.querySelector('.bg-blue-500.rounded-full.w-5');
+        if (check) check.remove();
+      });
+
+      // 添加选中状态
+      const card = element.querySelector('.aspect-\\[4\\/3\\]');
+      if (card) {
+        card.classList.remove('border-transparent');
+        card.classList.add('border-blue-500');
+      }
+
+      // 添加勾选图标
+      const checkDiv = document.createElement('div');
+      checkDiv.className = 'absolute -top-1 -right-1 w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center';
+      checkDiv.innerHTML = '<span class="iconify w-3 h-3 text-white" data-icon="heroicons:check-20-solid"></span>';
+      element.appendChild(checkDiv);
+
+      // 更新预览
+      const theme = themes[themeKey];
+      if (themeKey === 'transparent') {
+        document.getElementById('desktopPreview').style.background = 'rgba(0,0,0,0.3)';
+      } else {
+        document.getElementById('desktopPreview').style.background = `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`;
+      }
+
+      showToast('桌面端主题已更新');
+    }
+
+    function updateOpacity() {
+      const value = document.getElementById('opacitySlider').value;
+      document.getElementById('opacityValue').textContent = value + '%';
+    }
+
+    function setSize(size) {
+      // 更新按钮状态
+      document.querySelectorAll('.grid-cols-3 button').forEach(btn => {
+        btn.classList.remove('bg-blue-600', 'text-white');
+        btn.classList.add('bg-gray-100', 'text-gray-600');
+      });
+      event.target.classList.remove('bg-gray-100', 'text-gray-600');
+      event.target.classList.add('bg-blue-600', 'text-white');
+
+      document.getElementById('currentSize').textContent = sizes[size];
+      showToast('尺寸已更新');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.remove('opacity-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+      }, 1500);
+    }
+
+    // 贴纸相关函数
+    function showStickerSheet() {
+      const sheet = document.getElementById('stickerSheet');
+      const overlay = document.getElementById('stickerOverlay');
+      const content = document.getElementById('stickerContent');
+
+      sheet.classList.remove('invisible');
+      sheet.classList.add('pointer-events-auto');
+      overlay.classList.remove('opacity-0');
+      overlay.classList.add('opacity-100');
+      content.classList.remove('translate-y-full');
+      content.classList.add('translate-y-0');
+    }
+
+    function hideStickerSheet() {
+      const sheet = document.getElementById('stickerSheet');
+      const overlay = document.getElementById('stickerOverlay');
+      const content = document.getElementById('stickerContent');
+
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0');
+      content.classList.remove('translate-y-0');
+      content.classList.add('translate-y-full');
+
+      setTimeout(() => {
+        sheet.classList.add('invisible');
+        sheet.classList.remove('pointer-events-auto');
+      }, 300);
+    }
+
+    function selectSticker(element, stickerName) {
+      document.querySelectorAll('.flex.gap-3 > div').forEach(div => {
+        const card = div.querySelector('.w-14');
+        if (card) {
+          card.classList.remove('border-blue-500');
+          card.classList.add('border-transparent');
+        }
+        const check = div.querySelector('.bg-blue-500.rounded-full.w-4');
+        if (check) check.remove();
+      });
+
+      const card = element.querySelector('.w-14');
+      card.classList.remove('border-transparent');
+      card.classList.add('border-blue-500');
+
+      const checkDiv = document.createElement('div');
+      checkDiv.className = 'absolute -top-1 -right-1 w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center';
+      checkDiv.innerHTML = '<span class="iconify w-2.5 h-2.5 text-white" data-icon="heroicons:check-20-solid"></span>';
+      element.appendChild(checkDiv);
+
+      showToast('贴纸已应用');
+    }
+
+    function selectStickerFromSheet(stickerName) {
+      hideStickerSheet();
+      showToast('贴纸已应用');
+    }
+
+    function goToStickerStore() {
+      hideStickerSheet();
+      showToast('正在前往贴纸商店...');
+    }
+
+    // 编辑器相关函数
+    let currentZoom = 100;
+
+    function showEditorSheet() {
+      const sheet = document.getElementById('editorSheet');
+      const overlay = document.getElementById('editorOverlay');
+      const content = document.getElementById('editorContent');
+
+      sheet.classList.remove('invisible');
+      sheet.classList.add('pointer-events-auto');
+      overlay.classList.remove('opacity-0');
+      overlay.classList.add('opacity-100');
+      content.classList.remove('translate-y-full');
+      content.classList.add('translate-y-0');
+    }
+
+    function hideEditorSheet() {
+      const sheet = document.getElementById('editorSheet');
+      const overlay = document.getElementById('editorOverlay');
+      const content = document.getElementById('editorContent');
+
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0');
+      content.classList.remove('translate-y-0');
+      content.classList.add('translate-y-full');
+
+      setTimeout(() => {
+        sheet.classList.add('invisible');
+        sheet.classList.remove('pointer-events-auto');
+      }, 300);
+    }
+
+    function zoomEditor(delta) {
+      currentZoom = Math.max(50, Math.min(150, currentZoom + delta));
+      document.getElementById('zoomSlider').value = currentZoom;
+      updateZoom();
+    }
+
+    function updateZoom() {
+      currentZoom = parseInt(document.getElementById('zoomSlider').value);
+      document.getElementById('zoomValue').textContent = currentZoom + '%';
+      document.getElementById('editorCanvas').style.transform = `scale(${currentZoom / 100})`;
+    }
+
+    function resetEditor() {
+      currentZoom = 100;
+      document.getElementById('zoomSlider').value = 100;
+      updateZoom();
+      showToast('已重置');
+    }
+
+    function saveEditorChanges() {
+      hideEditorSheet();
+      showToast('编辑已保存');
+    }
+  </script>
+</body>
+</html>

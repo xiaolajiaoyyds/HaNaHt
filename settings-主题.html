@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>个性化主题</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-[#F2F2F7] flex justify-center items-center min-h-screen">
+<!-- iPhone 15 Pro Container -->
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- 状态栏 -->
+<div class="h-11 flex justify-between items-center px-8 bg-[#F2F2F7]">
+<span class="text-[15px] font-semibold">9:41</span>
+<div class="flex space-x-1.5 items-center">
+<span class="iconify w-4 h-4" data-icon="heroicons:signal-20-solid"></span>
+<span class="iconify w-4 h-4" data-icon="heroicons:wifi-20-solid"></span>
+<span class="iconify w-5 h-5" data-icon="heroicons:battery-100-20-solid"></span>
+</div>
+</div>
+<!-- 标题栏 -->
+<header class="h-14 flex items-center px-4 bg-[#F2F2F7]">
+<a href="4-设置.html" class="flex items-center text-blue-500">
+<span class="iconify w-6 h-6" data-icon="heroicons:chevron-left-20-solid"></span>
+<span class="text-[17px]">设置</span>
+</a>
+<h1 class="flex-1 text-center text-[17px] font-semibold pr-16">个性化主题</h1>
+</header>
+<!-- 主内容区 -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-4 pb-8 space-y-6">
+<!-- 当前主题预览 -->
+<section class="animate-slide-in" style="animation-delay: 0.1s;">
+<div class="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl p-5 shadow-lg">
+<div class="flex items-center justify-between mb-4">
+<span class="text-white/60 text-[13px] font-medium">当前全局主题</span>
+<span class="bg-white/20 text-white text-[11px] px-2 py-1 rounded-full font-bold">经典蓝</span>
+</div>
+<div class="text-center">
+<p class="text-white text-[56px] font-black leading-none">128</p>
+<p class="text-white/80 text-[15px] mt-2">BPM</p>
+</div>
+</div>
+</section>
+
+<!-- 主题分类入口 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.2s;">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-1">主题分类</h2>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+<!-- 表盘主题 -->
+<a href="settings-主题-表盘.html" class="flex items-center justify-between p-4 border-b border-gray-100 active:bg-gray-50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+<span class="iconify w-6 h-6 text-orange-500" data-icon="heroicons:clock-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-semibold">表盘主题</p>
+<p class="text-[12px] text-gray-400">Apple Watch 专属样式</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[12px] text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full font-medium">不可同步</span>
+<span class="iconify w-5 h-5 text-gray-300" data-icon="heroicons:chevron-right-20-solid"></span>
+</div>
+</a>
+<!-- OBS/Web/桌面端主题 -->
+<a href="settings-主题-桌面.html" class="flex items-center justify-between p-4 border-b border-gray-100 active:bg-gray-50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
+<span class="iconify w-6 h-6 text-indigo-500" data-icon="heroicons:computer-desktop-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-semibold">OBS / Web / 桌面端</p>
+<p class="text-[12px] text-gray-400">直播源与网页组件样式</p>
+</div>
+</div>
+<span class="iconify w-5 h-5 text-gray-300" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+<!-- App内主题 -->
+<a href="settings-主题-app.html" class="flex items-center justify-between p-4 border-b border-gray-100 active:bg-gray-50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+<span class="iconify w-6 h-6 text-blue-500" data-icon="heroicons:device-phone-mobile-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-semibold">App 内主题</p>
+<p class="text-[12px] text-gray-400">iPhone 应用界面样式</p>
+</div>
+</div>
+<span class="iconify w-5 h-5 text-gray-300" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+<!-- 全局渐变色 -->
+<a href="settings-主题-渐变.html" class="flex items-center justify-between p-4 active:bg-gray-50 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-gradient-to-br from-pink-400 to-purple-500 rounded-xl flex items-center justify-center">
+<span class="iconify w-6 h-6 text-white" data-icon="heroicons:paint-brush-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-semibold">全局渐变色</p>
+<p class="text-[12px] text-gray-400">自定义颜色与渐变方向</p>
+</div>
+</div>
+<span class="iconify w-5 h-5 text-gray-300" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+</div>
+</section>
+
+<!-- 主题同步设置 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.3s;">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-1">同步设置</h2>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+<!-- 同步到桌面端 -->
+<div class="flex items-center justify-between p-4 border-b border-gray-100">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center">
+<span class="iconify w-5 h-5 text-green-500" data-icon="heroicons:arrow-path-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-medium">同步主题到桌面端</p>
+<p class="text-[11px] text-gray-400">App主题变更时自动同步</p>
+</div>
+</div>
+<div class="w-12 h-7 bg-blue-500 rounded-full relative cursor-pointer" onclick="this.classList.toggle('bg-blue-500'); this.classList.toggle('bg-gray-300'); this.querySelector('div').classList.toggle('translate-x-5');">
+<div class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-transform translate-x-5"></div>
+</div>
+</div>
+<!-- 同步到小组件 -->
+<div class="flex items-center justify-between p-4">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-purple-100 rounded-lg flex items-center justify-center">
+<span class="iconify w-5 h-5 text-purple-500" data-icon="heroicons:squares-2x2-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-medium">同步主题到小组件</p>
+<p class="text-[11px] text-gray-400">iOS桌面小组件样式同步</p>
+</div>
+</div>
+<div class="w-12 h-7 bg-blue-500 rounded-full relative cursor-pointer" onclick="this.classList.toggle('bg-blue-500'); this.classList.toggle('bg-gray-300'); this.querySelector('div').classList.toggle('translate-x-5');">
+<div class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-transform translate-x-5"></div>
+</div>
+</div>
+</div>
+<!-- 表盘同步说明 -->
+<div class="bg-amber-50/80 rounded-xl p-3 border border-amber-100 flex items-start gap-2">
+<span class="iconify w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" data-icon="heroicons:exclamation-triangle-20-solid"></span>
+<p class="text-[11px] text-amber-700 leading-relaxed">Apple Watch 表盘主题受系统限制，无法与其他平台同步，需单独在「表盘主题」中设置。</p>
+</div>
+</section>
+
+<!-- 预设主题库 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.4s;">
+<div class="flex justify-between items-center px-1">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider">预设主题库</h2>
+<button class="text-[12px] text-blue-500 font-medium">查看全部</button>
+</div>
+<div class="grid grid-cols-3 gap-3">
+<!-- 经典蓝 (选中) -->
+<div class="relative">
+<div class="aspect-square bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-md border-2 border-blue-500">
+<span class="text-white font-bold text-[20px]">128</span>
+</div>
+<div class="absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+<span class="iconify w-4 h-4 text-white" data-icon="heroicons:check-20-solid"></span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-2 font-medium">经典蓝</p>
+</div>
+<!-- 日落橙 -->
+<div class="relative cursor-pointer" onclick="selectTheme(this, 'sunset')">
+<div class="aspect-square bg-gradient-to-br from-orange-400 to-red-500 rounded-2xl flex items-center justify-center shadow-md border-2 border-transparent hover:border-orange-400 transition-colors">
+<span class="text-white font-bold text-[20px]">128</span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-2 font-medium">日落橙</p>
+</div>
+<!-- 森林绿 -->
+<div class="relative cursor-pointer" onclick="selectTheme(this, 'forest')">
+<div class="aspect-square bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl flex items-center justify-center shadow-md border-2 border-transparent hover:border-emerald-400 transition-colors">
+<span class="text-white font-bold text-[20px]">128</span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-2 font-medium">森林绿</p>
+</div>
+<!-- 午夜紫 -->
+<div class="relative cursor-pointer" onclick="selectTheme(this, 'midnight')">
+<div class="aspect-square bg-gradient-to-br from-purple-500 to-violet-700 rounded-2xl flex items-center justify-center shadow-md border-2 border-transparent hover:border-purple-500 transition-colors">
+<span class="text-white font-bold text-[20px]">128</span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-2 font-medium">午夜紫</p>
+</div>
+<!-- 玫瑰红 -->
+<div class="relative cursor-pointer" onclick="selectTheme(this, 'rose')">
+<div class="aspect-square bg-gradient-to-br from-pink-400 to-rose-600 rounded-2xl flex items-center justify-center shadow-md border-2 border-transparent hover:border-pink-400 transition-colors">
+<span class="text-white font-bold text-[20px]">128</span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-2 font-medium">玫瑰红</p>
+</div>
+<!-- 暗夜黑 -->
+<div class="relative cursor-pointer" onclick="selectTheme(this, 'dark')">
+<div class="aspect-square bg-gradient-to-br from-gray-700 to-gray-900 rounded-2xl flex items-center justify-center shadow-md border-2 border-transparent hover:border-gray-600 transition-colors">
+<span class="text-white font-bold text-[20px]">128</span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-2 font-medium">暗夜黑</p>
+</div>
+</div>
+</section>
+
+<!-- 我的主题 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.5s;">
+<div class="flex justify-between items-center px-1">
+<h2 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider">我的主题</h2>
+<button class="text-[12px] text-blue-500 font-medium">管理</button>
+</div>
+<div class="grid grid-cols-3 gap-3">
+<!-- 自定义主题示例 -->
+<div class="relative cursor-pointer">
+<div class="aspect-square bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center shadow-md border-2 border-transparent hover:border-cyan-400 transition-colors">
+<span class="text-white font-bold text-[20px]">128</span>
+</div>
+<p class="text-[11px] text-center text-gray-600 mt-2 font-medium">清新蓝</p>
+</div>
+<!-- 创建新主题 -->
+<div class="relative cursor-pointer" onclick="showCustomSheet()">
+<div class="aspect-square bg-white rounded-2xl flex flex-col items-center justify-center shadow-md border-2 border-dashed border-gray-300 hover:border-blue-400 transition-colors">
+<span class="iconify w-8 h-8 text-gray-400" data-icon="heroicons:plus-20-solid"></span>
+<span class="text-[10px] text-gray-400 mt-1">自定义</span>
+</div>
+<p class="text-[11px] text-center text-blue-500 mt-2 font-medium">创建主题</p>
+</div>
+</div>
+</section>
+</main>
+
+<!-- Toast 提示 -->
+<div class="absolute bottom-24 left-1/2 -translate-x-1/2 bg-gray-900/90 text-white text-[14px] px-5 py-2.5 rounded-full font-medium opacity-0 transition-opacity pointer-events-none" id="toast">
+主题已应用
+</div>
+
+<!-- 自定义主题 Sheet -->
+<div class="absolute inset-0 z-30 invisible pointer-events-none transition-all duration-300" id="customSheet">
+<div class="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300" id="customOverlay" onclick="hideCustomSheet()"></div>
+<div class="absolute bottom-0 w-full h-[85%] bg-[#F2F2F7] rounded-t-[20px] shadow-2xl translate-y-full transition-transform duration-300 flex flex-col overflow-hidden" id="customContent">
+<div class="h-1.5 w-10 bg-gray-300 rounded-full mx-auto mt-2"></div>
+<!-- Sheet 头部 -->
+<div class="flex justify-between items-center px-4 py-3 bg-white border-b border-gray-100">
+<button class="text-blue-500 font-medium text-[16px]" onclick="hideCustomSheet()">取消</button>
+<h2 class="text-[17px] font-bold">自定义主题</h2>
+<button class="text-blue-500 font-medium text-[16px]" onclick="saveCustomTheme()">保存</button>
+</div>
+<!-- 实时预览 -->
+<div class="px-4 pt-4">
+<div class="rounded-2xl p-6 shadow-lg" id="customPreview" style="background: linear-gradient(135deg, #3b82f6, #6366f1);">
+<div class="text-center">
+<p class="text-white/60 text-[13px] font-medium tracking-wider uppercase mb-2">预览效果</p>
+<p class="text-white text-[56px] font-black leading-none" id="previewText">128</p>
+<p class="text-white/80 text-[15px] mt-2">BPM</p>
+</div>
+</div>
+</div>
+<!-- 自定义选项 -->
+<div class="flex-1 overflow-y-auto hide-scrollbar px-4 py-4 space-y-4">
+<!-- 快速预设 -->
+<section>
+<h3 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider mb-3">快速预设</h3>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
+<button class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 border-2 border-white shadow-md flex-shrink-0" onclick="applyPreset('blue')"></button>
+<button class="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-red-500 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('orange')"></button>
+<button class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('green')"></button>
+<button class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-violet-700 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('purple')"></button>
+<button class="w-10 h-10 rounded-xl bg-gradient-to-br from-pink-400 to-rose-600 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('pink')"></button>
+<button class="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-700 to-gray-900 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('dark')"></button>
+<button class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-500 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('cyan')"></button>
+<button class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 border-2 border-transparent shadow-md flex-shrink-0" onclick="applyPreset('amber')"></button>
+</div>
+</section>
+<!-- 颜色设置 -->
+<section class="bg-white rounded-2xl overflow-hidden">
+<h3 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-4 pt-4 pb-2">颜色设置</h3>
+<!-- 主色调 -->
+<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg" id="primaryColorPreview" style="background: #3b82f6;"></div>
+<span class="text-[15px]">主色调</span>
+</div>
+<input type="color" id="primaryColor" value="#3b82f6" class="w-8 h-8 rounded cursor-pointer" onchange="updatePreview()">
+</div>
+<!-- 副色调 -->
+<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg" id="secondaryColorPreview" style="background: #6366f1;"></div>
+<span class="text-[15px]">副色调</span>
+</div>
+<input type="color" id="secondaryColor" value="#6366f1" class="w-8 h-8 rounded cursor-pointer" onchange="updatePreview()">
+</div>
+<!-- 文字颜色 -->
+<div class="flex items-center justify-between px-4 py-3">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg border border-gray-200" id="textColorPreview" style="background: #ffffff;"></div>
+<span class="text-[15px]">文字颜色</span>
+</div>
+<input type="color" id="textColor" value="#ffffff" class="w-8 h-8 rounded cursor-pointer" onchange="updatePreview()">
+</div>
+</section>
+<!-- 渐变设置 -->
+<section class="bg-white rounded-2xl overflow-hidden">
+<h3 class="text-[13px] font-medium text-gray-500 uppercase tracking-wider px-4 pt-4 pb-2">渐变设置</h3>
+<!-- 渐变方向 -->
+<div class="px-4 py-3 border-b border-gray-100">
+<div class="flex items-center justify-between mb-3">
+<span class="text-[15px]">渐变方向</span>
+<span class="text-[13px] text-gray-400" id="directionLabel">右下</span>
+</div>
+<div class="grid grid-cols-4 gap-2">
+<button class="p-2 rounded-lg bg-gray-100 text-center text-[12px]" onclick="setDirection('to-r')">→</button>
+<button class="p-2 rounded-lg bg-gray-100 text-center text-[12px]" onclick="setDirection('to-b')">↓</button>
+<button class="p-2 rounded-lg bg-blue-100 text-blue-600 text-center text-[12px]" onclick="setDirection('to-br')">↘</button>
+<button class="p-2 rounded-lg bg-gray-100 text-center text-[12px]" onclick="setDirection('to-bl')">↙</button>
+</div>
+</div>
+<!-- 透明度 -->
+<div class="px-4 py-3">
+<div class="flex items-center justify-between mb-3">
+<span class="text-[15px]">背景透明度</span>
+<span class="text-[13px] text-gray-400" id="opacityLabel">100%</span>
+</div>
+<input type="range" min="50" max="100" value="100" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" id="opacitySlider" oninput="updateOpacity()">
+</div>
+</section>
+<!-- 主题名称 -->
+<section class="bg-white rounded-2xl overflow-hidden">
+<div class="px-4 py-3">
+<label class="text-[13px] font-medium text-gray-500 uppercase tracking-wider block mb-2">主题名称</label>
+<input type="text" id="themeName" placeholder="我的自定义主题" class="w-full px-3 py-2 bg-gray-50 rounded-lg text-[15px] focus:outline-none focus:ring-2 focus:ring-blue-500">
+</div>
+</section>
+</div>
+</div>
+</div>
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+<script>
+    // 当前自定义设置
+    let customSettings = {
+      primary: '#3b82f6',
+      secondary: '#6366f1',
+      text: '#ffffff',
+      direction: '135deg',
+      opacity: 100
+    };
+
+    // 预设配色
+    const presets = {
+      blue: { primary: '#3b82f6', secondary: '#6366f1' },
+      orange: { primary: '#fb923c', secondary: '#ef4444' },
+      green: { primary: '#34d399', secondary: '#0d9488' },
+      purple: { primary: '#a855f7', secondary: '#7c3aed' },
+      pink: { primary: '#f472b6', secondary: '#e11d48' },
+      dark: { primary: '#374151', secondary: '#111827' },
+      cyan: { primary: '#22d3ee', secondary: '#3b82f6' },
+      amber: { primary: '#fbbf24', secondary: '#f97316' }
+    };
+
+    // 渐变方向映射
+    const directions = {
+      'to-r': { deg: '90deg', label: '向右' },
+      'to-b': { deg: '180deg', label: '向下' },
+      'to-br': { deg: '135deg', label: '右下' },
+      'to-bl': { deg: '225deg', label: '左下' }
+    };
+
+    function selectTheme(element, themeName) {
+      // 移除所有选中状态
+      document.querySelectorAll('.grid > div').forEach(div => {
+        const card = div.querySelector('.aspect-square');
+        if (card) {
+          card.classList.remove('border-blue-500', 'border-orange-400', 'border-emerald-400', 'border-purple-500', 'border-pink-400', 'border-gray-600', 'border-cyan-400');
+          card.classList.add('border-transparent');
+        }
+        const check = div.querySelector('.bg-blue-500.rounded-full');
+        if (check && check.querySelector('.iconify')) check.remove();
+      });
+
+      // 添加选中状态
+      const card = element.querySelector('.aspect-square');
+      card.classList.remove('border-transparent');
+      card.classList.add('border-blue-500');
+
+      // 添加勾选图标
+      const checkDiv = document.createElement('div');
+      checkDiv.className = 'absolute -top-1 -right-1 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center';
+      checkDiv.innerHTML = '<span class="iconify w-4 h-4 text-white" data-icon="heroicons:check-20-solid"></span>';
+      element.appendChild(checkDiv);
+
+      // 更新顶部预览
+      const gradient = window.getComputedStyle(card).background;
+      document.querySelector('section > div.bg-gradient-to-br').style.background = gradient;
+
+      showToast('主题已应用');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.remove('opacity-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+      }, 1500);
+    }
+
+    // 自定义主题 Sheet 相关
+    function showCustomSheet() {
+      const sheet = document.getElementById('customSheet');
+      const overlay = document.getElementById('customOverlay');
+      const content = document.getElementById('customContent');
+
+      sheet.classList.remove('invisible');
+      sheet.classList.add('pointer-events-auto');
+      overlay.classList.remove('opacity-0');
+      overlay.classList.add('opacity-100');
+      content.classList.remove('translate-y-full');
+      content.classList.add('translate-y-0');
+    }
+
+    function hideCustomSheet() {
+      const sheet = document.getElementById('customSheet');
+      const overlay = document.getElementById('customOverlay');
+      const content = document.getElementById('customContent');
+
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0');
+      content.classList.remove('translate-y-0');
+      content.classList.add('translate-y-full');
+
+      setTimeout(() => {
+        sheet.classList.add('invisible');
+        sheet.classList.remove('pointer-events-auto');
+      }, 300);
+    }
+
+    function applyPreset(presetName) {
+      const preset = presets[presetName];
+      customSettings.primary = preset.primary;
+      customSettings.secondary = preset.secondary;
+
+      document.getElementById('primaryColor').value = preset.primary;
+      document.getElementById('secondaryColor').value = preset.secondary;
+
+      updatePreview();
+    }
+
+    function updatePreview() {
+      const primary = document.getElementById('primaryColor').value;
+      const secondary = document.getElementById('secondaryColor').value;
+      const text = document.getElementById('textColor').value;
+
+      customSettings.primary = primary;
+      customSettings.secondary = secondary;
+      customSettings.text = text;
+
+      // 更新颜色预览块
+      document.getElementById('primaryColorPreview').style.background = primary;
+      document.getElementById('secondaryColorPreview').style.background = secondary;
+      document.getElementById('textColorPreview').style.background = text;
+
+      // 更新预览卡片
+      const preview = document.getElementById('customPreview');
+      const opacity = customSettings.opacity / 100;
+      preview.style.background = `linear-gradient(${customSettings.direction}, ${primary}, ${secondary})`;
+      preview.style.opacity = opacity;
+
+      // 更新文字颜色
+      document.getElementById('previewText').style.color = text;
+      preview.querySelectorAll('p').forEach(p => {
+        if (!p.id) p.style.color = text;
+      });
+    }
+
+    function setDirection(dir) {
+      const dirInfo = directions[dir];
+      customSettings.direction = dirInfo.deg;
+      document.getElementById('directionLabel').textContent = dirInfo.label;
+
+      // 更新按钮样式
+      document.querySelectorAll('.grid.grid-cols-4 button').forEach(btn => {
+        btn.classList.remove('bg-blue-100', 'text-blue-600');
+        btn.classList.add('bg-gray-100');
+      });
+      event.target.classList.remove('bg-gray-100');
+      event.target.classList.add('bg-blue-100', 'text-blue-600');
+
+      updatePreview();
+    }
+
+    function updateOpacity() {
+      const value = document.getElementById('opacitySlider').value;
+      customSettings.opacity = value;
+      document.getElementById('opacityLabel').textContent = value + '%';
+      updatePreview();
+    }
+
+    function saveCustomTheme() {
+      const name = document.getElementById('themeName').value || '自定义主题';
+      hideCustomSheet();
+      showToast('主题「' + name + '」已保存');
+    }
+  </script>
+</body>
+</html>

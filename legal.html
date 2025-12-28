@@ -1,0 +1,256 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>合规文案 - 广播心率系统</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-up {
+      animation: slideUp 0.4s ease-out forwards;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-[#F2F2F7] flex justify-center items-center min-h-screen p-4">
+<!-- APP Container (375x812) -->
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- 状态栏模拟 -->
+<div class="h-11 flex justify-between items-center px-8 w-full bg-white/80 backdrop-blur-md z-20">
+<span class="text-[15px] font-semibold">9:41</span>
+<div class="flex space-x-1.5 items-center">
+<span class="iconify w-4 h-4" data-icon="heroicons:signal-20-solid"></span>
+<span class="iconify w-4 h-4" data-icon="heroicons:wifi-20-solid"></span>
+<span class="iconify w-5 h-5" data-icon="heroicons:battery-100-20-solid"></span>
+</div>
+</div>
+<!-- 标题栏 (56px) -->
+<header class="h-[56px] bg-white/80 backdrop-blur-md border-b border-[#C6C6C8] flex items-center px-4 sticky top-0 z-10">
+<a href="4-设置.html" class="w-11 h-11 flex items-center justify-start text-[#007AFF] active:opacity-50 transition-opacity">
+<span class="iconify w-6 h-6" data-icon="heroicons:chevron-left-20-solid"></span>
+</a>
+<h1 class="flex-1 text-center text-[17px] font-semibold mr-11">法律与合规</h1>
+</header>
+<!-- 内容区 (676px) -->
+<main class="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-6">
+<!-- 中国区版本说明 Banner -->
+<section class="bg-white rounded-[14px] p-4 shadow-sm border border-gray-100 animate-slide-up">
+<div class="flex items-start space-x-3">
+<div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center flex-shrink-0">
+<span class="iconify text-[#FF9500] w-6 h-6" data-icon="heroicons:shield-check-20-solid"></span>
+</div>
+<div>
+<h3 class="text-[15px] font-bold text-black">版本信息 (v1.0-CN)</h3>
+<p class="text-[13px] text-[#3C3C43]/60 leading-relaxed mt-1">
+              本应用为中国区专用单机版。依据相关法规，所有联网功能已禁用，所有数据仅存储于您的本地设备。
+            </p>
+</div>
+</div>
+</section>
+<!-- 条款分类列表 (Inset Grouped Style) -->
+<section class="space-y-2">
+<h2 class="px-4 text-[13px] font-medium text-[#3C3C43]/60 uppercase tracking-wider">法律文件</h2>
+<div class="bg-white rounded-[14px] overflow-hidden shadow-sm">
+<!-- 条目 1 -->
+<button class="w-full flex items-center px-4 py-[14px] active:bg-[#D1D1D6] transition-colors border-b border-[#C6C6C8]/50" onclick="showDoc('terms')">
+<span class="iconify text-[#007AFF] w-5 h-5 mr-3" data-icon="heroicons:document-text"></span>
+<span class="flex-1 text-left text-[16px]">使用条款 (Terms of Service)</span>
+<span class="iconify text-[#C6C6C8] w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</button>
+<!-- 条目 2 -->
+<button class="w-full flex items-center px-4 py-[14px] active:bg-[#D1D1D6] transition-colors border-b border-[#C6C6C8]/50" onclick="showDoc('privacy')">
+<span class="iconify text-[#34C759] w-5 h-5 mr-3" data-icon="heroicons:lock-closed"></span>
+<span class="flex-1 text-left text-[16px]">隐私协议 (Privacy Policy)</span>
+<span class="iconify text-[#C6C6C8] w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</button>
+<!-- 条目 3 -->
+<button class="w-full flex items-center px-4 py-[14px] active:bg-[#D1D1D6] transition-colors" onclick="showDoc('sdks')">
+<span class="iconify text-[#FF3B30] w-5 h-5 mr-3" data-icon="heroicons:puzzle-piece"></span>
+<span class="flex-1 text-left text-[16px]">第三方SDK与资源清单</span>
+<span class="iconify text-[#C6C6C8] w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</button>
+</div>
+</section>
+<!-- 核心承兑说明 -->
+<section class="px-4 space-y-4 text-center">
+<div class="inline-block p-3 rounded-full bg-blue-50">
+<img alt="App Logo" class="w-12 h-12 rounded-xl" id="img-1" src="https://modao.cc/agent-py/media/generated_images/2025-12-26/20f4d90143464a6d8b2337898c3bfac6.jpg"/>
+</div>
+<div class="space-y-1">
+<p class="text-[14px] font-semibold text-black">广播心率系统：隐私透明承诺</p>
+<p class="text-[12px] text-[#3C3C43]/60 leading-5">
+            我们坚持“极简数据处理”原则。<br/>不采集身份信息 · 不上传身体数据 · 不共享历史记录。
+          </p>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-2">
+<div class="bg-white/60 p-3 rounded-xl border border-white/80">
+<span class="iconify text-gray-400 w-5 h-5 mb-1 mx-auto" data-icon="heroicons:cpu-chip-20-solid"></span>
+<p class="text-[11px] font-medium">本地计算</p>
+</div>
+<div class="bg-white/60 p-3 rounded-xl border border-white/80">
+<span class="iconify text-gray-400 w-5 h-5 mb-1 mx-auto" data-icon="heroicons:archive-box-20-solid"></span>
+<p class="text-[11px] font-medium">本机存储</p>
+</div>
+</div>
+</section>
+<footer class="pt-4 pb-8 text-center">
+<p class="text-[11px] text-[#3C3C43]/30">更新日期：2025年12月26日</p>
+</footer>
+</main>
+<!-- 底部导航 -->
+<nav class="h-20 bg-white/80 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-4 pb-4 z-10">
+<a href="1-今天.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="heroicons:calendar-days-solid"></span>
+<span class="text-[10px] font-medium">今天</span>
+</a>
+<a href="2-设备.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="heroicons:cpu-chip-20-solid"></span>
+<span class="text-[10px] font-medium">设备</span>
+</a>
+<a href="3-广播.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="solar:graph-up-bold-duotone"></span>
+<span class="text-[10px] font-medium">广播</span>
+</a>
+<a href="4-设置.html" class="flex flex-col items-center space-y-1 text-blue-500">
+<span class="iconify text-2xl" data-icon="heroicons:cog-8-tooth-20-solid"></span>
+<span class="text-[10px] font-medium">设置</span>
+</a>
+</nav>
+<!-- 文档预览弹窗 (Sheet) -->
+<div class="absolute inset-0 z-30 invisible pointer-events-none transition-all duration-300" id="docSheet">
+<div class="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300" id="sheetOverlay" onclick="hideDoc()"></div>
+<div class="absolute bottom-0 w-full h-[90%] bg-white rounded-t-[20px] shadow-2xl translate-y-full transition-transform duration-300 flex flex-col overflow-hidden" id="sheetContent">
+<div class="h-1.5 w-10 bg-[#D1D1D6] rounded-full mx-auto mt-2"></div>
+<div class="flex justify-between items-center px-4 py-2 border-b border-[#F2F2F7]">
+<h2 class="text-[17px] font-bold" id="sheetTitle">文档预览</h2>
+<button class="text-[#007AFF] font-medium text-[16px] px-2 py-2" onclick="hideDoc()">完成</button>
+</div>
+<div class="flex-1 overflow-y-auto p-5 text-[14px] text-[#3C3C43] leading-relaxed space-y-4" id="sheetBody">
+<!-- 动态内容 -->
+</div>
+</div>
+</div>
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full z-50"></div>
+</div>
+<script>
+    const docs = {
+      terms: {
+        title: "使用条款",
+        content: `
+          <h3 class="font-bold text-black text-lg">1. 特别说明 (v1.0-CN)</h3>
+          <p class="mt-2">本应用专为中国大陆地区设计。在本版本中，所有与外部服务器之间的通信功能均已完全移除。本应用不提供云端同步、多人在线、自动在线更新等功能。</p>
+          <h3 class="font-bold text-black mt-4">2. 服务内容</h3>
+          <p>应用通过蓝牙/SF技术读取您的心率数据并转换为广播协议。所有逻辑均在手机本地完成计算。</p>
+          <h3 class="font-bold text-black mt-4">3. 免责声明</h3>
+          <p>本应用并非医疗诊断工具。计算出的心率数据供运动娱乐参考使用，由于设备传感器精度限制，数据可能存在误差。</p>
+          <h3 class="font-bold text-black mt-4">4. 联网功能限制</h3>
+          <p>如果您是非中国区用户并希望使用联网中继功能，请查阅相关“联网功能总开关”说明。在中国区版本下，该开关不可见且无法激活。</p>
+        `
+      },
+      privacy: {
+        title: "隐私政策",
+        content: `
+          <h3 class="font-bold text-black text-lg">我们的承诺</h3>
+          <p class="mt-2 text-[#34C759]">我们默认不收集、不上传、不共享任何用户数据。</p>
+          <h3 class="font-bold text-black mt-4">1. 数据处理范围</h3>
+          <ul class="list-disc pl-5 mt-2 space-y-1">
+            <li><strong>心率数据：</strong> 实时通过系统 HealthKit 读取，仅在内存中处理，不写入私有数据库。</li>
+            <li><strong>本地存储：</strong> 仅当您手动开启记录时，数据会以 CSV 格式存储在应用本地沙盒目录。</li>
+            <li><strong>数据导出：</strong> 您拥有数据的完全控制权，可通过系统共享面板导出，应用本身不保留导出记录。</li>
+          </ul>
+          <h3 class="font-bold text-black mt-4">2. 权限说明</h3>
+          <p>我们需要“蓝牙”与“健康数据”访问权限，这些权限仅用于硬件交互及数据读取，不涉及个人主页或社交信息获取。</p>
+          <h3 class="font-bold text-black mt-4">3. 第三方共享</h3>
+          <p>由于应用为单机运行模式，不接入任何第三方数据分析或广告定向系统。</p>
+        `
+      },
+      sdks: {
+        title: "第三方清单",
+        content: `
+          <table class="w-full border-collapse mt-2">
+            <thead>
+              <tr class="bg-[#F2F2F7]">
+                <th class="border border-[#C6C6C8] px-2 py-1 text-left text-[12px]">库/框架名称</th>
+                <th class="border border-[#C6C6C8] px-2 py-1 text-left text-[12px]">用途</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border border-[#C6C6C8] px-2 py-2 text-[12px]">Apple HealthKit</td>
+                <td class="border border-[#C6C6C8] px-2 py-2 text-[12px]">读取核心心率分值</td>
+              </tr>
+              <tr>
+                <td class="border border-[#C6C6C8] px-2 py-2 text-[12px]">Apple CoreBluetooth</td>
+                <td class="border border-[#C6C6C8] px-2 py-2 text-[12px]">广播心率外设模式</td>
+              </tr>
+              <tr>
+                <td class="border border-[#C6C6C8] px-2 py-2 text-[12px]">Iconify Framework</td>
+                <td class="border border-[#C6C6C8] px-2 py-2 text-[12px]">系统级UI矢量图标呈现</td>
+              </tr>
+              <tr>
+                <td class="border border-[#C6C6C8] px-2 py-2 text-[12px]">Tailwind Engine</td>
+                <td class="border border-[#C6C6C8] px-2 py-2 text-[12px]">轻深度视觉系统渲染</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="text-[11px] mt-4 text-[#3C3C43]/60 italic">注：以上资源均遵循 MIT 或 Apple 标准开发者授权，均不包含网络追踪组件。</p>
+        `
+      }
+    };
+
+    function showDoc(key) {
+      const doc = docs[key];
+      const sheet = document.getElementById('docSheet');
+      const overlay = document.getElementById('sheetOverlay');
+      const content = document.getElementById('sheetContent');
+      
+      document.getElementById('sheetTitle').innerText = doc.title;
+      document.getElementById('sheetBody').innerHTML = doc.content;
+
+      sheet.classList.remove('invisible');
+      sheet.classList.add('pointer-events-auto');
+      overlay.classList.remove('opacity-0');
+      overlay.classList.add('opacity-100');
+      content.classList.remove('translate-y-full');
+      content.classList.add('translate-y-0');
+    }
+
+    function hideDoc() {
+      const sheet = document.getElementById('docSheet');
+      const overlay = document.getElementById('sheetOverlay');
+      const content = document.getElementById('sheetContent');
+
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0');
+      content.classList.remove('translate-y-0');
+      content.classList.add('translate-y-full');
+
+      setTimeout(() => {
+        sheet.classList.add('invisible');
+        sheet.classList.remove('pointer-events-auto');
+      }, 300);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>升级至 Pro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-slate-100 flex justify-center items-center min-h-screen">
+<!-- iPhone 15 Pro Container -->
+<div class="w-[375px] h-[812px] bg-white rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col text-slate-900">
+<!-- 状态栏 -->
+<div class="h-12 w-full flex justify-between items-center px-8 flex-shrink-0 z-20">
+<span class="text-[15px] font-bold">9:41</span>
+<div class="flex space-x-1.5 items-center">
+<span class="iconify w-4 h-4" data-icon="heroicons:signal-20-solid"></span>
+<span class="iconify w-4 h-4" data-icon="heroicons:wifi-20-solid"></span>
+<span class="iconify w-6 h-6 rotate-90" data-icon="heroicons:battery-100-20-solid"></span>
+</div>
+</div>
+<!-- 顶部背景点缀 -->
+<div class="absolute top-0 w-full h-64 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-b-[40px] z-0"></div>
+<!-- 内容区 -->
+<main class="flex-1 overflow-y-auto hide-scrollbar z-10 relative px-6">
+<!-- 关闭按钮 -->
+<a href="4-设置.html" class="mt-2 w-8 h-8 flex items-center justify-center bg-black/10 rounded-full text-white/80 hover:bg-black/20 transition-colors">
+<span class="iconify w-5 h-5" data-icon="heroicons:x-mark-20-solid"></span>
+</a>
+<!-- 视觉头部 -->
+<div class="mt-6 text-center text-white space-y-2">
+<div class="inline-block p-4 bg-white/20 backdrop-blur-md rounded-2xl animate-float">
+<span class="iconify w-12 h-12 text-yellow-300" data-icon="heroicons:sparkles-20-solid"></span>
+</div>
+<h1 class="text-3xl font-black tracking-tight mt-4">解锁 Pro</h1>
+<p class="text-white/80 text-sm">释放实时健康监测的全部潜力</p>
+</div>
+<!-- 功能列表对比 -->
+<div class="mt-8 bg-white rounded-3xl p-5 shadow-xl border border-blue-50">
+<h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">功能对比</h2>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<span class="iconify w-5 h-5 text-blue-500" data-icon="heroicons:clock-20-solid"></span>
+<span class="text-sm font-medium">无限时实时监测</span>
+</div>
+<div class="flex space-x-6 text-[10px] font-bold">
+<span class="text-slate-300">Free</span>
+<span class="text-blue-600">Pro</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<span class="iconify w-5 h-5 text-indigo-500" data-icon="heroicons:cloud-arrow-up-20-solid"></span>
+<span class="text-sm font-medium">跨设备云中继同步</span>
+</div>
+<span class="iconify w-5 h-5 text-blue-600" data-icon="heroicons:check-badge-20-solid"></span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<span class="iconify w-5 h-5 text-purple-500" data-icon="heroicons:document-chart-bar-20-solid"></span>
+<span class="text-sm font-medium">详细健康报告导出</span>
+</div>
+<span class="iconify w-5 h-5 text-blue-600" data-icon="heroicons:check-badge-20-solid"></span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<span class="iconify w-5 h-5 text-amber-500" data-icon="heroicons:bell-alert-20-solid"></span>
+<span class="text-sm font-medium">心率异常智能预警</span>
+</div>
+<span class="iconify w-5 h-5 text-blue-600" data-icon="heroicons:check-badge-20-solid"></span>
+</div>
+</div>
+</div>
+<!-- 订阅套餐 -->
+<div class="mt-8 space-y-4">
+<div class="relative group cursor-pointer">
+<div class="absolute -top-3 right-4 bg-yellow-400 text-black text-[10px] font-black px-3 py-1 rounded-full shadow-sm z-10">最受欢迎</div>
+<div class="bg-white border-2 border-blue-600 rounded-2xl p-4 flex items-center justify-between shadow-lg">
+<div>
+<p class="text-xs font-bold text-blue-600">年度订阅</p>
+<p class="text-2xl font-black">¥198.00<span class="text-sm font-normal text-slate-400"> / 年</span></p>
+</div>
+<div class="text-right">
+<p class="text-xs text-slate-400">每周仅需 ¥3.8</p>
+<p class="text-xs text-green-500 font-bold">省 45%</p>
+</div>
+</div>
+</div>
+<div class="bg-white border-2 border-slate-100 rounded-2xl p-4 flex items-center justify-between hover:border-blue-200 transition-colors cursor-pointer">
+<div>
+<p class="text-xs font-bold text-slate-500">月度订阅</p>
+<p class="text-2xl font-black">¥28.00<span class="text-sm font-normal text-slate-400"> / 月</span></p>
+</div>
+<span class="iconify w-6 h-6 text-slate-200" data-icon="heroicons:chevron-right-20-solid"></span>
+</div>
+</div>
+<!-- 底部条款说明 -->
+<div class="mt-6 text-[11px] text-slate-400 text-center leading-relaxed px-4">
+<p>确认购买后将从您的 iTunes 账户扣费。除非提前 24 小时取消，否则订阅将自动续费。</p>
+<button class="mt-2 text-blue-600 font-semibold underline underline-offset-4">恢复已购项目</button>
+</div>
+<div class="h-32"></div>
+</main>
+<!-- 固定底部 CTA -->
+<div class="h-28 bg-white/80 backdrop-blur-xl border-t border-slate-100 p-6 flex flex-col justify-center space-y-2 z-20">
+<button class="w-full h-14 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold rounded-2xl shadow-xl shadow-blue-200 active:scale-95 transition-transform">
+        立即开启免费试用
+      </button>
+<div class="flex justify-center space-x-6">
+<button class="text-[11px] text-slate-400 hover:text-slate-600">用户协议</button>
+<button class="text-[11px] text-slate-400 hover:text-slate-600">隐私政策</button>
+</div>
+</div>
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+</body>
+</html>

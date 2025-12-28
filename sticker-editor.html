@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>贴纸编辑器</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(2deg); }
+    }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in { animation: slideIn 0.4s ease-out forwards; }
+    .sticker-draggable {
+      cursor: grab;
+      touch-action: none;
+    }
+    .sticker-draggable:active { cursor: grabbing; }
+</style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden flex flex-col relative">
+
+<!-- Header -->
+<header class="h-[56px] flex items-center justify-between px-5 border-b border-gray-100 bg-white shrink-0">
+  <a href="settings-贴纸.html" class="text-blue-600 text-sm font-medium">取消</a>
+  <h1 class="text-base font-bold text-gray-900">编辑贴纸</h1>
+  <button class="text-blue-600 text-sm font-semibold">保存</button>
+</header>
+
+<!-- 预览区域 -->
+<section class="bg-gradient-to-br from-gray-800 to-gray-900 p-4 relative h-[240px]">
+  <!-- 心率卡片预览 -->
+  <div class="bg-white/10 backdrop-blur rounded-2xl p-4 h-full relative overflow-hidden" id="previewArea">
+    <div class="flex items-baseline gap-2">
+      <span class="text-6xl font-black text-white tabular-nums">128</span>
+      <span class="text-xl text-white/60">BPM</span>
+    </div>
+    <p class="text-white/40 text-xs mt-1">有氧燃脂区间</p>
+
+    <!-- 可拖拽贴纸 -->
+    <div class="sticker-draggable absolute animate-float" id="sticker1" style="top: 20px; right: 20px; opacity: 0.8;">
+      <span class="text-5xl">🔥</span>
+    </div>
+    <div class="sticker-draggable absolute" id="sticker2" style="bottom: 30px; right: 40px; opacity: 0.6;">
+      <span class="text-4xl">💪</span>
+    </div>
+  </div>
+
+  <!-- 提示 -->
+  <p class="text-white/40 text-[10px] text-center mt-2">拖拽贴纸调整位置</p>
+</section>
+
+<!-- 编辑控制区 -->
+<main class="flex-1 overflow-y-auto hide-scrollbar bg-[#F2F2F7] px-4 py-4 space-y-4">
+
+<!-- 当前贴纸 -->
+<section class="animate-slide-in" style="animation-delay: 0.1s;">
+  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2 mb-2">当前贴纸</h3>
+  <div class="bg-white rounded-2xl p-4 border border-gray-100">
+    <div class="flex items-center gap-3 mb-4">
+      <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center text-3xl">🔥</div>
+      <div class="flex-1">
+        <p class="font-semibold text-gray-900">燃烧火焰</p>
+        <p class="text-xs text-gray-400">运动激励系列</p>
+      </div>
+      <button class="text-rose-500 text-xs font-medium">移除</button>
+    </div>
+  </div>
+</section>
+
+<!-- 透明度控制 -->
+<section class="animate-slide-in" style="animation-delay: 0.15s;">
+  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2 mb-2">透明度</h3>
+  <div class="bg-white rounded-2xl p-4 border border-gray-100">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-sm text-gray-600">不透明度</span>
+      <span class="text-sm font-bold text-gray-900" id="opacityValue">80%</span>
+    </div>
+    <input type="range" min="20" max="100" value="80"
+      class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+      id="opacitySlider" oninput="updateOpacity(this.value)"/>
+    <div class="flex justify-between text-[10px] text-gray-400 mt-1">
+      <span>淡</span>
+      <span>浓</span>
+    </div>
+  </div>
+</section>
+
+<!-- 缩放控制 -->
+<section class="animate-slide-in" style="animation-delay: 0.2s;">
+  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2 mb-2">大小</h3>
+  <div class="bg-white rounded-2xl p-4 border border-gray-100">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-sm text-gray-600">缩放比例</span>
+      <span class="text-sm font-bold text-gray-900" id="scaleValue">100%</span>
+    </div>
+    <input type="range" min="50" max="200" value="100"
+      class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+      id="scaleSlider" oninput="updateScale(this.value)"/>
+    <div class="flex justify-between text-[10px] text-gray-400 mt-1">
+      <span>50%</span>
+      <span>200%</span>
+    </div>
+  </div>
+</section>
+
+<!-- 动画效果 -->
+<section class="animate-slide-in" style="animation-delay: 0.25s;">
+  <div class="flex items-center justify-between ml-2 mb-2">
+    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider">动画效果</h3>
+    <span class="text-[10px] bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-bold">PRO</span>
+  </div>
+  <div class="bg-white rounded-2xl overflow-hidden border border-gray-100">
+    <div class="flex items-center justify-between p-4 border-b border-gray-50">
+      <div class="flex items-center gap-3">
+        <span class="iconify text-xl text-purple-500" data-icon="solar:magic-stick-3-bold-duotone"></span>
+        <span class="text-sm font-medium">浮动效果</span>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input checked class="sr-only peer" type="checkbox" id="floatToggle"/>
+        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+      </label>
+    </div>
+    <div class="flex items-center justify-between p-4 border-b border-gray-50">
+      <div class="flex items-center gap-3">
+        <span class="iconify text-xl text-pink-500" data-icon="solar:stars-minimalistic-bold-duotone"></span>
+        <span class="text-sm font-medium">闪烁效果</span>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input class="sr-only peer" type="checkbox"/>
+        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+      </label>
+    </div>
+    <div class="p-4">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-gray-600">动画速度</span>
+        <span class="text-sm font-bold text-gray-900" id="speedValue">中速</span>
+      </div>
+      <input type="range" min="1" max="3" value="2" step="1"
+        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+        id="speedSlider" oninput="updateSpeed(this.value)"/>
+      <div class="flex justify-between text-[10px] text-gray-400 mt-1">
+        <span>慢</span>
+        <span>中</span>
+        <span>快</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 应用范围 -->
+<section class="animate-slide-in" style="animation-delay: 0.3s;">
+  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2 mb-2">应用范围</h3>
+  <div class="bg-white rounded-2xl overflow-hidden border border-gray-100">
+    <div class="flex items-center justify-between p-4 border-b border-gray-50">
+      <span class="text-sm font-medium">今天页</span>
+      <input checked class="w-5 h-5 accent-blue-600 rounded" type="checkbox"/>
+    </div>
+    <div class="flex items-center justify-between p-4 border-b border-gray-50">
+      <span class="text-sm font-medium">灵动岛</span>
+      <input class="w-5 h-5 accent-blue-600 rounded" type="checkbox"/>
+    </div>
+    <div class="flex items-center justify-between p-4">
+      <span class="text-sm font-medium">小组件</span>
+      <input class="w-5 h-5 accent-blue-600 rounded" type="checkbox"/>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- 底部操作栏 -->
+<div class="h-20 bg-white border-t border-gray-200 flex items-center justify-center gap-4 px-5 pb-4">
+  <button class="flex-1 py-3 bg-gray-100 rounded-xl text-sm font-semibold text-gray-700">
+    重置
+  </button>
+  <button class="flex-1 py-3 bg-blue-600 rounded-xl text-sm font-semibold text-white">
+    应用贴纸
+  </button>
+</div>
+
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+
+<script>
+function updateOpacity(val) {
+  document.getElementById('opacityValue').textContent = val + '%';
+  document.getElementById('sticker1').style.opacity = val / 100;
+}
+
+function updateScale(val) {
+  document.getElementById('scaleValue').textContent = val + '%';
+  document.getElementById('sticker1').style.transform = `scale(${val / 100})`;
+}
+
+function updateSpeed(val) {
+  const speeds = ['慢速', '中速', '快速'];
+  document.getElementById('speedValue').textContent = speeds[val - 1];
+}
+
+// 简单拖拽实现
+const stickers = document.querySelectorAll('.sticker-draggable');
+stickers.forEach(sticker => {
+  let isDragging = false;
+  let startX, startY, initialX, initialY;
+
+  sticker.addEventListener('mousedown', startDrag);
+  sticker.addEventListener('touchstart', startDrag);
+
+  function startDrag(e) {
+    isDragging = true;
+    const rect = sticker.getBoundingClientRect();
+    const parentRect = sticker.parentElement.getBoundingClientRect();
+
+    if (e.type === 'touchstart') {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    } else {
+      startX = e.clientX;
+      startY = e.clientY;
+    }
+
+    initialX = rect.left - parentRect.left;
+    initialY = rect.top - parentRect.top;
+
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('touchmove', drag);
+    document.addEventListener('mouseup', stopDrag);
+    document.addEventListener('touchend', stopDrag);
+  }
+
+  function drag(e) {
+    if (!isDragging) return;
+    e.preventDefault();
+
+    let currentX, currentY;
+    if (e.type === 'touchmove') {
+      currentX = e.touches[0].clientX;
+      currentY = e.touches[0].clientY;
+    } else {
+      currentX = e.clientX;
+      currentY = e.clientY;
+    }
+
+    const deltaX = currentX - startX;
+    const deltaY = currentY - startY;
+
+    sticker.style.left = (initialX + deltaX) + 'px';
+    sticker.style.top = (initialY + deltaY) + 'px';
+    sticker.style.right = 'auto';
+    sticker.style.bottom = 'auto';
+  }
+
+  function stopDrag() {
+    isDragging = false;
+    document.removeEventListener('mousemove', drag);
+    document.removeEventListener('touchmove', drag);
+    document.removeEventListener('mouseup', stopDrag);
+    document.removeEventListener('touchend', stopDrag);
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>会话摘要</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in { animation: slideIn 0.4s ease-out forwards; }
+</style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden flex flex-col relative">
+
+<!-- Header -->
+<header class="h-[56px] flex items-center justify-between px-5 border-b border-gray-100 bg-white shrink-0">
+  <a href="history.html" class="w-8 h-8 flex items-center justify-center">
+    <span class="iconify text-2xl text-gray-800" data-icon="solar:alt-arrow-left-linear"></span>
+  </a>
+  <h1 class="text-base font-bold text-gray-900">会话摘要</h1>
+  <button class="w-8 h-8 flex items-center justify-center">
+    <span class="iconify text-xl text-blue-600" data-icon="solar:share-bold"></span>
+  </button>
+</header>
+
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-4 py-4 space-y-4">
+
+<!-- 顶部概览卡片 -->
+<section class="animate-slide-in" style="animation-delay: 0.1s;">
+  <div class="bg-gradient-to-br from-rose-500 to-pink-600 rounded-3xl p-5 text-white">
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <p class="text-white/70 text-xs">2025年12月28日</p>
+        <p class="text-lg font-bold">下午训练会话</p>
+      </div>
+      <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+        <span class="iconify text-2xl" data-icon="solar:heart-bold"></span>
+      </div>
+    </div>
+    <div class="flex items-end justify-between">
+      <div>
+        <p class="text-4xl font-black tabular-nums">45:32</p>
+        <p class="text-white/70 text-xs">总时长</p>
+      </div>
+      <div class="text-right">
+        <p class="text-2xl font-bold tabular-nums">118</p>
+        <p class="text-white/70 text-xs">平均心率</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 核心指标 -->
+<section class="animate-slide-in" style="animation-delay: 0.15s;">
+  <div class="grid grid-cols-3 gap-3">
+    <div class="bg-white rounded-2xl p-3 text-center border border-gray-100">
+      <p class="text-2xl font-black text-blue-600 tabular-nums">68</p>
+      <p class="text-[10px] text-gray-400 mt-1">最低心率</p>
+    </div>
+    <div class="bg-white rounded-2xl p-3 text-center border border-gray-100">
+      <p class="text-2xl font-black text-green-600 tabular-nums">118</p>
+      <p class="text-[10px] text-gray-400 mt-1">平均心率</p>
+    </div>
+    <div class="bg-white rounded-2xl p-3 text-center border border-gray-100">
+      <p class="text-2xl font-black text-rose-500 tabular-nums">156</p>
+      <p class="text-[10px] text-gray-400 mt-1">最高心率</p>
+    </div>
+  </div>
+</section>
+
+<!-- 心率曲线图 -->
+<section class="animate-slide-in" style="animation-delay: 0.2s;">
+  <div class="bg-white rounded-2xl p-4 border border-gray-100">
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="text-sm font-bold text-gray-800">心率曲线</h3>
+      <span class="text-[10px] text-gray-400">全程记录</span>
+    </div>
+    <div class="h-40" id="hrChart"></div>
+  </div>
+</section>
+
+<!-- 区间分布 -->
+<section class="animate-slide-in" style="animation-delay: 0.25s;">
+  <div class="bg-white rounded-2xl p-4 border border-gray-100">
+    <h3 class="text-sm font-bold text-gray-800 mb-3">区间分布</h3>
+    <div class="space-y-2">
+      <div class="flex items-center gap-2">
+        <div class="w-3 h-3 rounded bg-blue-400"></div>
+        <span class="text-xs text-gray-600 flex-1">静息区 (60-90)</span>
+        <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div class="h-full bg-blue-400 rounded-full" style="width: 15%"></div>
+        </div>
+        <span class="text-xs font-bold text-gray-700 w-10 text-right">15%</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-3 h-3 rounded bg-green-400"></div>
+        <span class="text-xs text-gray-600 flex-1">有氧区 (90-130)</span>
+        <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div class="h-full bg-green-400 rounded-full" style="width: 55%"></div>
+        </div>
+        <span class="text-xs font-bold text-gray-700 w-10 text-right">55%</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-3 h-3 rounded bg-yellow-400"></div>
+        <span class="text-xs text-gray-600 flex-1">燃脂区 (130-150)</span>
+        <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div class="h-full bg-yellow-400 rounded-full" style="width: 22%"></div>
+        </div>
+        <span class="text-xs font-bold text-gray-700 w-10 text-right">22%</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-3 h-3 rounded bg-rose-500"></div>
+        <span class="text-xs text-gray-600 flex-1">极限区 (150+)</span>
+        <div class="w-24 h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div class="h-full bg-rose-500 rounded-full" style="width: 8%"></div>
+        </div>
+        <span class="text-xs font-bold text-gray-700 w-10 text-right">8%</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 提醒事件 -->
+<section class="animate-slide-in" style="animation-delay: 0.3s;">
+  <div class="bg-white rounded-2xl p-4 border border-gray-100">
+    <h3 class="text-sm font-bold text-gray-800 mb-3">提醒事件</h3>
+    <div class="space-y-2">
+      <div class="flex items-center gap-3 p-2 bg-rose-50 rounded-xl">
+        <span class="iconify text-rose-500" data-icon="solar:danger-triangle-bold"></span>
+        <div class="flex-1">
+          <p class="text-xs font-medium text-gray-800">心率过高警告</p>
+          <p class="text-[10px] text-gray-400">14:23:15 · 156 BPM</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 p-2 bg-amber-50 rounded-xl">
+        <span class="iconify text-amber-500" data-icon="solar:bell-bold"></span>
+        <div class="flex-1">
+          <p class="text-xs font-medium text-gray-800">接近上限提醒</p>
+          <p class="text-[10px] text-gray-400">14:35:42 · 148 BPM</p>
+        </div>
+      </div>
+    </div>
+    <p class="text-[10px] text-gray-400 mt-2 text-center">共 2 次提醒事件</p>
+  </div>
+</section>
+
+<!-- 广播统计 -->
+<section class="animate-slide-in" style="animation-delay: 0.35s;">
+  <div class="bg-white rounded-2xl p-4 border border-gray-100">
+    <h3 class="text-sm font-bold text-gray-800 mb-3">广播统计</h3>
+    <div class="grid grid-cols-2 gap-3">
+      <div class="bg-indigo-50 rounded-xl p-3">
+        <p class="text-xs text-indigo-600 font-medium">接收设备</p>
+        <p class="text-xl font-bold text-indigo-900">2 台</p>
+      </div>
+      <div class="bg-green-50 rounded-xl p-3">
+        <p class="text-xs text-green-600 font-medium">平均延迟</p>
+        <p class="text-xl font-bold text-green-900">18ms</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 操作按钮 -->
+<section class="animate-slide-in pb-4" style="animation-delay: 0.4s;">
+  <div class="grid grid-cols-2 gap-3">
+    <button class="py-3 bg-white rounded-xl text-sm font-semibold text-gray-700 border border-gray-200 flex items-center justify-center gap-2">
+      <span class="iconify" data-icon="solar:document-add-bold"></span>
+      导出数据
+    </button>
+    <button class="py-3 bg-blue-600 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2">
+      <span class="iconify" data-icon="solar:share-bold"></span>
+      分享记录
+    </button>
+  </div>
+</section>
+
+</main>
+
+<!-- Tab Bar -->
+<nav class="h-20 bg-white/80 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-4 pb-4">
+  <a href="1-今天.html" class="flex flex-col items-center space-y-1 text-gray-400">
+    <span class="iconify text-2xl" data-icon="heroicons:calendar-days-solid"></span>
+    <span class="text-[10px] font-medium">今天</span>
+  </a>
+  <a href="2-设备.html" class="flex flex-col items-center space-y-1 text-gray-400">
+    <span class="iconify text-2xl" data-icon="heroicons:cpu-chip-20-solid"></span>
+    <span class="text-[10px] font-medium">设备</span>
+  </a>
+  <a href="3-广播.html" class="flex flex-col items-center space-y-1 text-gray-400">
+    <span class="iconify text-2xl" data-icon="solar:graph-up-bold-duotone"></span>
+    <span class="text-[10px] font-medium">广播</span>
+  </a>
+  <a href="4-设置.html" class="flex flex-col items-center space-y-1 text-gray-400">
+    <span class="iconify text-2xl" data-icon="heroicons:cog-8-tooth-20-solid"></span>
+    <span class="text-[10px] font-medium">设置</span>
+  </a>
+</nav>
+
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+
+<script>
+// 初始化心率曲线图
+const chart = echarts.init(document.getElementById('hrChart'));
+const data = [];
+for (let i = 0; i < 45; i++) {
+  const base = 100 + Math.sin(i / 5) * 30;
+  data.push(Math.floor(base + Math.random() * 20));
+}
+
+chart.setOption({
+  grid: { left: 30, right: 10, top: 10, bottom: 20 },
+  xAxis: {
+    type: 'category',
+    data: data.map((_, i) => i + '分'),
+    axisLine: { show: false },
+    axisTick: { show: false },
+    axisLabel: { fontSize: 9, color: '#9ca3af', interval: 9 }
+  },
+  yAxis: {
+    type: 'value',
+    min: 60,
+    max: 180,
+    axisLine: { show: false },
+    axisTick: { show: false },
+    splitLine: { lineStyle: { color: '#f3f4f6' } },
+    axisLabel: { fontSize: 9, color: '#9ca3af' }
+  },
+  series: [{
+    data: data,
+    type: 'line',
+    smooth: true,
+    symbol: 'none',
+    lineStyle: { color: '#f43f5e', width: 2 },
+    areaStyle: {
+      color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+        { offset: 0, color: 'rgba(244, 63, 94, 0.3)' },
+        { offset: 1, color: 'rgba(244, 63, 94, 0)' }
+      ])
+    }
+  }]
+});
+</script>
+</body>
+</html>

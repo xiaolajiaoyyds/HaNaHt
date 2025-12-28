@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>数据与隐私</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @keyframes slideIn {
+          from { transform: translateY(10px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        .animate-slide-in {
+          animation: slideIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+<!-- iPhone 15 Pro Container -->
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- Status Bar -->
+<div class="h-11 px-8 flex justify-between items-center bg-transparent mt-3">
+<span class="text-sm font-semibold">9:41</span>
+<div class="flex items-center space-x-2">
+<span class="iconify" data-icon="heroicons:signal-20-solid"></span>
+<span class="iconify" data-icon="heroicons:wifi-20-solid"></span>
+<span class="iconify" data-icon="heroicons:battery-50-20-solid"></span>
+</div>
+</div>
+<!-- Navigation Bar -->
+<div class="h-14 px-4 flex items-center bg-[#F2F2F7]">
+<a href="4-设置.html" class="flex items-center text-blue-600">
+<span class="iconify text-2xl" data-icon="heroicons:chevron-left"></span>
+<span class="text-lg">设置</span>
+</a>
+<h1 class="flex-1 text-center font-bold text-gray-900 mr-8">数据与隐私</h1>
+</div>
+<!-- Content Area -->
+<div class="flex-1 overflow-y-auto hide-scrollbar px-4 pt-2">
+<!-- Privacy Introduction -->
+<div class="flex flex-col items-center text-center mt-4 mb-8">
+<div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-4">
+<span class="iconify text-4xl text-blue-600" data-icon="heroicons:shield-check-solid"></span>
+</div>
+<h2 class="text-xl font-bold px-4">您的数据，由您掌控</h2>
+<p class="text-sm text-gray-500 mt-2 px-6">
+                    本应用收集的心率等健康数据仅存储于本地。除非开启云中继，否则数据绝不会上传至服务器。
+                </p>
+<p class="text-[10px] text-gray-400 mt-2 italic px-8">注：本应用非医疗器械，数据仅供参考。</p>
+</div>
+<!-- List Section 1: Data Connection -->
+<div class="bg-white rounded-xl overflow-hidden mb-6">
+<div class="px-4 py-3 flex items-center justify-between border-b border-gray-100">
+<div class="flex items-center space-x-3">
+<div class="w-7 h-7 bg-blue-500 rounded-md flex items-center justify-center">
+<span class="iconify text-white" data-icon="heroicons:cloud-solid"></span>
+</div>
+<div>
+<p class="text-black">云中继 Pro</p>
+<p class="text-xs text-gray-400">支持跨网广播</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-green-500 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</label>
+</div>
+<!-- Warning Text -->
+<div class="px-4 py-2 bg-white">
+<p class="text-[11px] text-orange-500">开启后数据将实时加密出网，关闭将导致桌面端跨网配对失效。</p>
+</div>
+</div>
+<!-- List Section 2: Management -->
+<div class="bg-white rounded-xl overflow-hidden mb-6">
+<button class="w-full px-4 py-3 flex items-center justify-between border-b border-gray-100 active:bg-gray-50">
+<div class="flex items-center space-x-3">
+<div class="w-7 h-7 bg-green-500 rounded-md flex items-center justify-center">
+<span class="iconify text-white" data-icon="heroicons:arrow-up-tray-solid"></span>
+</div>
+<span class="text-black">导出所有数据</span>
+</div>
+<div class="flex items-center text-gray-400">
+<span class="text-sm mr-1">CSV / JSON</span>
+<span class="iconify" data-icon="heroicons:chevron-right"></span>
+</div>
+</button>
+<button class="w-full px-4 py-3 flex items-center justify-between border-b border-gray-100 active:bg-gray-50">
+<div class="flex items-center space-x-3">
+<div class="w-7 h-7 bg-purple-500 rounded-md flex items-center justify-center">
+<span class="iconify text-white" data-icon="heroicons:document-text-solid"></span>
+</div>
+<span class="text-black">隐私政策</span>
+</div>
+<span class="iconify text-gray-400" data-icon="heroicons:chevron-right"></span>
+</button>
+<button class="w-full px-4 py-3 flex items-center justify-between border-b border-gray-100 active:bg-gray-50">
+<div class="flex items-center space-x-3">
+<span class="iconify w-5 h-5 text-gray-400" data-icon="heroicons:beaker-20-solid"></span>
+<span class="text-[17px]">第三方共享清单</span>
+</div>
+<span class="iconify w-5 h-5 text-gray-300" data-icon="heroicons:chevron-right-20-solid"></span>
+</button>
+<button class="w-full px-4 py-3 flex items-center justify-between active:bg-gray-50">
+<div class="flex items-center space-x-3">
+<div class="w-7 h-7 bg-red-500 rounded-md flex items-center justify-center">
+<span class="iconify text-white" data-icon="heroicons:trash-solid"></span>
+</div>
+<span class="text-red-500 font-medium">清除所有本地数据</span>
+</div>
+<span class="iconify text-gray-400" data-icon="heroicons:chevron-right"></span>
+</button>
+</div>
+<!-- Version Info -->
+<div class="text-center pb-10">
+<p class="text-xs text-gray-400">2025年12月26日 更新</p>
+<div class="mt-4 flex justify-center space-x-4">
+<img alt="Privacy Logo small" class="w-8 h-8 opacity-20" id="1" src="https://modao.cc/agent-py/media/generated_images/2025-12-26/310a729b271f426cab03dbe7673a61cb.jpg"/>
+</div>
+</div>
+</div>
+<!-- 底部导航 -->
+<nav class="h-20 bg-white/80 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-4 pb-4">
+<a href="1-今天.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="heroicons:calendar-days-solid"></span>
+<span class="text-[10px] font-medium">今天</span>
+</a>
+<a href="2-设备.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="heroicons:cpu-chip-20-solid"></span>
+<span class="text-[10px] font-medium">设备</span>
+</a>
+<a href="3-广播.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="solar:graph-up-bold-duotone"></span>
+<span class="text-[10px] font-medium">广播</span>
+</a>
+<a href="4-设置.html" class="flex flex-col items-center space-y-1 text-blue-500">
+<span class="iconify text-2xl" data-icon="heroicons:cog-8-tooth-20-solid"></span>
+<span class="text-[10px] font-medium">设置</span>
+</a>
+</nav>
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+</body>
+</html>

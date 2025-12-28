@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>设置-采集</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes pulse-soft {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    .animate-pulse-soft {
+      animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .animate-spin {
+      animation: spin 1s linear infinite;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 flex items-center justify-center min-h-screen p-4">
+<!-- APP Container (375x812) -->
+<div class="w-[375px] h-[812px] bg-white rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden flex flex-col relative">
+<!-- 状态栏 (StatusBar Mock) -->
+<div class="h-11 px-8 flex justify-between items-end pb-2">
+<span class="text-xs font-bold">9:41</span>
+<div class="flex space-x-1.5 items-center">
+<span class="iconify w-4 h-4" data-icon="heroicons:signal-20-solid"></span>
+<span class="iconify w-4 h-4" data-icon="heroicons:wifi-20-solid"></span>
+<span class="iconify w-5 h-5" data-icon="heroicons:battery-50-20-solid"></span>
+</div>
+</div>
+<!-- 标题栏 (56px) -->
+<header class="h-14 flex items-center justify-between px-4 border-b border-gray-50">
+<a href="4-设置.html" class="p-2 hover:bg-gray-100 rounded-full transition-colors">
+<span class="iconify w-6 h-6 text-gray-800" data-icon="heroicons:chevron-left-20-solid"></span>
+</a>
+<h1 class="text-lg font-bold text-gray-900">采集设置</h1>
+<button class="p-2 opacity-0">
+<span class="iconify w-6 h-6" data-icon="heroicons:question-mark-circle-20-solid"></span>
+</button>
+</header>
+<!-- 内容区 (676px) -->
+<main class="flex-1 overflow-y-auto hide-scrollbar bg-gray-50/50 p-4 space-y-6 pb-20">
+<!-- 来源选择 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.1s;">
+<div class="flex justify-between items-center px-1">
+<h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wider">选择心率来源</h2>
+<span class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-bold">2025-12-27</span>
+</div>
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+<!-- Watch -->
+<label class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors group">
+<div class="flex items-center space-x-4">
+<div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
+<span class="iconify w-6 h-6" data-icon="heroicons:device-phone-mobile"></span>
+</div>
+<div>
+<p class="font-bold text-gray-800">Apple Watch</p>
+<p class="text-xs text-gray-400 font-medium">来源：手表 (高效/稳定)</p>
+</div>
+</div>
+<input checked="" class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500" name="source" type="radio"/>
+</label>
+<div class="h-[1px] bg-gray-50 mx-4"></div>
+<!-- Health -->
+<label class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors">
+<div class="flex items-center space-x-4">
+<div class="w-10 h-10 rounded-xl bg-red-50 flex items-center justify-center text-red-500">
+<span class="iconify w-6 h-6" data-icon="heroicons:heart-20-solid"></span>
+</div>
+<div>
+<p class="font-bold text-gray-800">Apple Health</p>
+<p class="text-xs text-gray-400 font-medium">来源：手机/健康 App</p>
+</div>
+</div>
+<input class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500" name="source" type="radio"/>
+</label>
+<div class="h-[1px] bg-gray-50 mx-4"></div>
+<!-- BLE -->
+<label class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors" id="bleOption">
+<div class="flex items-center space-x-4">
+<div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-500 relative" id="bleIcon">
+<span class="iconify w-6 h-6" data-icon="material-symbols:bluetooth"></span>
+<!-- Loading Spinner (隐藏状态) -->
+<div class="absolute inset-0 flex items-center justify-center hidden" id="bleSpinner">
+<div class="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+</div>
+</div>
+<div>
+<p class="font-bold text-gray-800">外设传感器</p>
+<p class="text-xs font-medium font-mono" id="bleStatus">
+<span class="text-green-500" id="bleConnected">已连接：Polar H10</span>
+<span class="text-blue-500 hidden" id="bleConnecting">正在连接...</span>
+<span class="text-gray-400 hidden" id="bleDisconnected">未连接设备</span>
+</p>
+</div>
+</div>
+<input class="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500" name="source" type="radio" onclick="handleBleSelect(event)"/>
+</label>
+</div>
+</section>
+<!-- 权限状态卡 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.2s;">
+<h2 class="text-sm font-semibold text-gray-500 uppercase px-1">权限状态</h2>
+<div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<span class="iconify w-6 h-6 text-red-500" data-icon="heroicons:lock-closed-20-solid"></span>
+<div>
+<p class="text-[13px] font-bold text-gray-800">健康数据读取</p>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-red-50 text-red-600 uppercase">
+                未授权
+              </span>
+</div>
+</div>
+<button class="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-full shadow-md active:scale-95 transition-all">
+            前往授权
+          </button>
+</div>
+</section>
+<!-- Pro 增强功能 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.3s;">
+<div class="flex items-center space-x-2 px-1">
+<h2 class="text-sm font-semibold text-gray-500 uppercase">增强设置</h2>
+<span class="bg-gradient-to-r from-amber-400 to-orange-500 text-[9px] text-white px-1.5 py-0.5 rounded font-black italic">PRO</span>
+</div>
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-50">
+<div class="p-4 flex items-center justify-between">
+<div>
+<p class="font-bold text-gray-800">自动切换来源</p>
+<p class="text-xs text-gray-400 pr-4">信号弱时自动回退到手机数据</p>
+</div>
+<div class="relative w-12 h-6 bg-gray-200 rounded-full flex items-center px-1">
+<div class="w-4 h-4 bg-white rounded-full shadow-sm"></div>
+<span class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<span class="iconify w-3 h-3 text-gray-400" data-icon="heroicons:lock-closed-20-solid"></span>
+</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 设备联动 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.35s;">
+<h2 class="text-sm font-semibold text-gray-500 uppercase px-1">设备联动</h2>
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 divide-y divide-gray-50">
+<!-- 自动启动手表App -->
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-xl bg-orange-50 flex items-center justify-center">
+<span class="iconify w-5 h-5 text-orange-500" data-icon="heroicons:device-phone-mobile-20-solid"></span>
+</div>
+<div>
+<p class="font-bold text-gray-800">自动启动手表 App</p>
+<p class="text-xs text-gray-400">iPhone 启动时自动唤醒 Watch</p>
+</div>
+</div>
+<div class="w-12 h-7 bg-blue-600 rounded-full relative cursor-pointer" onclick="this.classList.toggle('bg-blue-600'); this.classList.toggle('bg-gray-200'); this.querySelector('div').classList.toggle('translate-x-5');">
+<div class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-transform translate-x-5"></div>
+</div>
+</div>
+<!-- 屏幕常亮 -->
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-9 h-9 rounded-xl bg-yellow-50 flex items-center justify-center">
+<span class="iconify w-5 h-5 text-yellow-500" data-icon="heroicons:sun-20-solid"></span>
+</div>
+<div>
+<p class="font-bold text-gray-800">屏幕常亮</p>
+<p class="text-xs text-gray-400">开启后屏幕将不会自动锁屏</p>
+</div>
+</div>
+<div class="w-12 h-7 bg-gray-200 rounded-full relative cursor-pointer" onclick="this.classList.toggle('bg-blue-600'); this.classList.toggle('bg-gray-200'); this.querySelector('div').classList.toggle('translate-x-5');">
+<div class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-transform"></div>
+</div>
+</div>
+</div>
+<!-- 屏幕常亮警告 -->
+<div class="bg-amber-50/80 rounded-xl p-3 border border-amber-100 flex items-start gap-2">
+<span class="iconify w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" data-icon="heroicons:exclamation-triangle-20-solid"></span>
+<p class="text-[11px] text-amber-700 leading-relaxed">屏幕常亮会显著增加电池消耗，建议在充电时使用或搭配低电量自动关闭。</p>
+</div>
+</section>
+<!-- 快捷工具与优先级说明 -->
+<section class="grid grid-cols-2 gap-3 animate-slide-in" style="animation-delay: 0.4s;">
+<button class="bg-white p-4 rounded-2xl border border-gray-200 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-all group">
+<span class="iconify w-8 h-8 text-blue-500 group-hover:scale-110 transition-transform" data-icon="heroicons:beaker-20-solid"></span>
+<span class="text-xs font-bold text-gray-700">场景校准</span>
+</button>
+<button class="bg-white p-4 rounded-2xl border border-gray-200 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-all group">
+<span class="iconify w-8 h-8 text-green-500 group-hover:scale-110 transition-transform" data-icon="heroicons:play-circle-20-solid"></span>
+<span class="text-xs font-bold text-gray-700">采样测试</span>
+</button>
+</section>
+<!-- 优先级图示 -->
+<div class="bg-blue-50/50 rounded-2xl p-4 border border-blue-100 animate-slide-in" style="animation-delay: 0.5s;">
+<div class="flex items-center space-x-2 mb-3">
+<span class="iconify text-blue-500 w-4 h-4" data-icon="heroicons:information-circle-20-solid"></span>
+<span class="text-xs font-bold text-blue-800">数据分级规则</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex flex-col items-center">
+<div class="w-8 h-8 rounded-lg bg-white border border-blue-200 flex items-center justify-center text-blue-500 shadow-sm">1</div>
+<span class="text-[10px] mt-1 text-blue-600 font-bold">外设</span>
+</div>
+<span class="iconify text-blue-300" data-icon="heroicons:chevron-right-20-solid"></span>
+<div class="flex flex-col items-center opacity-60">
+<div class="w-8 h-8 rounded-lg bg-white border border-blue-200 flex items-center justify-center text-blue-400">2</div>
+<span class="text-[10px] mt-1 text-blue-500 font-bold">手表</span>
+</div>
+<span class="iconify text-blue-300" data-icon="heroicons:chevron-right-20-solid"></span>
+<div class="flex flex-col items-center opacity-60">
+<div class="w-8 h-8 rounded-lg bg-white border border-blue-200 flex items-center justify-center text-blue-400">3</div>
+<span class="text-[10px] mt-1 text-blue-500 font-bold">手机</span>
+</div>
+</div>
+</div>
+</main>
+<!-- 底部导航 -->
+<nav class="h-20 bg-white/80 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-4 pb-4">
+<a href="1-今天.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="heroicons:calendar-days-solid"></span>
+<span class="text-[10px] font-medium">今天</span>
+</a>
+<a href="2-设备.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="heroicons:cpu-chip-20-solid"></span>
+<span class="text-[10px] font-medium">设备</span>
+</a>
+<a href="3-广播.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="solar:graph-up-bold-duotone"></span>
+<span class="text-[10px] font-medium">广播</span>
+</a>
+<a href="4-设置.html" class="flex flex-col items-center space-y-1 text-blue-500">
+<span class="iconify text-2xl" data-icon="heroicons:cog-8-tooth-20-solid"></span>
+<span class="text-[10px] font-medium">设置</span>
+</a>
+</nav>
+<!-- 悬浮保存反馈 (Toast Mock) -->
+<div class="absolute bottom-24 left-1/2 -translate-x-1/2 bg-gray-900/90 text-white text-[10px] px-4 py-2 rounded-full font-bold opacity-0 transition-opacity pointer-events-none" id="toast">
+      配置已自动保存
+    </div>
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+<script>
+    // 模拟自动保存交互
+    const radios = document.querySelectorAll('input[type="radio"]');
+    const toast = document.getElementById('toast');
+
+    radios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        toast.classList.remove('opacity-0');
+        setTimeout(() => {
+          toast.classList.add('opacity-0');
+        }, 2000);
+      });
+    });
+
+    // 按钮交互预览
+    document.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        if (this.innerText.includes('前往授权')) {
+          this.style.backgroundColor = '#059669';
+          this.innerText = '已前往设置';
+        }
+      });
+    });
+
+    // BLE连接状态管理
+    function handleBleSelect(event) {
+      // 显示连接中状态
+      showConnecting();
+
+      // 模拟连接过程
+      setTimeout(() => {
+        showConnected();
+        showToast('设备已连接');
+      }, 2000);
+    }
+
+    function showConnecting() {
+      document.getElementById('bleSpinner').classList.remove('hidden');
+      document.getElementById('bleConnected').classList.add('hidden');
+      document.getElementById('bleConnecting').classList.remove('hidden');
+      document.getElementById('bleDisconnected').classList.add('hidden');
+    }
+
+    function showConnected() {
+      document.getElementById('bleSpinner').classList.add('hidden');
+      document.getElementById('bleConnected').classList.remove('hidden');
+      document.getElementById('bleConnecting').classList.add('hidden');
+      document.getElementById('bleDisconnected').classList.add('hidden');
+    }
+
+    function showDisconnected() {
+      document.getElementById('bleSpinner').classList.add('hidden');
+      document.getElementById('bleConnected').classList.add('hidden');
+      document.getElementById('bleConnecting').classList.add('hidden');
+      document.getElementById('bleDisconnected').classList.remove('hidden');
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.remove('opacity-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

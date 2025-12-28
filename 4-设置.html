@@ -1,0 +1,374 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>系统设置</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+    <script src="error-handler.js"></script>
+    <script src="gesture-handler.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <style>
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-[#F2F2F7] flex justify-center items-center min-h-screen p-4">
+<!-- iPhone 15 Pro Container (375x812) -->
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- Header -->
+<header class="px-5 pt-14 pb-2 bg-[#F2F2F7]">
+<div class="flex items-center justify-between">
+<h1 class="text-[28px] font-bold text-black tracking-tight">设置</h1>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-5 space-y-5 pb-4">
+
+<!-- Settings Groups -->
+<div class="space-y-6">
+<!-- 基础功能 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.1s;">
+<p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-1">基础功能</p>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+<!-- Row: 采集 -->
+<a href="settings-采集.html" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:bolt-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">采集</p>
+<p class="text-[11px] text-slate-400">来源/权限/校准</p>
+</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+<!-- Row: 提醒 -->
+<a href="settings-提醒.html" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-red-500 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:bell-alert-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">通知与提醒</p>
+<p class="text-[11px] text-slate-400">勿扰模式及声音反馈</p>
+</div>
+<div class="mr-1 text-blue-500 text-sm">已开启</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+</div>
+</section>
+<!-- 显示与个性化 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.2s;">
+<p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-1">显示与个性化</p>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+<!-- Row: 个性化主题 -->
+<a href="settings-主题.html" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:paint-brush-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">个性化主题</p>
+<p class="text-[11px] text-slate-400">表盘/桌面端/App/渐变色</p>
+</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+<!-- Row: 字体与排版 -->
+<a href="settings-字体.html" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-teal-500 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:language-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">字体与排版</p>
+<p class="text-[11px] text-slate-400">字体大小、粗细与行间距</p>
+</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+<!-- Row: 贴纸商城 -->
+<a href="settings-贴纸.html" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-pink-500 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:sparkles-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">贴纸商城</p>
+<p class="text-[11px] text-slate-400">心率贴纸包与装饰效果</p>
+</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+<!-- Row: 语言 -->
+<a href="#" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-sky-500 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:globe-alt-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">语言</p>
+<p class="text-[11px] text-slate-400">界面显示语言设置</p>
+</div>
+<div class="mr-1 text-slate-400 text-sm">简体中文</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+</div>
+</section>
+<!-- 联网功能（区域总开关） -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.25s;" id="networkSection">
+<p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-1">联网功能</p>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+<div class="w-full px-4 py-3.5 flex items-center border-b border-slate-50 last:border-0" id="networkRegionRow">
+<div class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center text-white mr-3 shadow-sm">
+<span class="iconify w-5 h-5" data-icon="heroicons:map-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">区域与合规</p>
+<p class="text-[11px] text-slate-400" id="regionSubtitle">中国区单机版：所有联网能力已禁用</p>
+</div>
+<button class="text-[10px] text-blue-600 font-semibold px-2 py-1 rounded-lg active:opacity-70" id="regionToggle">切换预览</button>
+</div>
+<div class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0" id="networkToggleRow">
+<div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white mr-3 shadow-sm">
+<span class="iconify w-5 h-5" data-icon="heroicons:wifi-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">联网功能总开关</p>
+<p class="text-[11px] text-slate-400">开启后才显示 Web/OBS、桌面配对等入口</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer" id="networkToggle">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- 设备与会话 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.3s;">
+<p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-1">设备与会话</p>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+<!-- Row: 屏幕常亮 -->
+<div class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-yellow-500 flex items-center justify-center text-white mr-3 shadow-sm">
+<span class="iconify w-5 h-5" data-icon="heroicons:sun-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">屏幕常亮</p>
+<p class="text-[11px] text-slate-400">防止屏幕自动锁定</p>
+</div>
+<div class="w-12 h-7 bg-gray-200 rounded-full relative cursor-pointer" onclick="this.classList.toggle('bg-blue-500'); this.classList.toggle('bg-gray-200'); this.querySelector('div').classList.toggle('translate-x-5');">
+<div class="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-md transition-transform"></div>
+</div>
+</div>
+<!-- Row: 广播设置 -->
+<a href="desktop-pairing.html" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group" id="broadcastSettingsRow">
+<div class="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:signal-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<div class="flex items-center">
+<p class="text-sm font-semibold text-slate-700">广播设置</p>
+<span class="ml-2 px-1.5 py-0.5 bg-indigo-100 text-indigo-700 text-[10px] font-bold rounded uppercase">Pro</span>
+</div>
+<p class="text-[11px] text-slate-400">推送节奏、场景管理与质量监控</p>
+</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+</div>
+</section>
+<!-- 数据 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.35s;">
+<p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-1">数据</p>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+<!-- Row: 归档与历史 -->
+<a href="history.html" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-gray-700 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:clock-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">归档与历史</p>
+<p class="text-[11px] text-slate-400">查看过往采集的数据记录</p>
+</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+<!-- Row: 隐私 -->
+<a href="privacy.html" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:shield-check-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">数据与隐私</p>
+<p class="text-[11px] text-slate-400">权限管理与个人信息保护</p>
+</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+</div>
+</section>
+<!-- 账户 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.4s;">
+<p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-1">账户</p>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+<!-- Row: 订阅 -->
+<a href="subscription.html" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:credit-card-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<div class="flex items-center">
+<p class="text-sm font-semibold text-slate-700">高级订阅</p>
+<span class="ml-2 px-1.5 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded uppercase">Pro</span>
+</div>
+<p class="text-[11px] text-slate-400">管理订阅计划与支付方式</p>
+</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+<!-- Row: 开发者模式 -->
+<a href="developer.html" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-slate-700 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:code-bracket-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">开发者模式</p>
+<p class="text-[11px] text-slate-400">API 接口、调试工具与日志导出</p>
+</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+</div>
+</section>
+<!-- 支持 -->
+<section class="space-y-3 animate-slide-in" style="animation-delay: 0.45s;">
+<p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider px-1">支持</p>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100/50">
+<!-- Row: 帮助中心 -->
+<a href="legal.html" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-cyan-500 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:question-mark-circle-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">帮助与反馈</p>
+<p class="text-[11px] text-slate-400">FAQ、使用指南与问题反馈</p>
+</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+<!-- Row: 关于 -->
+<a href="legal.html" class="w-full px-4 py-3.5 flex items-center hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0 group">
+<div class="w-8 h-8 rounded-lg bg-gray-500 flex items-center justify-center text-white mr-3 shadow-sm group-active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:information-circle-20-solid"></span>
+</div>
+<div class="flex-1 text-left">
+<p class="text-sm font-semibold text-slate-700">关于应用</p>
+<p class="text-[11px] text-slate-400">版本 4.2.0 · Build 902</p>
+</div>
+<span class="iconify text-slate-300 w-5 h-5" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+</div>
+</section>
+</div>
+</main>
+    <!-- Tab Bar -->
+    <nav class="h-20 bg-white/80 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-4 pb-4" role="navigation" aria-label="主导航">
+      <a href="1-今天.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+        <span class="iconify text-2xl" data-icon="heroicons:calendar-days-solid" aria-hidden="true"></span>
+        <span class="text-[10px] font-medium">今天</span>
+      </a>
+      <a href="2-设备.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+        <span class="iconify text-2xl" data-icon="heroicons:cpu-chip-20-solid" aria-hidden="true"></span>
+        <span class="text-[10px] font-medium">设备</span>
+      </a>
+      <a href="3-广播.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+        <span class="iconify text-2xl" data-icon="solar:graph-up-bold-duotone" aria-hidden="true"></span>
+        <span class="text-[10px] font-medium">广播</span>
+      </a>
+      <a href="4-设置.html" class="flex flex-col items-center space-y-1 text-blue-500" aria-current="page">
+        <span class="iconify text-2xl" data-icon="heroicons:cog-8-tooth-20-solid" aria-hidden="true"></span>
+        <span class="text-[10px] font-medium">设置</span>
+      </a>
+    </nav>
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+    </div>
+
+    <script>
+      const STORAGE_KEYS = {
+        region: 'hrb_region',
+        networkEnabled: 'hrb_network_enabled'
+      };
+
+      function getRegion() {
+        return localStorage.getItem(STORAGE_KEYS.region) || 'CN';
+      }
+
+      function setRegion(region) {
+        localStorage.setItem(STORAGE_KEYS.region, region);
+      }
+
+      function getNetworkEnabled() {
+        return (localStorage.getItem(STORAGE_KEYS.networkEnabled) || '0') === '1';
+      }
+
+      function setNetworkEnabled(enabled) {
+        localStorage.setItem(STORAGE_KEYS.networkEnabled, enabled ? '1' : '0');
+      }
+
+      function syncUI() {
+        const region = getRegion();
+        const networkEnabled = getNetworkEnabled();
+
+        const subtitle = document.getElementById('regionSubtitle');
+        const regionToggle = document.getElementById('regionToggle');
+        const networkToggleRow = document.getElementById('networkToggleRow');
+        const networkToggleInput = document.querySelector('#networkToggle input');
+        const broadcastSettingsRow = document.getElementById('broadcastSettingsRow');
+
+        if (region === 'CN') {
+          subtitle.textContent = '中国区单机版：所有联网能力已禁用';
+          networkToggleRow.classList.add('opacity-40');
+          networkToggleInput.checked = false;
+          networkToggleInput.disabled = true;
+          setNetworkEnabled(false);
+        } else {
+          subtitle.textContent = `非中国区：联网功能${networkEnabled ? '已开启' : '默认关闭'}`;
+          networkToggleRow.classList.remove('opacity-40');
+          networkToggleInput.disabled = false;
+          networkToggleInput.checked = networkEnabled;
+        }
+
+        const networkAllowed = region !== 'CN' && networkEnabled;
+        if (networkAllowed) {
+          broadcastSettingsRow.classList.remove('opacity-40', 'pointer-events-none');
+        } else {
+          broadcastSettingsRow.classList.add('opacity-40', 'pointer-events-none');
+        }
+
+        regionToggle.textContent = region === 'CN' ? '切换为非中国区预览' : '切换为中国区预览';
+      }
+
+      document.getElementById('regionToggle').addEventListener('click', () => {
+        const next = getRegion() === 'CN' ? 'NonCN' : 'CN';
+        setRegion(next);
+        syncUI();
+      });
+
+      document.querySelector('#networkToggle input').addEventListener('change', (e) => {
+        setNetworkEnabled(e.target.checked);
+        syncUI();
+      });
+
+      syncUI();
+
+    // Service Worker 注册
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+    </script>
+</body>
+</html>

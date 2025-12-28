@@ -1,0 +1,516 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>贴纸商店</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-black flex justify-center items-center min-h-screen">
+<!-- iPhone 15 Pro Container -->
+<div class="w-[375px] h-[812px] bg-[#1C1C1E] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- 状态栏 -->
+<div class="h-11 w-full flex justify-between items-center px-8 flex-shrink-0 z-20">
+<span class="text-[15px] font-semibold text-white">9:41</span>
+<div class="flex space-x-1.5 items-center text-white">
+<span class="iconify w-4 h-4" data-icon="heroicons:signal-20-solid"></span>
+<span class="iconify w-4 h-4" data-icon="heroicons:wifi-20-solid"></span>
+<span class="iconify w-5 h-5" data-icon="heroicons:battery-100-20-solid"></span>
+</div>
+</div>
+<!-- 搜索栏 + 完成 -->
+<header class="px-4 pb-3 flex items-center gap-3">
+<div class="flex-1 relative">
+<span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" data-icon="heroicons:magnifying-glass-20-solid"></span>
+<input class="w-full bg-[#2C2C2E] rounded-xl py-2.5 pl-10 pr-4 text-[16px] text-white placeholder-gray-500 focus:outline-none" placeholder="搜索贴纸" type="text"/>
+</div>
+<a href="4-设置.html" class="text-blue-500 font-medium text-[17px]">完成</a>
+</header>
+<!-- 分类标签 -->
+<div class="px-4 pb-3 flex space-x-2 overflow-x-auto hide-scrollbar">
+<button class="px-4 py-1.5 bg-blue-600 text-white rounded-full text-[13px] font-semibold whitespace-nowrap">热门精选</button>
+<button class="px-4 py-1.5 bg-[#2C2C2E] text-gray-400 rounded-full text-[13px] font-medium whitespace-nowrap">动态心跳</button>
+<button class="px-4 py-1.5 bg-[#2C2C2E] text-gray-400 rounded-full text-[13px] font-medium whitespace-nowrap">像素风格</button>
+<button class="px-4 py-1.5 bg-[#2C2C2E] text-gray-400 rounded-full text-[13px] font-medium whitespace-nowrap">3D 渲染</button>
+</div>
+<!-- 主内容滚动区 -->
+<main class="flex-1 overflow-y-auto hide-scrollbar">
+<!-- 本地存储库 -->
+<section class="px-4 py-3 border-b border-[#38383A]">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-[#2C2C2E] rounded-xl flex items-center justify-center">
+<span class="iconify w-6 h-6 text-blue-500" data-icon="heroicons:folder-20-solid"></span>
+</div>
+<div>
+<p class="text-[15px] font-semibold text-white">本地存储库</p>
+<p class="text-[13px] text-gray-500">12 个贴纸包 · 64.2 MB</p>
+</div>
+</div>
+<span class="iconify w-5 h-5 text-gray-500" data-icon="heroicons:chevron-right-20-solid"></span>
+</div>
+</section>
+
+<section class="px-4 py-3 border-b border-[#38383A]" id="localImportSection">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-[#2C2C2E] rounded-xl flex items-center justify-center">
+        <span class="iconify w-6 h-6 text-blue-500" data-icon="heroicons:photo-20-solid"></span>
+      </div>
+      <div>
+        <p class="text-[15px] font-semibold text-white">导入图片（本地）</p>
+        <p class="text-[13px] text-gray-500">仅保存到本机，不会上传</p>
+      </div>
+    </div>
+    <button class="px-3 py-1.5 bg-[#2C2C2E] text-blue-500 rounded-lg text-[13px] font-semibold border border-blue-500/30 active:scale-95 transition-transform" id="importImageBtn">选择</button>
+  </div>
+  <div class="mt-3 flex gap-2 overflow-x-auto hide-scrollbar" id="localImportGallery"></div>
+  <input accept="image/*" class="hidden" id="localImageInput" type="file"/>
+</section>
+<!-- 贴纸包列表 -->
+<div class="divide-y divide-[#38383A]">
+<!-- 贴纸包 1: Duck -->
+<div class="px-4 py-4 animate-slide-in" style="animation-delay: 0.1s;" onclick="showStickerDetail('duck')">
+<div class="flex items-start justify-between mb-3">
+<div>
+<p class="text-[17px] font-semibold text-white">赛博心律</p>
+<p class="text-[13px] text-gray-500">40 张贴纸</p>
+</div>
+<button class="px-4 py-1.5 bg-blue-600 text-white rounded-lg text-[13px] font-semibold" onclick="event.stopPropagation();">已添加</button>
+</div>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar">
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<img alt="sticker" class="w-12 h-12 object-contain" src="https://modao.cc/agent-py/media/generated_images/2025-12-26/37210e16d93f40c78695cabd35408d80.jpg"/>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-gray-600" data-icon="heroicons:heart-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-gray-600" data-icon="heroicons:bolt-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-gray-600" data-icon="heroicons:fire-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-gray-600" data-icon="heroicons:sparkles-20-solid"></span>
+</div>
+</div>
+</div>
+<!-- 贴纸包 2: Hot Cherry -->
+<div class="px-4 py-4 animate-slide-in" style="animation-delay: 0.2s;" onclick="showStickerDetail('cherry')">
+<div class="flex items-start justify-between mb-3">
+<div>
+<p class="text-[17px] font-semibold text-white">元气脉动</p>
+<p class="text-[13px] text-gray-500">34 张贴纸</p>
+</div>
+<button class="px-4 py-1.5 bg-blue-600 text-white rounded-lg text-[13px] font-semibold" onclick="event.stopPropagation();">已添加</button>
+</div>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar">
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<img alt="sticker" class="w-12 h-12 object-contain" src="https://modao.cc/agent-py/media/generated_images/2025-12-26/7d71d895a9ab4b36b00cefaf790679ea.jpg"/>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-pink-600" data-icon="heroicons:heart-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-pink-600" data-icon="heroicons:face-smile-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-pink-600" data-icon="heroicons:star-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-pink-600" data-icon="heroicons:musical-note-20-solid"></span>
+</div>
+</div>
+</div>
+<!-- 贴纸包 3: Buddy Bear -->
+<div class="px-4 py-4 animate-slide-in" style="animation-delay: 0.3s;" onclick="showStickerDetail('bear')">
+<div class="flex items-start justify-between mb-3">
+<div>
+<p class="text-[17px] font-semibold text-white">像素心跳</p>
+<p class="text-[13px] text-gray-500">28 张贴纸</p>
+</div>
+<button class="px-4 py-1.5 bg-[#2C2C2E] text-blue-500 rounded-lg text-[13px] font-semibold border border-blue-500/30" onclick="event.stopPropagation();">添加</button>
+</div>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar">
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<img alt="sticker" class="w-12 h-12 object-contain" src="https://modao.cc/agent-py/media/generated_images/2025-12-26/ca06ffcd5eb545b4a8536de7e812be5c.jpg"/>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-red-500" data-icon="heroicons:heart-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-red-500" data-icon="heroicons:hand-thumb-up-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-red-500" data-icon="heroicons:gift-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-red-500" data-icon="heroicons:cake-20-solid"></span>
+</div>
+</div>
+</div>
+<!-- 贴纸包 4: Croco -->
+<div class="px-4 py-4 animate-slide-in" style="animation-delay: 0.4s;" onclick="showStickerDetail('croco')">
+<div class="flex items-start justify-between mb-3">
+<div>
+<p class="text-[17px] font-semibold text-white">霓虹闪烁</p>
+<p class="text-[13px] text-gray-500">34 张贴纸</p>
+</div>
+<button class="px-4 py-1.5 bg-[#2C2C2E] text-blue-500 rounded-lg text-[13px] font-semibold border border-blue-500/30" onclick="event.stopPropagation();">添加</button>
+</div>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar">
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<img alt="sticker" class="w-12 h-12 object-contain" src="https://modao.cc/agent-py/media/generated_images/2025-12-26/582b284b3f014c2f98254ab592cd2933.jpg"/>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-green-500" data-icon="heroicons:bolt-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-green-500" data-icon="heroicons:rocket-launch-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-green-500" data-icon="heroicons:trophy-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-green-500" data-icon="heroicons:puzzle-piece-20-solid"></span>
+</div>
+</div>
+</div>
+<!-- 贴纸包 5: Life's a Peach -->
+<div class="px-4 py-4 animate-slide-in" style="animation-delay: 0.5s;" onclick="showStickerDetail('peach')">
+<div class="flex items-start justify-between mb-3">
+<div>
+<p class="text-[17px] font-semibold text-white">萌趣表情</p>
+<p class="text-[13px] text-gray-500">23 张贴纸</p>
+</div>
+<button class="px-4 py-1.5 bg-[#2C2C2E] text-blue-500 rounded-lg text-[13px] font-semibold border border-blue-500/30" onclick="event.stopPropagation();">添加</button>
+</div>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar">
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<img alt="sticker" class="w-12 h-12 object-contain" src="https://modao.cc/agent-py/media/generated_images/2025-12-26/4bbf325b56564842b725336252389ae0.jpg"/>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-orange-400" data-icon="heroicons:face-smile-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-orange-400" data-icon="heroicons:sun-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-orange-400" data-icon="heroicons:cloud-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-orange-400" data-icon="heroicons:moon-20-solid"></span>
+</div>
+</div>
+</div>
+<!-- 贴纸包 6 -->
+<div class="px-4 py-4 animate-slide-in" style="animation-delay: 0.6s;" onclick="showStickerDetail('cat')">
+<div class="flex items-start justify-between mb-3">
+<div>
+<p class="text-[17px] font-semibold text-white">极简线条</p>
+<p class="text-[13px] text-gray-500">24 张贴纸</p>
+</div>
+<button class="px-4 py-1.5 bg-[#2C2C2E] text-blue-500 rounded-lg text-[13px] font-semibold border border-blue-500/30" onclick="event.stopPropagation();">添加</button>
+</div>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar">
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<img alt="sticker" class="w-12 h-12 object-contain" src="https://modao.cc/agent-py/media/generated_images/2025-12-26/df6e09f3f77b4a1abfe38cde621cd248.jpg"/>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-gray-500" data-icon="heroicons:heart-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-gray-500" data-icon="heroicons:chat-bubble-left-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-gray-500" data-icon="heroicons:paper-airplane-20-solid"></span>
+</div>
+<div class="w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg flex items-center justify-center">
+<span class="iconify w-10 h-10 text-gray-500" data-icon="heroicons:bookmark-20-solid"></span>
+</div>
+</div>
+</div>
+</div>
+<!-- 底部留白 -->
+<div class="h-20"></div>
+</main>
+<!-- 贴纸详情 Sheet -->
+<div class="absolute inset-0 z-30 invisible pointer-events-none transition-all duration-300" id="stickerSheet">
+<div class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300" id="sheetOverlay" onclick="hideStickerDetail()"></div>
+<div class="absolute bottom-0 w-full h-[75%] bg-[#2C2C2E] rounded-t-[20px] shadow-2xl translate-y-full transition-transform duration-300 flex flex-col overflow-hidden" id="sheetContent">
+<!-- Sheet 头部 -->
+<div class="flex justify-between items-center px-4 py-3 border-b border-[#38383A]">
+<button class="text-blue-500 font-medium text-[17px]" onclick="hideStickerDetail()">取消</button>
+<h2 class="text-[17px] font-semibold text-white" id="sheetTitle">赛博心律</h2>
+<button class="w-8 h-8 bg-[#3A3A3C] rounded-full flex items-center justify-center">
+<span class="iconify w-5 h-5 text-blue-500" data-icon="heroicons:ellipsis-horizontal-20-solid"></span>
+</button>
+</div>
+<!-- 贴纸网格 -->
+<div class="flex-1 overflow-y-auto hide-scrollbar p-4">
+<div class="grid grid-cols-5 gap-2" id="stickerGrid">
+<!-- 动态填充贴纸 -->
+</div>
+</div>
+
+<div class="absolute inset-0 z-40 invisible pointer-events-none transition-all duration-300" id="importSheet">
+  <div class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300" id="importOverlay"></div>
+  <div class="absolute bottom-0 w-full bg-[#2C2C2E] rounded-t-[20px] shadow-2xl translate-y-full transition-transform duration-300 flex flex-col overflow-hidden" id="importContent">
+    <div class="flex justify-between items-center px-4 py-3 border-b border-[#38383A]">
+      <button class="text-blue-500 font-medium text-[17px]" id="importCancelBtn">取消</button>
+      <h2 class="text-[17px] font-semibold text-white">添加图片</h2>
+      <button class="text-blue-500 font-medium text-[17px]" id="importConfirmBtn">添加</button>
+    </div>
+    <div class="p-4 space-y-4">
+      <div class="bg-[#1C1C1E] border border-[#38383A] rounded-2xl p-4 flex items-center gap-4">
+        <div class="w-20 h-20 bg-[#2C2C2E] rounded-2xl overflow-hidden flex items-center justify-center">
+          <img alt="preview" class="w-full h-full object-cover hidden" id="importPreviewImg"/>
+          <span class="iconify w-8 h-8 text-gray-600" data-icon="heroicons:photo-20-solid" id="importPreviewIcon"></span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-[15px] font-semibold text-white truncate" id="importFileName">未选择图片</p>
+          <p class="text-[13px] text-gray-500 mt-1" id="importFileMeta">支持 PNG/JPG，建议小于 2MB</p>
+        </div>
+      </div>
+      <div class="bg-[#1C1C1E] border border-[#38383A] rounded-2xl p-4">
+        <p class="text-[13px] font-semibold text-white">用途</p>
+        <p class="text-[12px] text-gray-500 mt-1">可作为贴纸叠加到今天页/直播叠加（Pro）。</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 底部添加按钮 -->
+<div class="p-4 bg-[#1C1C1E]">
+<button class="w-full py-3.5 bg-blue-600 text-white rounded-xl text-[17px] font-semibold" id="addBtn">
+添加 40 张贴纸
+</button>
+</div>
+</div>
+</div>
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-white/20 rounded-full z-50"></div>
+</div>
+<script>
+    const stickerPacks = {
+      duck: { name: '赛博心律', count: 40, color: 'text-yellow-500' },
+      cherry: { name: '元气脉动', count: 34, color: 'text-pink-500' },
+      bear: { name: '像素心跳', count: 28, color: 'text-red-500' },
+      croco: { name: '霓虹闪烁', count: 34, color: 'text-green-500' },
+      peach: { name: '萌趣表情', count: 23, color: 'text-orange-400' },
+      cat: { name: '极简线条', count: 24, color: 'text-gray-400' }
+    };
+
+    const icons = [
+      'heroicons:heart-20-solid',
+      'heroicons:bolt-20-solid',
+      'heroicons:fire-20-solid',
+      'heroicons:sparkles-20-solid',
+      'heroicons:star-20-solid',
+      'heroicons:face-smile-20-solid',
+      'heroicons:hand-thumb-up-20-solid',
+      'heroicons:gift-20-solid',
+      'heroicons:rocket-launch-20-solid',
+      'heroicons:trophy-20-solid',
+      'heroicons:musical-note-20-solid',
+      'heroicons:sun-20-solid',
+      'heroicons:moon-20-solid',
+      'heroicons:cloud-20-solid',
+      'heroicons:cake-20-solid'
+    ];
+
+    function showStickerDetail(packId) {
+      const pack = stickerPacks[packId];
+      const sheet = document.getElementById('stickerSheet');
+      const overlay = document.getElementById('sheetOverlay');
+      const content = document.getElementById('sheetContent');
+      const grid = document.getElementById('stickerGrid');
+
+      document.getElementById('sheetTitle').innerText = pack.name;
+      document.getElementById('addBtn').innerText = `添加 ${pack.count} 张贴纸`;
+
+      // 生成贴纸网格
+      grid.innerHTML = '';
+      for (let i = 0; i < pack.count; i++) {
+        const icon = icons[i % icons.length];
+        const div = document.createElement('div');
+        div.className = 'aspect-square bg-[#3A3A3C] rounded-lg flex items-center justify-center';
+        if (i < 5) {
+          div.innerHTML = `<span class="iconify w-10 h-10 ${pack.color}" data-icon="${icon}"></span>`;
+        } else {
+          div.innerHTML = `<span class="iconify w-10 h-10 text-gray-600" data-icon="${icon}"></span>`;
+        }
+        grid.appendChild(div);
+      }
+
+      sheet.classList.remove('invisible');
+      sheet.classList.add('pointer-events-auto');
+      overlay.classList.remove('opacity-0');
+      overlay.classList.add('opacity-100');
+      content.classList.remove('translate-y-full');
+      content.classList.add('translate-y-0');
+    }
+
+    function hideStickerDetail() {
+      const sheet = document.getElementById('stickerSheet');
+      const overlay = document.getElementById('sheetOverlay');
+      const content = document.getElementById('sheetContent');
+
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0');
+      content.classList.remove('translate-y-0');
+      content.classList.add('translate-y-full');
+
+      setTimeout(() => {
+        sheet.classList.add('invisible');
+        sheet.classList.remove('pointer-events-auto');
+      }, 300);
+    }
+
+    const LOCAL_IMAGE_KEY = 'hrb_local_images_v1';
+    let pendingImport = null;
+
+    function loadLocalImages() {
+      const gallery = document.getElementById('localImportGallery');
+      if (!gallery) return;
+      const raw = localStorage.getItem(LOCAL_IMAGE_KEY);
+      const images = raw ? JSON.parse(raw) : [];
+
+      gallery.innerHTML = '';
+      if (!images.length) {
+        const empty = document.createElement('div');
+        empty.className = 'text-[12px] text-gray-600 py-2';
+        empty.textContent = '暂无导入图片';
+        gallery.appendChild(empty);
+        return;
+      }
+
+      images.slice(0, 12).forEach((img) => {
+        const item = document.createElement('div');
+        item.className = 'w-14 h-14 flex-shrink-0 bg-[#2C2C2E] rounded-lg overflow-hidden border border-[#38383A]';
+        item.innerHTML = `<img alt="local" class="w-full h-full object-cover" src="${img.dataUrl}"/>`;
+        gallery.appendChild(item);
+      });
+    }
+
+    function openImportSheet() {
+      const sheet = document.getElementById('importSheet');
+      const overlay = document.getElementById('importOverlay');
+      const content = document.getElementById('importContent');
+
+      sheet.classList.remove('invisible');
+      sheet.classList.add('pointer-events-auto');
+      overlay.classList.remove('opacity-0');
+      overlay.classList.add('opacity-100');
+      content.classList.remove('translate-y-full');
+      content.classList.add('translate-y-0');
+    }
+
+    function closeImportSheet() {
+      const sheet = document.getElementById('importSheet');
+      const overlay = document.getElementById('importOverlay');
+      const content = document.getElementById('importContent');
+
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0');
+      content.classList.remove('translate-y-0');
+      content.classList.add('translate-y-full');
+
+      setTimeout(() => {
+        sheet.classList.add('invisible');
+        sheet.classList.remove('pointer-events-auto');
+      }, 300);
+    }
+
+    function syncImportPreview(fileName, fileMeta, dataUrl) {
+      const img = document.getElementById('importPreviewImg');
+      const icon = document.getElementById('importPreviewIcon');
+      const nameEl = document.getElementById('importFileName');
+      const metaEl = document.getElementById('importFileMeta');
+
+      nameEl.textContent = fileName;
+      metaEl.textContent = fileMeta;
+
+      if (dataUrl) {
+        img.src = dataUrl;
+        img.classList.remove('hidden');
+        icon.classList.add('hidden');
+      } else {
+        img.classList.add('hidden');
+        icon.classList.remove('hidden');
+      }
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes && bytes !== 0) return '';
+      const units = ['B', 'KB', 'MB'];
+      let size = bytes;
+      let idx = 0;
+      while (size >= 1024 && idx < units.length - 1) {
+        size /= 1024;
+        idx += 1;
+      }
+      return `${size.toFixed(idx === 0 ? 0 : 1)} ${units[idx]}`;
+    }
+
+    document.getElementById('importImageBtn').addEventListener('click', () => {
+      const input = document.getElementById('localImageInput');
+      input.value = '';
+      pendingImport = null;
+      syncImportPreview('未选择图片', '支持 PNG/JPG，建议小于 2MB', null);
+      openImportSheet();
+      setTimeout(() => input.click(), 150);
+    });
+
+    document.getElementById('localImageInput').addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        pendingImport = {
+          id: `img_${Date.now()}`,
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          dataUrl: reader.result
+        };
+        syncImportPreview(file.name, `${file.type || 'image'} · ${formatBytes(file.size)}`, reader.result);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('importCancelBtn').addEventListener('click', closeImportSheet);
+    document.getElementById('importOverlay').addEventListener('click', closeImportSheet);
+
+    document.getElementById('importConfirmBtn').addEventListener('click', () => {
+      if (!pendingImport) {
+        closeImportSheet();
+        return;
+      }
+      const raw = localStorage.getItem(LOCAL_IMAGE_KEY);
+      const images = raw ? JSON.parse(raw) : [];
+      images.unshift(pendingImport);
+      localStorage.setItem(LOCAL_IMAGE_KEY, JSON.stringify(images.slice(0, 30)));
+      pendingImport = null;
+      loadLocalImages();
+      closeImportSheet();
+    });
+
+    loadLocalImages();
+  </script>
+</body>
+</html>

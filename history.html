@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>历史记录</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex justify-center items-center min-h-screen">
+<!-- iPhone 15 Pro Container -->
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- 状态栏 -->
+<div class="h-11 flex justify-between items-center px-8 bg-[#F2F2F7] z-20">
+<span class="text-[15px] font-semibold">9:41</span>
+<div class="flex space-x-1.5 items-center">
+<span class="iconify w-4 h-4" data-icon="heroicons:signal-20-solid"></span>
+<span class="iconify w-4 h-4" data-icon="heroicons:wifi-20-solid"></span>
+<span class="iconify w-5 h-5" data-icon="heroicons:battery-100-20-solid"></span>
+</div>
+</div>
+<!-- 标题栏 -->
+<header class="px-4 pb-2 bg-[#F2F2F7]">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<a href="1-今天.html" class="p-1 hover:bg-gray-200 rounded-full transition-colors">
+<span class="iconify w-6 h-6 text-blue-500" data-icon="heroicons:chevron-left-20-solid"></span>
+</a>
+<h1 class="text-[34px] font-bold text-black">历史</h1>
+</div>
+<button class="p-2 bg-gray-200 rounded-full">
+<span class="iconify w-5 h-5 text-gray-600" data-icon="heroicons:arrow-up-tray-20-solid"></span>
+</button>
+</div>
+<!-- 搜索栏 -->
+<div class="relative">
+<span class="iconify absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" data-icon="heroicons:magnifying-glass-20-solid"></span>
+<input class="w-full bg-gray-200 rounded-xl py-2.5 pl-10 pr-4 text-[16px] focus:outline-none" placeholder="搜索日期或备注..." type="text"/>
+</div>
+<!-- 筛选按钮 -->
+<div class="flex gap-2 mt-3">
+<button class="flex-1 py-2 bg-blue-600 text-white rounded-xl text-[13px] font-semibold">近7日</button>
+<button class="flex-1 py-2 bg-white text-gray-600 rounded-xl text-[13px] font-medium">近30日</button>
+<button class="flex-1 py-2 bg-white text-gray-600 rounded-xl text-[13px] font-medium">自定义</button>
+</div>
+</header>
+<!-- 主内容区 -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-4 pt-4 pb-4 space-y-2">
+<!-- 空状态 (默认隐藏，可切换显示) -->
+<div class="hidden flex-col items-center justify-center py-16 px-8" id="emptyState">
+<div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+<span class="iconify text-gray-300 text-5xl" data-icon="heroicons:clock-20-solid"></span>
+</div>
+<h3 class="text-[20px] font-bold text-gray-800 mb-2">暂无历史记录</h3>
+<p class="text-[14px] text-gray-500 text-center mb-6 leading-relaxed">开始您的第一次心率监测会话，<br/>记录将自动保存在这里</p>
+<a href="1-今天.html" class="px-6 py-3 bg-blue-600 text-white rounded-2xl text-[15px] font-semibold flex items-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95 transition-transform">
+<span class="iconify" data-icon="heroicons:play-20-solid"></span>
+开始监测
+</a>
+<button class="mt-4 text-[13px] text-gray-400 font-medium" onclick="toggleEmptyState()">切换展示状态</button>
+</div>
+<!-- 数据列表容器 -->
+<div id="dataList">
+<!-- 会话卡片 1 (选中状态) -->
+<a href="history-detail.html" class="block bg-white p-4 rounded-2xl shadow-sm animate-slide-in mb-3 active:scale-[0.98] transition-transform" style="animation-delay: 0.1s;">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-[17px] font-bold text-black">2025年12月27日</span>
+<p class="text-[13px] text-gray-500 mt-0.5">09:30 AM · 会话 #HS-01</p>
+</div>
+<span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-[11px] font-bold">达标</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="flex items-center gap-2">
+<span class="iconify text-gray-400 w-4 h-4" data-icon="heroicons:clock-20-solid"></span>
+<span class="text-[13px] text-gray-600">45' 12''</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-red-400 w-4 h-4" data-icon="heroicons:fire-20-solid"></span>
+<span class="text-[13px] text-gray-600">峰值: 142</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-blue-400 w-4 h-4" data-icon="heroicons:chart-bar-20-solid"></span>
+<span class="text-[13px] text-gray-600">均值: 78</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-orange-500 w-4 h-4" data-icon="heroicons:exclamation-triangle-20-solid"></span>
+<span class="text-[13px] text-orange-500 font-medium">越界: 2次</span>
+</div>
+</div>
+<!-- 迷你图表 -->
+<div class="mt-3 h-16 bg-gray-50 rounded-xl overflow-hidden" id="miniChart1"></div>
+</a>
+<!-- 会话卡片 2 -->
+<a href="history-detail.html" class="block bg-white p-4 rounded-2xl shadow-sm animate-slide-in mb-3 active:scale-[0.98] transition-transform" style="animation-delay: 0.2s;">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-[17px] font-bold text-black">2025年12月26日</span>
+<p class="text-[13px] text-gray-500 mt-0.5">14:20 PM · 会话 #HS-02</p>
+</div>
+<span class="px-2.5 py-1 bg-gray-100 text-gray-500 rounded-full text-[11px] font-bold">日常</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="flex items-center gap-2">
+<span class="iconify text-gray-400 w-4 h-4" data-icon="heroicons:clock-20-solid"></span>
+<span class="text-[13px] text-gray-600">32' 05''</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-red-400 w-4 h-4" data-icon="heroicons:fire-20-solid"></span>
+<span class="text-[13px] text-gray-600">峰值: 128</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-blue-400 w-4 h-4" data-icon="heroicons:chart-bar-20-solid"></span>
+<span class="text-[13px] text-gray-600">均值: 72</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-green-500 w-4 h-4" data-icon="heroicons:check-circle-20-solid"></span>
+<span class="text-[13px] text-green-500">越界: 0次</span>
+</div>
+</div>
+</a>
+<!-- 会话卡片 3 -->
+<a href="history-detail.html" class="block bg-white p-4 rounded-2xl shadow-sm animate-slide-in mb-3 active:scale-[0.98] transition-transform" style="animation-delay: 0.3s;">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-[17px] font-bold text-black">2025年12月25日</span>
+<p class="text-[13px] text-gray-500 mt-0.5">10:15 AM · 会话 #HS-03</p>
+</div>
+<span class="px-2.5 py-1 bg-orange-100 text-orange-600 rounded-full text-[11px] font-bold">警告</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="flex items-center gap-2">
+<span class="iconify text-gray-400 w-4 h-4" data-icon="heroicons:clock-20-solid"></span>
+<span class="text-[13px] text-gray-600">58' 40''</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-red-400 w-4 h-4" data-icon="heroicons:fire-20-solid"></span>
+<span class="text-[13px] text-gray-600">峰值: 156</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-blue-400 w-4 h-4" data-icon="heroicons:chart-bar-20-solid"></span>
+<span class="text-[13px] text-gray-600">均值: 85</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-orange-500 w-4 h-4" data-icon="heroicons:exclamation-triangle-20-solid"></span>
+<span class="text-[13px] text-orange-500 font-medium">越界: 5次</span>
+</div>
+</div>
+</a>
+<!-- 会话卡片 4 -->
+<a href="history-detail.html" class="block bg-white p-4 rounded-2xl shadow-sm animate-slide-in mb-3 active:scale-[0.98] transition-transform" style="animation-delay: 0.4s;">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-[17px] font-bold text-black">2025年12月24日</span>
+<p class="text-[13px] text-gray-500 mt-0.5">16:45 PM · 会话 #HS-04</p>
+</div>
+<span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-[11px] font-bold">达标</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="flex items-center gap-2">
+<span class="iconify text-gray-400 w-4 h-4" data-icon="heroicons:clock-20-solid"></span>
+<span class="text-[13px] text-gray-600">28' 30''</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-red-400 w-4 h-4" data-icon="heroicons:fire-20-solid"></span>
+<span class="text-[13px] text-gray-600">峰值: 118</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-blue-400 w-4 h-4" data-icon="heroicons:chart-bar-20-solid"></span>
+<span class="text-[13px] text-gray-600">均值: 70</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="iconify text-green-500 w-4 h-4" data-icon="heroicons:check-circle-20-solid"></span>
+<span class="text-[13px] text-green-500">越界: 0次</span>
+</div>
+</div>
+</a>
+<!-- 加载更多 -->
+<div class="py-4 text-center">
+<button class="text-[14px] text-blue-600 font-medium">加载更多记录...</button>
+</div>
+</div>
+</main>
+<!-- 底部Tab栏 -->
+<nav class="h-20 bg-white/80 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-4 pb-4">
+<a href="1-今天.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="heroicons:calendar-days-solid"></span>
+<span class="text-[10px] font-medium">今天</span>
+</a>
+<a href="2-设备.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="heroicons:cpu-chip-20-solid"></span>
+<span class="text-[10px] font-medium">设备</span>
+</a>
+<a href="3-广播.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="solar:graph-up-bold-duotone"></span>
+<span class="text-[10px] font-medium">广播</span>
+</a>
+<a href="4-设置.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+<span class="iconify text-2xl" data-icon="heroicons:cog-8-tooth-20-solid"></span>
+<span class="text-[10px] font-medium">设置</span>
+</a>
+</nav>
+<!-- 详情Sheet弹窗 -->
+<div class="absolute inset-0 z-30 invisible pointer-events-none transition-all duration-300" id="detailSheet">
+<div class="absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-300" id="sheetOverlay" onclick="hideDetail()"></div>
+<div class="absolute bottom-0 w-full h-[85%] bg-white rounded-t-[20px] shadow-2xl translate-y-full transition-transform duration-300 flex flex-col overflow-hidden" id="sheetContent">
+<div class="h-1.5 w-10 bg-gray-300 rounded-full mx-auto mt-2"></div>
+<div class="flex justify-between items-center px-4 py-3 border-b border-gray-100">
+<h2 class="text-[17px] font-bold">健康分析详情</h2>
+<button class="text-blue-600 font-medium text-[16px]" onclick="hideDetail()">完成</button>
+</div>
+<div class="flex-1 overflow-y-auto hide-scrollbar p-4 space-y-4">
+<!-- 会话信息 -->
+<div class="text-center py-2">
+<p class="text-[13px] text-gray-500">会话 ID: #HS-20251227-01</p>
+<p class="text-[13px] text-gray-500">开始于 09:30 AM</p>
+</div>
+<!-- KPI卡片 -->
+<div class="grid grid-cols-2 gap-3">
+<div class="bg-blue-50 p-3 rounded-xl">
+<p class="text-[11px] text-blue-600 font-bold uppercase">区间占比</p>
+<p class="text-[24px] font-black text-blue-900">82<span class="text-[14px]">%</span></p>
+</div>
+<div class="bg-green-50 p-3 rounded-xl">
+<p class="text-[11px] text-green-600 font-bold uppercase">持续时间</p>
+<p class="text-[24px] font-black text-green-900">45<span class="text-[14px]"> min</span></p>
+</div>
+<div class="bg-orange-50 p-3 rounded-xl">
+<p class="text-[11px] text-orange-600 font-bold uppercase">平均指标</p>
+<p class="text-[24px] font-black text-orange-900">78</p>
+</div>
+<div class="bg-red-50 p-3 rounded-xl">
+<p class="text-[11px] text-red-600 font-bold uppercase">峰值负荷</p>
+<p class="text-[24px] font-black text-red-900">142</p>
+</div>
+</div>
+<!-- 趋势图表 -->
+<div class="bg-gray-50 rounded-xl p-4">
+<h3 class="text-[14px] font-bold text-gray-800 mb-3">实时趋势曲线</h3>
+<div class="w-full h-[160px]" id="detailChart"></div>
+</div>
+<!-- 事件时间线 -->
+<div class="space-y-3">
+<h3 class="text-[14px] font-bold text-gray-800">关键事件</h3>
+<div class="bg-red-50 p-3 rounded-xl border-l-4 border-red-500">
+<p class="text-[13px] font-bold text-gray-800">09:42:15 - 峰值预警</p>
+<p class="text-[12px] text-gray-500 mt-1">监测到指标激增至 142，触发一级反馈。</p>
+</div>
+<div class="bg-blue-50 p-3 rounded-xl border-l-4 border-blue-500">
+<p class="text-[13px] font-bold text-gray-800">09:55:00 - 会话偏移</p>
+<p class="text-[12px] text-gray-500 mt-1">平均值轻微向下偏移，建议调整基准。</p>
+</div>
+</div>
+<!-- 导出按钮 -->
+<div class="grid grid-cols-2 gap-3 pt-2">
+<button class="py-3 bg-gray-100 rounded-xl text-[14px] font-semibold text-gray-700 flex items-center justify-center gap-2">
+<span class="iconify w-5 h-5" data-icon="heroicons:document-arrow-down-20-solid"></span>
+导出 CSV
+</button>
+<button class="py-3 bg-blue-600 rounded-xl text-[14px] font-semibold text-white flex items-center justify-center gap-2">
+<span class="iconify w-5 h-5" data-icon="heroicons:printer-20-solid"></span>
+生成报告
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full z-50"></div>
+</div>
+<script>
+    // 空状态切换
+    function toggleEmptyState() {
+      const emptyState = document.getElementById('emptyState');
+      const dataList = document.getElementById('dataList');
+      if (emptyState.classList.contains('hidden')) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        dataList.classList.add('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+        dataList.classList.remove('hidden');
+      }
+    }
+
+    // 迷你图表
+    const miniChart1 = echarts.init(document.getElementById('miniChart1'));
+    miniChart1.setOption({
+      grid: { left: 0, right: 0, top: 5, bottom: 5 },
+      xAxis: { type: 'category', show: false },
+      yAxis: { type: 'value', show: false, min: 50, max: 160 },
+      series: [{
+        data: [65, 72, 85, 142, 110, 88, 75, 82, 78, 70],
+        type: 'line',
+        smooth: true,
+        symbol: 'none',
+        lineStyle: { color: '#3b82f6', width: 2 },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(59, 130, 246, 0.3)' },
+            { offset: 1, color: 'rgba(59, 130, 246, 0)' }
+          ])
+        }
+      }]
+    });
+
+    // 详情Sheet图表
+    let detailChart = null;
+
+    function showDetail() {
+      const sheet = document.getElementById('detailSheet');
+      const overlay = document.getElementById('sheetOverlay');
+      const content = document.getElementById('sheetContent');
+
+      sheet.classList.remove('invisible');
+      sheet.classList.add('pointer-events-auto');
+      overlay.classList.remove('opacity-0');
+      overlay.classList.add('opacity-100');
+      content.classList.remove('translate-y-full');
+      content.classList.add('translate-y-0');
+
+      // 初始化详情图表
+      setTimeout(() => {
+        if (!detailChart) {
+          detailChart = echarts.init(document.getElementById('detailChart'));
+        }
+        detailChart.setOption({
+          grid: { left: 30, right: 10, top: 10, bottom: 25 },
+          xAxis: {
+            type: 'category',
+            data: ['09:30', '09:35', '09:40', '09:45', '09:50', '09:55', '10:00', '10:05', '10:10', '10:15'],
+            axisLine: { lineStyle: { color: '#e5e7eb' } },
+            axisLabel: { color: '#9ca3af', fontSize: 9 }
+          },
+          yAxis: {
+            type: 'value',
+            splitLine: { lineStyle: { type: 'dashed', color: '#f3f4f6' } },
+            axisLabel: { color: '#9ca3af', fontSize: 9 }
+          },
+          series: [{
+            data: [65, 72, 85, 142, 110, 88, 75, 82, 78, 70],
+            type: 'line',
+            smooth: true,
+            symbolSize: 6,
+            itemStyle: { color: '#3b82f6' },
+            lineStyle: { width: 2, color: '#3b82f6' },
+            areaStyle: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                { offset: 0, color: 'rgba(59, 130, 246, 0.2)' },
+                { offset: 1, color: 'rgba(59, 130, 246, 0)' }
+              ])
+            },
+            markLine: {
+              symbol: 'none',
+              label: { show: false },
+              data: [{ yAxis: 130, lineStyle: { color: '#f97316', type: 'dashed' } }]
+            }
+          }]
+        });
+        detailChart.resize();
+      }, 350);
+    }
+
+    function hideDetail() {
+      const sheet = document.getElementById('detailSheet');
+      const overlay = document.getElementById('sheetOverlay');
+      const content = document.getElementById('sheetContent');
+
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0');
+      content.classList.remove('translate-y-0');
+      content.classList.add('translate-y-full');
+
+      setTimeout(() => {
+        sheet.classList.add('invisible');
+        sheet.classList.remove('pointer-events-auto');
+      }, 300);
+    }
+  </script>
+</body>
+</html>

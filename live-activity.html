@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>灵动岛与实时活动预览</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .animate-heartbeat { animation: heartbeat 1s infinite; }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.7; }
+      50% { transform: scale(1.05); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.7; }
+    }
+    .pulse-ring { animation: pulse-ring 2s infinite; }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in { animation: slideIn 0.4s ease-out forwards; }
+    .dynamic-island {
+      background: #000;
+      border-radius: 36px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .dynamic-island.expanded {
+      border-radius: 44px;
+    }
+</style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden flex flex-col relative">
+
+<!-- 灵动岛区域 -->
+<div class="absolute top-4 left-1/2 -translate-x-1/2 z-50">
+  <!-- 紧凑态 -->
+  <div class="dynamic-island w-[126px] h-[37px] flex items-center justify-between px-3 cursor-pointer" id="compactIsland" onclick="expandIsland()">
+    <div class="flex items-center gap-1.5">
+      <span class="iconify text-rose-500 text-sm animate-heartbeat" data-icon="solar:heart-bold"></span>
+      <span class="text-white text-xs font-bold tabular-nums">128</span>
+    </div>
+    <div class="w-6 h-6 rounded-full bg-rose-500/20 flex items-center justify-center">
+      <div class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></div>
+    </div>
+  </div>
+
+  <!-- 展开态 -->
+  <div class="dynamic-island expanded w-[351px] h-[84px] hidden flex-col p-3" id="expandedIsland" onclick="collapseIsland()">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center relative">
+          <span class="iconify text-rose-500 text-2xl animate-heartbeat" data-icon="solar:heart-bold"></span>
+          <div class="absolute inset-0 rounded-full border-2 border-rose-500/30 pulse-ring"></div>
+        </div>
+        <div>
+          <div class="flex items-baseline gap-1">
+            <span class="text-white text-3xl font-black tabular-nums" id="islandHR">128</span>
+            <span class="text-white/60 text-sm">BPM</span>
+          </div>
+          <p class="text-white/40 text-[10px]">有氧燃脂区间</p>
+        </div>
+      </div>
+      <div class="flex flex-col items-end gap-1">
+        <div class="flex items-center gap-1">
+          <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+          <span class="text-white/60 text-[10px]">广播中</span>
+        </div>
+        <span class="text-white/40 text-[10px]">00:45:32</span>
+      </div>
+    </div>
+    <div class="flex gap-1 mt-2 h-1">
+      <div class="flex-1 bg-blue-400/30 rounded-full"></div>
+      <div class="flex-1 bg-green-400 rounded-full relative">
+        <div class="absolute top-1/2 left-[60%] -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow"></div>
+      </div>
+      <div class="flex-1 bg-yellow-400/30 rounded-full"></div>
+      <div class="flex-1 bg-orange-400/30 rounded-full"></div>
+      <div class="flex-1 bg-rose-500/30 rounded-full"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="px-5 pt-16 pb-2 bg-[#F2F2F7]">
+  <div class="flex items-center justify-between">
+    <a href="4-设置.html" class="w-8 h-8 flex items-center justify-center">
+      <span class="iconify text-2xl text-gray-800" data-icon="solar:alt-arrow-left-linear"></span>
+    </a>
+    <h1 class="text-lg font-bold text-gray-900">灵动岛预览</h1>
+    <div class="w-8"></div>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-5 space-y-5 pb-4">
+
+<!-- 说明卡片 -->
+<section class="animate-slide-in" style="animation-delay: 0.1s;">
+  <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-3xl p-5 text-white">
+    <div class="flex items-center gap-2 mb-3">
+      <span class="iconify text-2xl" data-icon="solar:iphone-bold-duotone"></span>
+      <span class="font-bold">Live Activity</span>
+      <span class="text-[10px] bg-white/20 px-2 py-0.5 rounded-full">iOS 18</span>
+    </div>
+    <p class="text-sm text-white/80 leading-relaxed">
+      实时活动会在灵动岛和锁屏界面显示心率数据，让你随时掌握运动状态。
+    </p>
+    <p class="text-xs text-white/60 mt-2">
+      点击上方灵动岛可切换紧凑/展开状态
+    </p>
+  </div>
+</section>
+
+<!-- 锁屏预览 -->
+<section class="animate-slide-in" style="animation-delay: 0.2s;">
+  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2 mb-3">锁屏实时活动</h3>
+  <div class="bg-gradient-to-b from-gray-800 to-gray-900 rounded-3xl p-4 relative overflow-hidden">
+    <!-- 模拟锁屏时间 -->
+    <div class="text-center mb-4">
+      <p class="text-white/40 text-xs">12月28日 周六</p>
+      <p class="text-white text-5xl font-thin">14:32</p>
+    </div>
+
+    <!-- Live Activity 卡片 -->
+    <div class="bg-white/10 backdrop-blur-xl rounded-2xl p-4 border border-white/10">
+      <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-rose-500 flex items-center justify-center">
+            <span class="iconify text-white" data-icon="solar:heart-bold"></span>
+          </div>
+          <div>
+            <p class="text-white text-sm font-semibold">心率嘀嗒</p>
+            <p class="text-white/50 text-[10px]">训练进行中</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-white text-2xl font-black tabular-nums">128</p>
+          <p class="text-white/50 text-[10px]">BPM</p>
+        </div>
+      </div>
+
+      <!-- 区间条 -->
+      <div class="flex gap-1 h-2 rounded-full overflow-hidden">
+        <div class="w-[15%] bg-blue-400"></div>
+        <div class="w-[25%] bg-green-400 relative">
+          <div class="absolute right-2 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-lg"></div>
+        </div>
+        <div class="w-[20%] bg-yellow-400"></div>
+        <div class="w-[20%] bg-orange-400"></div>
+        <div class="w-[20%] bg-rose-500"></div>
+      </div>
+
+      <div class="flex justify-between mt-3 text-[10px] text-white/50">
+        <span>00:45:32</span>
+        <span>均值 118 BPM</span>
+        <span>峰值 142 BPM</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Apple Watch Smart Stack 预览 -->
+<section class="animate-slide-in" style="animation-delay: 0.3s;">
+  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2 mb-3">Apple Watch Smart Stack</h3>
+  <div class="flex justify-center">
+    <div class="w-[180px] h-[220px] bg-black rounded-[40px] p-3 relative">
+      <!-- Watch 边框 -->
+      <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-gray-700 rounded-l"></div>
+
+      <!-- Watch 屏幕 -->
+      <div class="w-full h-full bg-gradient-to-b from-gray-900 to-black rounded-[32px] p-3 flex flex-col">
+        <p class="text-white/40 text-[8px] text-center mb-1">14:32</p>
+
+        <!-- Live Activity 卡片 -->
+        <div class="flex-1 bg-gradient-to-br from-rose-500/20 to-rose-600/10 rounded-2xl p-2 border border-rose-500/20">
+          <div class="flex items-center justify-between mb-2">
+            <span class="iconify text-rose-500 text-lg animate-heartbeat" data-icon="solar:heart-bold"></span>
+            <span class="text-[8px] text-green-400 flex items-center gap-0.5">
+              <span class="w-1 h-1 rounded-full bg-green-400"></span>
+              广播中
+            </span>
+          </div>
+          <div class="text-center">
+            <p class="text-white text-3xl font-black tabular-nums">128</p>
+            <p class="text-white/50 text-[8px]">BPM</p>
+          </div>
+          <div class="flex gap-0.5 mt-2 h-1 rounded-full overflow-hidden">
+            <div class="flex-1 bg-blue-400/50"></div>
+            <div class="flex-1 bg-green-400"></div>
+            <div class="flex-1 bg-yellow-400/50"></div>
+            <div class="flex-1 bg-rose-500/50"></div>
+          </div>
+          <p class="text-white/40 text-[7px] text-center mt-1">有氧燃脂</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="text-center text-xs text-gray-400 mt-3">iOS 18 自动同步到 Apple Watch Smart Stack</p>
+</section>
+
+<!-- 配置选项 -->
+<section class="animate-slide-in" style="animation-delay: 0.4s;">
+  <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-2 mb-3">显示配置</h3>
+  <div class="bg-white rounded-2xl overflow-hidden border border-gray-100">
+    <div class="flex items-center justify-between p-4 border-b border-gray-50">
+      <div class="flex items-center gap-3">
+        <span class="iconify text-xl text-purple-500" data-icon="solar:smartphone-2-bold-duotone"></span>
+        <span class="text-sm font-medium">灵动岛显示</span>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input checked class="sr-only peer" type="checkbox"/>
+        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+      </label>
+    </div>
+    <div class="flex items-center justify-between p-4 border-b border-gray-50">
+      <div class="flex items-center gap-3">
+        <span class="iconify text-xl text-indigo-500" data-icon="solar:lock-keyhole-bold-duotone"></span>
+        <span class="text-sm font-medium">锁屏显示</span>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input checked class="sr-only peer" type="checkbox"/>
+        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+      </label>
+    </div>
+    <div class="flex items-center justify-between p-4">
+      <div class="flex items-center gap-3">
+        <span class="iconify text-xl text-gray-500" data-icon="solar:watch-square-bold-duotone"></span>
+        <span class="text-sm font-medium">同步到 Apple Watch</span>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input checked class="sr-only peer" type="checkbox"/>
+        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+      </label>
+    </div>
+  </div>
+</section>
+
+<!-- 更新频率说明 -->
+<section class="animate-slide-in" style="animation-delay: 0.5s;">
+  <div class="bg-amber-50 rounded-2xl p-4 border border-amber-100">
+    <div class="flex items-start gap-3">
+      <span class="iconify text-amber-500 mt-0.5" data-icon="solar:info-circle-bold"></span>
+      <div>
+        <p class="text-sm font-semibold text-amber-800">更新频率说明</p>
+        <p class="text-xs text-amber-700/70 mt-1 leading-relaxed">
+          iOS 18 对 Live Activity 更新频率有限制（5-15秒），同步到 Apple Watch 会消耗更新预算。心率数据会智能聚合以确保关键变化及时显示。
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- Tab Bar -->
+<nav class="h-20 bg-white/80 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-4 pb-4">
+  <a href="1-今天.html" class="flex flex-col items-center space-y-1 text-gray-400">
+    <span class="iconify text-2xl" data-icon="heroicons:calendar-days-solid"></span>
+    <span class="text-[10px] font-medium">今天</span>
+  </a>
+  <a href="2-设备.html" class="flex flex-col items-center space-y-1 text-gray-400">
+    <span class="iconify text-2xl" data-icon="heroicons:cpu-chip-20-solid"></span>
+    <span class="text-[10px] font-medium">设备</span>
+  </a>
+  <a href="3-广播.html" class="flex flex-col items-center space-y-1 text-gray-400">
+    <span class="iconify text-2xl" data-icon="solar:graph-up-bold-duotone"></span>
+    <span class="text-[10px] font-medium">广播</span>
+  </a>
+  <a href="4-设置.html" class="flex flex-col items-center space-y-1 text-blue-500">
+    <span class="iconify text-2xl" data-icon="heroicons:cog-8-tooth-20-solid"></span>
+    <span class="text-[10px] font-medium">设置</span>
+  </a>
+</nav>
+
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+
+<script>
+function expandIsland() {
+  document.getElementById('compactIsland').classList.add('hidden');
+  document.getElementById('expandedIsland').classList.remove('hidden');
+  document.getElementById('expandedIsland').classList.add('flex');
+}
+
+function collapseIsland() {
+  document.getElementById('expandedIsland').classList.add('hidden');
+  document.getElementById('expandedIsland').classList.remove('flex');
+  document.getElementById('compactIsland').classList.remove('hidden');
+}
+
+// 模拟心率变化
+let hr = 128;
+setInterval(() => {
+  hr += Math.floor(Math.random() * 5) - 2;
+  hr = Math.max(100, Math.min(150, hr));
+  document.getElementById('islandHR').textContent = hr;
+}, 2000);
+</script>
+</body>
+</html>

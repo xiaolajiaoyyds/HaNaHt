@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>心率历史记录</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .animate-in { animation: fadeIn 0.5s ease-out; }
+  </style>
+</head>
+<body class="bg-zinc-100 flex justify-center items-center min-h-screen">
+<!-- iPhone 15 Pro Container -->
+<div class="w-[375px] h-[812px] bg-white rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- 状态栏 -->
+<div class="h-12 w-full flex justify-between items-center px-8 flex-shrink-0 bg-white/90 backdrop-blur-md sticky top-0 z-20">
+<span class="text-[15px] font-bold">9:41</span>
+<div class="flex space-x-1.5 items-center">
+<span class="iconify w-4 h-4" data-icon="heroicons:signal-20-solid"></span>
+<span class="iconify w-4 h-4" data-icon="heroicons:wifi-20-solid"></span>
+<span class="iconify w-6 h-6 rotate-90" data-icon="heroicons:battery-100-20-solid"></span>
+</div>
+</div>
+<!-- 标题及筛选 -->
+<header class="bg-white/90 backdrop-blur-md px-5 pb-3 border-b border-zinc-100 z-10">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<a href="1-今天.html" class="p-1 hover:bg-zinc-100 rounded-full transition-colors">
+<span class="iconify w-6 h-6 text-zinc-600" data-icon="heroicons:chevron-left-20-solid"></span>
+</a>
+<h1 class="text-2xl font-bold text-zinc-900">历史记录</h1>
+</div>
+<button class="flex items-center space-x-1 text-blue-600 active:scale-95 transition-transform">
+<span class="iconify w-5 h-5" data-icon="heroicons:arrow-up-tray-20-solid"></span>
+<span class="text-sm font-medium">导出所有</span>
+</button>
+</div>
+<div class="flex space-x-2 overflow-x-auto hide-scrollbar">
+<button class="px-4 py-1.5 bg-zinc-900 text-white rounded-full text-xs font-semibold whitespace-nowrap">全部</button>
+<button class="px-4 py-1.5 bg-zinc-100 text-zinc-500 rounded-full text-xs font-semibold whitespace-nowrap">最近7天</button>
+<button class="px-4 py-1.5 bg-zinc-100 text-zinc-500 rounded-full text-xs font-semibold whitespace-nowrap">按运动</button>
+<button class="px-4 py-1.5 bg-zinc-100 text-zinc-500 rounded-full text-xs font-semibold whitespace-nowrap">按静息</button>
+</div>
+</header>
+<!-- 主内容区 -->
+<main class="flex-1 overflow-y-auto hide-scrollbar bg-zinc-50/50">
+<!-- 详情卡片 (当前选中详情) -->
+<section class="p-4 animate-in">
+<div class="bg-white rounded-3xl p-5 shadow-sm border border-zinc-100 space-y-4">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest leading-none">最近会话</p>
+<h2 class="text-lg font-bold text-zinc-900 mt-1">2025年12月26日 09:20</h2>
+</div>
+<span class="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-[11px] font-bold">详情</span>
+</div>
+<!-- 趋势图 -->
+<div class="w-full h-32" id="historyChart"></div>
+<!-- 关键指标 -->
+<div class="grid grid-cols-4 gap-2 border-t border-zinc-50 pt-4">
+<div class="text-center">
+<p class="text-[9px] text-zinc-400 uppercase font-black">时长</p>
+<p class="text-sm font-bold text-zinc-800">42m</p>
+</div>
+<div class="text-center border-l border-zinc-100">
+<p class="text-[9px] text-zinc-400 uppercase font-black">均值</p>
+<p class="text-sm font-bold text-zinc-800">76</p>
+</div>
+<div class="text-center border-l border-zinc-100">
+<p class="text-[9px] text-zinc-400 uppercase font-black">峰值</p>
+<p class="text-sm font-bold text-zinc-800">142</p>
+</div>
+<div class="text-center border-l border-zinc-100">
+<p class="text-[9px] text-zinc-400 uppercase font-black">越界</p>
+<p class="text-sm font-bold text-rose-500">23</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 时间线事件 -->
+<section class="px-4 mb-6">
+<h3 class="text-xs font-bold text-zinc-400 mb-3 px-1 uppercase tracking-widest">事件时间线</h3>
+<div class="space-y-3">
+<div class="flex items-start space-x-3 bg-white p-3 rounded-2xl border border-zinc-100">
+<div class="w-2 h-2 rounded-full bg-rose-500 mt-1.5 shadow-[0_0_8px_rgba(244,63,94,0.4)]"></div>
+<div class="flex-1">
+<p class="text-xs font-bold text-zinc-800">心率过高警告 (158 BPM)</p>
+<p class="text-[10px] text-zinc-400">09:42:31 · 持续 12 秒</p>
+</div>
+</div>
+<div class="flex items-start space-x-3 bg-white p-3 rounded-2xl border border-zinc-100">
+<div class="w-2 h-2 rounded-full bg-blue-400 mt-1.5"></div>
+<div class="flex-1">
+<p class="text-xs font-bold text-zinc-800">心率回归正常</p>
+<p class="text-[10px] text-zinc-400">09:42:43 · 参数已平滑</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 历史列表 -->
+<section class="px-4 space-y-3 pb-8">
+<h3 class="text-xs font-bold text-zinc-400 mb-3 px-1 uppercase tracking-widest">往期会话</h3>
+<div class="bg-white rounded-2xl border border-zinc-100 divide-y divide-zinc-50 overflow-hidden">
+<div class="p-4 flex items-center justify-between hover:bg-zinc-50 transition-colors">
+<div class="space-y-1">
+<p class="text-sm font-bold text-zinc-800">2025年12月25日 14:10</p>
+<div class="flex items-center space-x-2 text-[10px] text-zinc-400 font-medium">
+<span>1h 12m</span>
+<span class="w-1 h-1 bg-zinc-300 rounded-full"></span>
+<span>Avg 68</span>
+<span class="w-1 h-1 bg-zinc-300 rounded-full"></span>
+<span class="text-orange-500">4 次越界</span>
+</div>
+</div>
+<span class="iconify text-zinc-300" data-icon="heroicons:chevron-right-20-solid"></span>
+</div>
+<div class="p-4 flex items-center justify-between hover:bg-zinc-50 transition-colors">
+<div class="space-y-1">
+<p class="text-sm font-bold text-zinc-800">2025年12月24日 22:30</p>
+<div class="flex items-center space-x-2 text-[10px] text-zinc-400 font-medium">
+<span>0h 45m</span>
+<span class="w-1 h-1 bg-zinc-300 rounded-full"></span>
+<span>Avg 62</span>
+<span class="w-1 h-1 bg-zinc-300 rounded-full"></span>
+<span class="text-green-500">正常</span>
+</div>
+</div>
+<span class="iconify text-zinc-300" data-icon="heroicons:chevron-right-20-solid"></span>
+</div>
+<div class="p-4 flex items-center justify-between hover:bg-zinc-50 transition-colors">
+<div class="space-y-1">
+<p class="text-sm font-bold text-zinc-800">2025年12月24日 08:15</p>
+<div class="flex items-center space-x-2 text-[10px] text-zinc-400 font-medium">
+<span>2h 05m</span>
+<span class="w-1 h-1 bg-zinc-300 rounded-full"></span>
+<span>Avg 74</span>
+<span class="w-1 h-1 bg-zinc-300 rounded-full"></span>
+<span class="text-orange-500">2 次越界</span>
+</div>
+</div>
+<span class="iconify text-zinc-300" data-icon="heroicons:chevron-right-20-solid"></span>
+</div>
+</div>
+</section>
+</main>
+<!-- 底部主页指示器 -->
+<div class="h-8 w-full flex justify-center items-end pb-2 bg-white flex-shrink-0">
+<div class="w-32 h-1 bg-zinc-900 rounded-full"></div>
+</div>
+</div>
+<script>
+    const chartDom = document.getElementById('historyChart');
+    const myChart = echarts.init(chartDom);
+    const option = {
+      grid: { left: 5, right: 5, top: 10, bottom: 0 },
+      xAxis: { type: 'category', show: false },
+      yAxis: { type: 'value', show: false, min: 60, max: 150 },
+      series: [
+        {
+          data: [72, 75, 71, 85, 92, 105, 120, 142, 130, 95, 82, 78, 75, 73, 72, 76, 80],
+          type: 'line',
+          smooth: true,
+          symbol: 'none',
+          lineStyle: { color: '#3b82f6', width: 3 },
+          areaStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: 'rgba(59, 130, 246, 0.15)' },
+              { offset: 1, color: 'transparent' }
+            ])
+          },
+          markArea: {
+            itemStyle: { color: 'rgba(239, 68, 68, 0.05)' },
+            data: [[{ yAxis: 110 }, { yAxis: 150 }]]
+          }
+        }
+      ]
+    };
+    myChart.setOption(option);
+    
+    window.addEventListener('resize', () => myChart.resize());
+  </script>
+</body>
+</html>

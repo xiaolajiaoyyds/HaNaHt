@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>桌面配对Sheet</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .animate-slide-up {
+      animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+</head>
+<body class="bg-slate-900 flex items-center justify-center min-h-screen font-sans">
+<!-- iPhone 15 Pro Container (375x812) -->
+<div class="w-[375px] h-[812px] bg-white rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- Status Bar Area -->
+<div class="h-11 w-full flex justify-between items-center px-8 pt-4">
+<span class="text-sm font-semibold">9:41</span>
+<div class="flex items-center space-x-2">
+<span class="iconify" data-icon="heroicons:signal-20-solid"></span>
+<span class="iconify" data-icon="heroicons:wifi-20-solid"></span>
+<span class="iconify" data-icon="heroicons:battery-50-20-solid"></span>
+</div>
+</div>
+<!-- Main Content Area (Scrollable) -->
+<div class="h-[676px] overflow-y-auto hide-scrollbar px-5 pt-4 pb-20">
+<!-- Header -->
+<div class="flex items-center justify-between mb-6">
+<h1 class="text-2xl font-bold text-slate-900">配对桌面设备</h1>
+<a href="4-设置.html" class="w-8 h-8 flex items-center justify-center bg-slate-100 rounded-full">
+<span class="iconify text-slate-500" data-icon="heroicons:x-mark-20-solid"></span>
+</a>
+</div>
+
+<div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-6 hidden" id="cnOfflineNotice">
+  <div class="flex items-start gap-3">
+    <span class="iconify text-blue-600 mt-0.5" data-icon="heroicons:shield-check-20-solid" data-width="18"></span>
+    <div>
+      <p class="text-[13px] font-semibold text-blue-700">中国区单机版</p>
+      <p class="text-[11px] text-blue-700/70 mt-1">已禁用所有联网能力，无法使用桌面配对与云中继。</p>
+    </div>
+  </div>
+</div>
+
+<div class="bg-amber-50 border border-amber-100 rounded-2xl p-4 mb-6 hidden" id="networkOffNotice">
+  <div class="flex items-start gap-3">
+    <span class="iconify text-amber-600 mt-0.5" data-icon="heroicons:exclamation-triangle-20-solid" data-width="18"></span>
+    <div>
+      <p class="text-[13px] font-semibold text-amber-800">联网功能未开启</p>
+      <p class="text-[11px] text-amber-800/70 mt-1">请先在「设置 → 联网功能」开启后再进行桌面配对。</p>
+    </div>
+  </div>
+</div>
+
+<div id="networkOnlyContent">
+<!-- Quick Explanation -->
+<p class="text-sm text-slate-500 mb-6 leading-relaxed">
+        请确保您的手机与电脑处于<span class="text-blue-600 font-medium">同一局域网</span>即可自动直连。
+      </p>
+
+<div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-6">
+  <div class="flex items-center justify-between mb-3">
+    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">在电脑浏览器打开</p>
+    <div class="flex items-center gap-2">
+      <button class="w-9 h-9 bg-white border border-slate-200 rounded-xl flex items-center justify-center active:scale-95 transition-transform" id="copyServerBtn">
+        <span class="iconify text-slate-700" data-icon="heroicons:document-duplicate-20-solid" data-width="18"></span>
+      </button>
+      <button class="w-9 h-9 bg-white border border-slate-200 rounded-xl flex items-center justify-center active:scale-95 transition-transform" id="shareServerBtn">
+        <span class="iconify text-slate-700" data-icon="heroicons:square-2-stack-20-solid" data-width="18"></span>
+      </button>
+    </div>
+  </div>
+  <a class="block text-[15px] font-mono text-blue-600 break-all" href="#" id="serverUrlLink"></a>
+  <div class="flex items-center gap-2 mt-3">
+    <span class="text-[10px] bg-slate-900 text-white px-1.5 py-0.5 rounded font-black italic">OBS</span>
+    <a class="text-[13px] font-mono text-purple-600 break-all" href="#" id="obsUrlLink"></a>
+  </div>
+  <p class="mt-3 text-[11px] text-slate-500 leading-relaxed">电脑端无法扫描手机二维码时，请直接输入上述地址；也可复制后通过聊天工具发送到电脑。</p>
+</div>
+<!-- Connection Tabs (QR / Code) -->
+<div class="bg-slate-100 p-1 rounded-xl flex mb-6">
+<button class="flex-1 py-1.5 text-sm font-medium bg-white rounded-lg shadow-sm text-slate-900">二维码扫码</button>
+<button class="flex-1 py-1.5 text-sm font-medium text-slate-500">配对码</button>
+</div>
+<!-- QR Code Section -->
+<div class="bg-slate-50 rounded-2xl p-8 flex flex-col items-center justify-center border border-slate-100 mb-6">
+<div class="w-48 h-48 bg-white p-2 rounded-xl shadow-sm border border-slate-200 relative">
+<img alt="Connection QR Code" class="w-full h-full" id="1" src="https://modao.cc/agent-py/media/generated_images/2025-12-26/2961957311fa4ccead94176548f9dc79.jpg"/>
+<div class="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-[1px] opacity-0 hover:opacity-100 transition-opacity cursor-pointer">
+<span class="iconify text-slate-800 text-3xl" data-icon="heroicons:arrow-path-20-solid"></span>
+</div>
+</div>
+<p class="mt-4 text-xs text-slate-400">有效期：15 分钟</p>
+</div>
+<!-- 配对码 Section (Secondary) -->
+<div class="mb-8">
+<label class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 block">您的 6 位配对码</label>
+<div class="flex items-center justify-between space-x-3">
+<div class="flex-1 h-14 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-center text-2xl font-mono font-bold tracking-[0.5em] text-blue-600">
+            829401
+          </div>
+<button class="h-14 px-4 bg-slate-900 text-white rounded-xl flex items-center justify-center active:scale-95 transition-transform" onclick="alert('已复制到剪贴板')">
+<span class="iconify text-xl" data-icon="heroicons:document-duplicate-20-solid"></span>
+</button>
+</div>
+</div>
+<!-- Cloud Relay Pro Switch -->
+<div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 mb-8">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center space-x-2">
+<span class="iconify text-blue-600 text-xl" data-icon="heroicons:cloud-20-solid"></span>
+<span class="text-sm font-bold text-blue-900">云中继 Pro</span>
+<span class="px-1.5 py-0.5 bg-blue-600 text-[10px] text-white font-bold rounded">PREMIUM</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+</label>
+</div>
+<p class="text-xs text-blue-700/80 leading-snug">开启后支持跨网络(4G/5G)配对，数据将通过加密隧道<span class="font-bold underline">传输至外网</span>。</p>
+</div>
+<!-- Connected Devices List -->
+<div class="mb-4">
+<h2 class="text-sm font-bold text-slate-900 mb-3 flex items-center">
+          已配对设备
+          <span class="ml-2 px-2 py-0.5 bg-slate-100 text-slate-500 text-[10px] rounded-full uppercase">Recent</span>
+</h2>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center">
+<span class="iconify text-slate-400 text-xl" data-icon="heroicons:computer-desktop-20-solid"></span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-900">MacBook Pro M2</p>
+<p class="text-[10px] text-green-500 flex items-center">
+<span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1"></span>
+                  当前在线
+                </p>
+</div>
+</div>
+<button class="text-xs text-slate-400 font-medium">移除</button>
+</div>
+<div class="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-xl opacity-60">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-slate-50 rounded-lg flex items-center justify-center">
+<span class="iconify text-slate-400 text-xl" data-icon="heroicons:window-20-solid"></span>
+</div>
+<div>
+<p class="text-sm font-semibold text-slate-900">Gaming-PC-Win11</p>
+<p class="text-[10px] text-slate-400">最后连接于 3天前</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Troubleshooting Links -->
+<div class="mt-8 pt-4 border-t border-slate-100 space-y-3">
+<a class="flex items-center justify-between text-slate-500 group" href="legal.html">
+<div class="flex items-center space-x-2">
+<span class="iconify text-lg" data-icon="heroicons:question-mark-circle-20-solid"></span>
+<span class="text-xs">无法找到设备？查看网络排查指南</span>
+</div>
+<span class="iconify group-hover:translate-x-1 transition-transform" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+<a class="flex items-center justify-between text-slate-500 group" href="legal.html">
+<div class="flex items-center space-x-2">
+<span class="iconify text-lg" data-icon="heroicons:shield-check-20-solid"></span>
+<span class="text-xs">防火墙与端口配置帮助</span>
+</div>
+<span class="iconify group-hover:translate-x-1 transition-transform" data-icon="heroicons:chevron-right-20-solid"></span>
+</a>
+</div>
+</div>
+</div>
+<!-- Bottom Action Bar (Fixed) -->
+<div class="absolute bottom-0 left-0 right-0 h-20 bg-white/80 backdrop-blur-md border-t border-slate-100 flex items-center px-6 pb-2">
+<button class="w-full h-12 bg-slate-900 text-white rounded-2xl font-bold flex items-center justify-center space-x-2 active:scale-95 transition-transform" id="startBtn">
+<span class="iconify" data-icon="heroicons:video-camera-20-solid"></span>
+<span>连接并启动展示</span>
+</button>
+</div>
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+
+<script>
+  const STORAGE_KEYS = {
+    region: 'hrb_region',
+    networkEnabled: 'hrb_network_enabled'
+  };
+
+  function getServerBaseUrl() {
+    return localStorage.getItem('hrb_server_base_url') || 'http://192.168.1.235:8080';
+  }
+
+  function copyToClipboard(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text);
+    }
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    return Promise.resolve();
+  }
+
+  function syncConnectionInfo() {
+    const base = getServerBaseUrl();
+    const serverUrlLink = document.getElementById('serverUrlLink');
+    const obsUrlLink = document.getElementById('obsUrlLink');
+    const copyServerBtn = document.getElementById('copyServerBtn');
+    const shareServerBtn = document.getElementById('shareServerBtn');
+
+    if (serverUrlLink) {
+      serverUrlLink.textContent = base;
+      serverUrlLink.href = base;
+      serverUrlLink.target = '_blank';
+      serverUrlLink.rel = 'noopener noreferrer';
+    }
+
+    const obsUrl = `${base}/obs`;
+    if (obsUrlLink) {
+      obsUrlLink.textContent = obsUrl;
+      obsUrlLink.href = obsUrl;
+      obsUrlLink.target = '_blank';
+      obsUrlLink.rel = 'noopener noreferrer';
+    }
+
+    if (copyServerBtn) {
+      copyServerBtn.onclick = () => copyToClipboard(base);
+    }
+
+    if (shareServerBtn) {
+      shareServerBtn.onclick = async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: '心率广播地址',
+              text: `在电脑浏览器打开：${base}\nOBS：${obsUrl}`
+            });
+          } catch (_) {
+          }
+          return;
+        }
+        copyToClipboard(`${base}\n${obsUrl}`);
+        alert('已复制链接到剪贴板');
+      };
+    }
+  }
+
+  function getRegion() {
+    return localStorage.getItem(STORAGE_KEYS.region) || 'CN';
+  }
+
+  function getNetworkEnabled() {
+    return (localStorage.getItem(STORAGE_KEYS.networkEnabled) || '0') === '1';
+  }
+
+  function syncUI() {
+    const region = getRegion();
+    const networkEnabled = getNetworkEnabled();
+    const networkAllowed = region !== 'CN' && networkEnabled;
+
+    const cnOfflineNotice = document.getElementById('cnOfflineNotice');
+    const networkOffNotice = document.getElementById('networkOffNotice');
+    const networkOnlyContent = document.getElementById('networkOnlyContent');
+    const startBtn = document.getElementById('startBtn');
+
+    if (region === 'CN') {
+      cnOfflineNotice.classList.remove('hidden');
+      networkOffNotice.classList.add('hidden');
+    } else {
+      cnOfflineNotice.classList.add('hidden');
+      if (networkEnabled) {
+        networkOffNotice.classList.add('hidden');
+      } else {
+        networkOffNotice.classList.remove('hidden');
+      }
+    }
+
+    if (networkAllowed) {
+      networkOnlyContent.classList.remove('hidden');
+      startBtn.classList.remove('opacity-40', 'pointer-events-none');
+      syncConnectionInfo();
+    } else {
+      networkOnlyContent.classList.add('hidden');
+      startBtn.classList.add('opacity-40', 'pointer-events-none');
+    }
+  }
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === STORAGE_KEYS.region || e.key === STORAGE_KEYS.networkEnabled) {
+      syncUI();
+    }
+  });
+
+  syncUI();
+</script>
+</body>
+</html>

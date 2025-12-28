@@ -1,0 +1,736 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>广播连接</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    @font-face {
+      font-family: 'SF Pro';
+      src: url('https://fonts.cdnfonts.com/css/sf-pro-display');
+    }
+    body {
+      font-family: 'SF Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .ios-blur {
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-[#F2F2F7] flex justify-center items-center min-h-screen p-4">
+<!-- iPhone 15 Pro Canvas -->
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- Header -->
+<header class="px-5 pt-14 pb-2 bg-[#F2F2F7]">
+<div class="flex items-center justify-between">
+<h1 class="text-[28px] font-bold text-black tracking-tight">广播</h1>
+<button class="w-8 h-8 flex items-center justify-center bg-blue-500 rounded-full shadow-sm active:scale-95 transition-transform" id="addReceiverBtn">
+<span class="iconify text-white" data-icon="heroicons:plus-20-solid"></span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-5 space-y-5 pb-4">
+<!-- BLE Broadcast (P0) -->
+<section class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 animate-slide-in" style="animation-delay: 0.18s;">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="iconify text-[#007AFF]" data-icon="material-symbols:bluetooth" data-width="18"></span>
+      <span class="text-xs font-bold text-gray-500 uppercase tracking-wider">BLE 设备广播</span>
+    </div>
+    <label class="relative inline-flex items-center cursor-pointer">
+      <input class="sr-only peer" type="checkbox" checked=""/>
+      <div class="w-13 h-7 bg-[#E9E9EA] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#34C759] w-[51px]"></div>
+    </label>
+  </div>
+  <div class="mt-4 grid grid-cols-2 gap-3">
+    <div class="bg-gray-50 rounded-xl p-3 border border-gray-100">
+      <p class="text-[10px] text-gray-400 font-bold uppercase">推送模式</p>
+      <p class="text-sm font-semibold text-gray-900 mt-1">自动</p>
+      <p class="text-[10px] text-gray-400 mt-1">跟随心率上报节奏</p>
+    </div>
+    <div class="bg-gray-50 rounded-xl p-3 border border-gray-100">
+      <p class="text-[10px] text-gray-400 font-bold uppercase">目标设备</p>
+      <p class="text-sm font-semibold text-gray-900 mt-1">运动设备</p>
+      <p class="text-[10px] text-gray-400 mt-1">支持 HRS 心率服务</p>
+    </div>
+  </div>
+</section>
+
+<section class="bg-blue-50 border border-blue-100 rounded-2xl p-4 hidden" id="cnOfflineNotice">
+  <div class="flex items-start gap-3">
+    <span class="iconify text-blue-600 mt-0.5" data-icon="heroicons:shield-check-20-solid" data-width="18"></span>
+    <div>
+      <p class="text-[13px] font-semibold text-blue-700">中国区单机版</p>
+      <p class="text-[11px] text-blue-700/70 mt-1">已禁用所有联网能力，仅支持 BLE 设备广播与本机展示。</p>
+    </div>
+  </div>
+</section>
+
+<section class="bg-amber-50 border border-amber-100 rounded-2xl p-4 hidden" id="networkOffNotice">
+  <div class="flex items-start gap-3">
+    <span class="iconify text-amber-600 mt-0.5" data-icon="heroicons:exclamation-triangle-20-solid" data-width="18"></span>
+    <div>
+      <p class="text-[13px] font-semibold text-amber-800">联网功能未开启</p>
+      <p class="text-[11px] text-amber-800/70 mt-1">Web/OBS 配对、场景管理、延迟监控与云中继入口已隐藏。可在「设置 → 联网功能」开启。</p>
+    </div>
+  </div>
+</section>
+
+<div id="networkOnly" class="space-y-5 hidden">
+<!-- Top Status Banner (Error State Sample) -->
+<section class="bg-[#FFE5E5] border border-[#FF3B30]/20 p-4 rounded-2xl flex items-start space-x-3 hidden" id="errorBanner">
+<span class="iconify text-[#FF3B30] mt-0.5" data-icon="ion:warning" data-width="20"></span>
+<div class="flex-1">
+<p class="text-sm font-medium text-[#D70015]">连接已断开</p>
+<p class="text-xs text-[#D70015]/80 mt-1">检测到防火墙拦截。请在系统设置中允许本应用访问本地网络，或检查路由器策略。</p>
+<button class="mt-2 text-xs font-bold text-[#FF3B30] flex items-center" onclick="toggleError()">
+            立即检查 <span class="iconify ml-1" data-icon="iconamoon:arrow-right-2-bold"></span>
+</button>
+</div>
+ </section>
+
+ <section class="bg-white rounded-2xl p-5 shadow-sm border border-black/5 animate-slide-in" style="animation-delay: 0.16s;">
+  <div class="flex items-center justify-between mb-3">
+   <span class="text-xs font-medium text-[#8E8E93] uppercase tracking-wider">连接信息</span>
+   <span class="text-[10px] bg-[#F2F2F7] text-[#8E8E93] px-2 py-1 rounded-full font-medium">同网直连</span>
+  </div>
+  <div class="space-y-3">
+   <div class="flex items-center justify-between bg-[#F2F2F7] rounded-xl p-3">
+    <div class="min-w-0">
+     <p class="text-[11px] text-[#8E8E93]">服务器地址</p>
+     <a class="block mt-1 text-[15px] font-mono text-[#007AFF] truncate" href="#" id="serverUrlLink"></a>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+     <button class="w-10 h-10 bg-white rounded-xl flex items-center justify-center active:scale-95 transition-transform" id="copyServerBtn">
+      <span class="iconify text-[#007AFF]" data-icon="heroicons:document-duplicate-20-solid" data-width="20"></span>
+     </button>
+     <a class="w-10 h-10 bg-white rounded-xl flex items-center justify-center active:scale-95 transition-transform" href="desktop-pairing.html" id="openPairingBtn">
+      <span class="iconify text-[#007AFF]" data-icon="heroicons:qr-code-20-solid" data-width="20"></span>
+     </a>
+    </div>
+   </div>
+
+   <div class="flex items-center justify-between bg-[#F2F2F7] rounded-xl p-3">
+    <div class="min-w-0">
+     <div class="flex items-center gap-2">
+      <p class="text-[11px] text-[#8E8E93]">OBS 直播模式</p>
+      <span class="text-[10px] bg-[#FF9500] text-white px-1.5 py-0.5 rounded font-black italic">PRO</span>
+     </div>
+     <a class="block mt-1 text-[15px] font-mono text-[#AF52DE] truncate" href="#" id="obsUrlLink"></a>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+     <button class="w-10 h-10 bg-white rounded-xl flex items-center justify-center active:scale-95 transition-transform" id="copyObsBtn">
+      <span class="iconify text-[#AF52DE]" data-icon="heroicons:document-duplicate-20-solid" data-width="20"></span>
+     </button>
+    </div>
+   </div>
+
+   <div class="flex items-center justify-between bg-[#F2F2F7] rounded-xl p-3">
+    <p class="text-[15px] font-semibold text-black">当前心率</p>
+    <div class="flex items-baseline gap-2">
+     <span class="text-[22px] font-bold text-[#FF3B30] tabular-nums" id="broadcastHrValue">72</span>
+     <span class="text-[11px] text-[#8E8E93]">BPM</span>
+    </div>
+   </div>
+  </div>
+  <p class="mt-3 text-[11px] text-[#8E8E93] leading-relaxed">电脑端无法扫描手机二维码时，可直接在电脑浏览器输入服务器地址打开。</p>
+ </section>
+<!-- Broadcast Code Card -->
+ <section class="bg-white rounded-[24px] p-5 shadow-sm space-y-6 transition-all border border-transparent animate-slide-in" style="animation-delay: 0.1s;" id="statusCard">
+<div class="flex justify-between items-center">
+<div class="flex items-center space-x-2">
+<div class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse-dot" id="statusDot"></div>
+<span class="text-sm font-semibold text-gray-500" id="statusLabel">正在广播</span>
+</div>
+<span class="text-xs bg-green-50 text-green-600 px-2 py-1 rounded-full font-medium" id="qualityLabel">极佳质量</span>
+</div>
+<div class="flex items-center justify-around py-2">
+<div class="text-center">
+<p class="text-[11px] text-gray-400 uppercase font-bold tracking-wider mb-1">延迟</p>
+<p class="text-2xl font-bold text-black tabular-nums" id="latencyValue">18ms</p>
+</div>
+<div class="w-[1px] h-8 bg-gray-100"></div>
+<div class="text-center">
+<p class="text-[11px] text-gray-400 uppercase font-bold tracking-wider mb-1">已连接</p>
+<p class="text-2xl font-bold text-black tabular-nums" id="receiverCount">2</p>
+</div>
+</div>
+</section>
+<section class="bg-white rounded-2xl p-5 shadow-sm border border-black/5 animate-slide-in" style="animation-delay: 0.2s;">
+<div class="flex justify-between items-center mb-3">
+<span class="text-xs font-medium text-[#8E8E93] uppercase tracking-wider">Web/OBS 配对码</span>
+<span class="flex items-center text-[10px] text-[#34C759] font-bold bg-[#E8F9EE] px-2 py-0.5 rounded-full">
+<span class="w-1.5 h-1.5 bg-[#34C759] rounded-full mr-1 animate-pulse"></span> 广播中
+          </span>
+</div>
+<div class="flex items-center justify-between">
+<code class="text-4xl font-bold tracking-widest text-[#1C1C1E] font-mono">882-941</code>
+<button class="bg-[#F2F2F7] active:bg-[#E5E5EA] p-3 rounded-xl transition-all group" onclick="copyCode()">
+<span class="iconify text-[#007AFF]" data-icon="ion:copy-outline" data-width="24" id="copyIcon"></span>
+</button>
+</div>
+<p class="mt-4 text-[13px] text-[#8E8E93] leading-relaxed">
+          仅在“联网功能”开启且非中国区时可用。同一局域网下优先直连，延迟更低且更安全。
+        </p>
+</section>
+
+<!-- Scene Management (Web/OBS) -->
+<section class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 animate-slide-in" style="animation-delay: 0.3s;">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="iconify text-[#5856D6]" data-icon="ion:layers" data-width="18"></span>
+<span class="text-xs font-bold text-gray-500 uppercase tracking-wider">场景管理</span>
+<span class="text-[10px] bg-[#5856D6] text-white px-1.5 py-0.5 rounded font-black italic">PRO</span>
+</div>
+<button class="text-[10px] text-[#007AFF] font-medium" onclick="alert('打开场景设置')">管理</button>
+</div>
+<!-- Active Scene -->
+<div class="bg-gradient-to-r from-[#5856D6]/10 to-[#5856D6]/5 rounded-xl p-3 mb-3 border border-[#5856D6]/20">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 bg-[#5856D6] rounded-lg flex items-center justify-center">
+<span class="iconify text-white" data-icon="ion:desktop" data-width="18"></span>
+</div>
+<div>
+<span class="text-sm font-semibold text-gray-900">OBS 直播间</span>
+<p class="text-[10px] text-gray-500">推流中 · 1080p60</p>
+<div class="mt-1 hidden" id="sceneImageBadge">
+ <span class="inline-flex items-center gap-1 text-[10px] text-[#FF9500] font-semibold">
+  <span class="iconify" data-icon="heroicons:photo-20-solid" data-width="12"></span>
+  自定义图片已添加
+ </span>
+</div>
+</div>
+</div>
+<span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+</div>
+</div>
+<!-- Scene List -->
+<div class="space-y-2">
+<div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 bg-blue-100 rounded-lg flex items-center justify-center">
+<span class="iconify text-blue-600" data-icon="ion:globe" data-width="16"></span>
+</div>
+<span class="text-xs font-medium text-gray-700">网页组件</span>
+</div>
+<span class="text-[10px] text-gray-400">待机</span>
+</div>
+<div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 bg-purple-100 rounded-lg flex items-center justify-center">
+<span class="iconify text-purple-600" data-icon="ion:game-controller" data-width="16"></span>
+</div>
+<span class="text-xs font-medium text-gray-700">游戏直播</span>
+</div>
+<span class="text-[10px] text-gray-400">离线</span>
+</div>
+</div>
+</section>
+
+<!-- Latency Chart -->
+<section class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 animate-slide-in" style="animation-delay: 0.4s;">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="iconify text-[#34C759]" data-icon="ion:pulse" data-width="18"></span>
+<span class="text-xs font-bold text-gray-500 uppercase tracking-wider">延迟监控</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="text-[10px] text-gray-400">近 5 分钟</span>
+<span class="iconify text-gray-300" data-icon="ion:chevron-down" data-width="14"></span>
+</div>
+</div>
+<!-- Chart Container -->
+<div class="h-32 bg-gradient-to-b from-green-50/50 to-transparent rounded-xl relative overflow-hidden">
+<canvas id="latencyChart" class="w-full h-full"></canvas>
+<!-- Stats Overlay -->
+<div class="absolute top-2 right-2 flex flex-col items-end">
+<span class="text-[10px] text-gray-400">平均</span>
+<span class="text-sm font-bold text-green-600">22ms</span>
+</div>
+</div>
+<!-- Legend -->
+<div class="flex items-center justify-center gap-4 mt-3">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 bg-green-500 rounded-full"></span>
+<span class="text-[10px] text-gray-500">正常</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+<span class="text-[10px] text-gray-500">波动</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 bg-red-500 rounded-full"></span>
+<span class="text-[10px] text-gray-500">延迟</span>
+</div>
+</div>
+</section>
+
+<!-- Macro Panel -->
+<section class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 animate-slide-in" style="animation-delay: 0.5s;">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="iconify text-[#FF9500]" data-icon="ion:flash" data-width="18"></span>
+<span class="text-xs font-bold text-gray-500 uppercase tracking-wider">快捷宏</span>
+</div>
+</div>
+<!-- Macro Grid -->
+<div class="grid grid-cols-3 gap-2">
+<button class="aspect-square bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex flex-col items-center justify-center shadow-sm active:scale-95 transition-transform">
+<span class="iconify text-white text-2xl" data-icon="ion:play-skip-forward"></span>
+<span class="text-[9px] text-white/90 mt-1 font-medium">切场景</span>
+</button>
+<button class="aspect-square bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex flex-col items-center justify-center shadow-sm active:scale-95 transition-transform">
+<span class="iconify text-white text-2xl" data-icon="ion:mic"></span>
+<span class="text-[9px] text-white/90 mt-1 font-medium">静音</span>
+</button>
+<button class="aspect-square bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex flex-col items-center justify-center shadow-sm active:scale-95 transition-transform">
+<span class="iconify text-white text-2xl" data-icon="ion:camera"></span>
+<span class="text-[9px] text-white/90 mt-1 font-medium">相机</span>
+</button>
+<button class="aspect-square bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex flex-col items-center justify-center shadow-sm active:scale-95 transition-transform">
+<span class="iconify text-white text-2xl" data-icon="ion:volume-high"></span>
+<span class="text-[9px] text-white/90 mt-1 font-medium">音量</span>
+</button>
+<button class="aspect-square bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl flex flex-col items-center justify-center shadow-sm active:scale-95 transition-transform">
+<span class="iconify text-white text-2xl" data-icon="ion:color-palette"></span>
+<span class="text-[9px] text-white/90 mt-1 font-medium">滤镜</span>
+</button>
+<button class="aspect-square bg-gray-100 rounded-xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300 active:scale-95 transition-transform" id="addImageMacroBtn">
+<span class="iconify text-gray-400 text-2xl" data-icon="ion:add"></span>
+<span class="text-[9px] text-gray-400 mt-1 font-medium">添加</span>
+</button>
+</div>
+</section>
+
+<!-- Connection Switch -->
+<section class="bg-white rounded-2xl overflow-hidden shadow-sm border border-black/5 animate-slide-in" style="animation-delay: 0.6s;">
+<div class="p-4 flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-[#5856D6] rounded-xl flex items-center justify-center">
+<span class="iconify text-white" data-icon="ion:cloud-done" data-width="24"></span>
+</div>
+<div>
+<div class="flex items-center">
+<span class="text-[17px] font-semibold">云中继 Pro</span>
+<span class="ml-2 text-[10px] bg-[#5856D6] text-white px-1.5 py-0.5 rounded font-black italic">PRO</span>
+</div>
+<p class="text-xs text-[#FF9500] font-medium mt-0.5">启用后数据流将<span class="underline">会出网</span>访问服务器</p>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="w-13 h-7 bg-[#E9E9EA] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#34C759] w-[51px]"></div>
+</label>
+</div>
+</section>
+<!-- Paired Devices List -->
+<section class="space-y-2 animate-slide-in" style="animation-delay: 0.7s;">
+<div class="px-2 flex justify-between items-end">
+<h2 class="text-xs font-medium text-[#8E8E93] uppercase tracking-wider">接收端设备 (3)</h2>
+</div>
+<div class="bg-white rounded-2xl shadow-sm border border-black/5 divide-y divide-[#C6C6C8]/30">
+<!-- Device Item -->
+<div class="p-4 flex items-center justify-between active:bg-[#F2F2F7] transition-colors">
+<div class="flex items-center space-x-3">
+<div class="w-[44px] h-[44px] bg-[#E5E5EA] rounded-full flex items-center justify-center">
+<span class="iconify text-[#48484A]" data-icon="ion:desktop-outline" data-width="22"></span>
+</div>
+<div>
+<span class="text-base font-medium block">Studio-Workstation</span>
+<span class="text-xs text-[#8E8E93]">上次活跃: 今天 09:12 · 同网直连</span>
+</div>
+</div>
+<span class="iconify text-[#C4C4C6]" data-icon="ion:chevron-forward" data-width="18"></span>
+</div>
+<!-- Device Item -->
+<div class="p-4 flex items-center justify-between active:bg-[#F2F2F7] transition-colors">
+<div class="flex items-center space-x-3">
+<div class="w-[44px] h-[44px] bg-[#E5E5EA] rounded-full flex items-center justify-center">
+<span class="iconify text-[#48484A]" data-icon="ion:laptop-outline" data-width="22"></span>
+</div>
+<div>
+<span class="text-base font-medium block">MacBook Pro 14"</span>
+<span class="text-xs text-[#8E8E93]">离线 · 云中继记录</span>
+</div>
+</div>
+<span class="iconify text-[#C4C4C6]" data-icon="ion:chevron-forward" data-width="18"></span>
+</div>
+<!-- Device Item -->
+<div class="p-4 flex items-center justify-between active:bg-[#F2F2F7] transition-colors">
+<div class="flex items-center space-x-3">
+<div class="w-[44px] h-[44px] bg-[#E5E5EA] rounded-full flex items-center justify-center">
+<span class="iconify text-[#48484A]" data-icon="ion:tablet-portrait-outline" data-width="22"></span>
+</div>
+<div>
+<span class="text-base font-medium block">iPad Pro</span>
+<span class="text-xs text-[#8E8E93]">同步中...</span>
+</div>
+</div>
+<span class="iconify text-[#C4C4C6]" data-icon="ion:chevron-forward" data-width="18"></span>
+</div>
+</div>
+</section>
+<!-- Troubleshooting Section -->
+<section class="bg-[#F2F2F7] animate-slide-in" style="animation-delay: 0.8s;">
+<div class="bg-white rounded-2xl shadow-sm border border-black/5">
+<button class="w-full p-4 flex items-center justify-between text-[#007AFF] font-medium active:opacity-60 transition-opacity" onclick="toggleError()">
+<div class="flex items-center">
+<span class="iconify mr-3" data-icon="ion:help-buoy-outline" data-width="20"></span>
+<span>无法连接？尝试连接排查</span>
+</div>
+<span class="iconify" data-icon="ion:chevron-forward" data-width="18"></span>
+</button>
+</div>
+<p class="px-4 mt-3 text-[11px] text-[#8E8E93] text-center">
+          当前日期: 2025年12月26日 · 版本 4.2.0 (Build 902)
+        </p>
+</section>
+</div>
+</main>
+<!-- Tab Bar -->
+    <nav class="h-20 bg-white/80 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-4 pb-4" role="navigation" aria-label="主导航">
+      <a href="1-今天.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+        <span class="iconify text-2xl" data-icon="heroicons:calendar-days-solid" aria-hidden="true"></span>
+        <span class="text-[10px] font-medium">今天</span>
+      </a>
+      <a href="2-设备.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+        <span class="iconify text-2xl" data-icon="heroicons:cpu-chip-20-solid" aria-hidden="true"></span>
+        <span class="text-[10px] font-medium">设备</span>
+      </a>
+      <a href="3-广播.html" class="flex flex-col items-center space-y-1 text-blue-500" aria-current="page">
+        <span class="iconify text-2xl" data-icon="solar:graph-up-bold-duotone" aria-hidden="true"></span>
+        <span class="text-[10px] font-medium">广播</span>
+      </a>
+      <a href="4-设置.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+        <span class="iconify text-2xl" data-icon="heroicons:cog-8-tooth-20-solid" aria-hidden="true"></span>
+        <span class="text-[10px] font-medium">设置</span>
+      </a>
+    </nav>
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+</div>
+
+<div class="fixed inset-0 z-[200] hidden" id="imageSheet">
+  <div class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300" id="imageSheetOverlay"></div>
+  <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[375px] bg-white rounded-t-[24px] shadow-2xl translate-y-full transition-transform duration-300" id="imageSheetContent">
+    <div class="px-5 py-4 flex items-center justify-between border-b border-gray-100">
+      <button class="text-sm font-semibold text-[#007AFF]" id="imageSheetCancel">取消</button>
+      <p class="text-sm font-semibold text-gray-900">添加图片</p>
+      <button class="text-sm font-semibold text-[#007AFF]" id="imageSheetApply">应用</button>
+    </div>
+    <div class="p-5 space-y-4">
+      <div class="bg-[#F2F2F7] rounded-2xl p-4 flex items-center gap-4">
+        <div class="w-16 h-16 bg-white rounded-2xl overflow-hidden flex items-center justify-center border border-gray-100">
+          <img alt="preview" class="w-full h-full object-cover hidden" id="sceneImagePreview"/>
+          <span class="iconify text-gray-400" data-icon="heroicons:photo-20-solid" data-width="26" id="sceneImageIcon"></span>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-semibold text-gray-900 truncate" id="sceneImageName">未选择图片</p>
+          <p class="text-[11px] text-gray-500 mt-1" id="sceneImageMeta">PNG/JPG，建议小于 2MB</p>
+        </div>
+        <button class="h-10 px-3 bg-white rounded-xl border border-gray-200 text-sm font-semibold text-gray-900 active:scale-95 transition-transform" id="sceneImagePickBtn">选择</button>
+        <input accept="image/*" class="hidden" id="sceneImageInput" type="file"/>
+      </div>
+
+      <div class="bg-[#F2F2F7] rounded-2xl p-4">
+        <p class="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">说明</p>
+        <p class="mt-2 text-[13px] text-gray-700 leading-relaxed">图片将作为场景叠加元素保存到本机。用于直播叠加时建议控制体积，避免影响性能。</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    const STORAGE_KEYS = {
+      region: 'hrb_region',
+      networkEnabled: 'hrb_network_enabled'
+    };
+
+    function getRegion() {
+      return localStorage.getItem(STORAGE_KEYS.region) || 'CN';
+    }
+
+    function getNetworkEnabled() {
+      return (localStorage.getItem(STORAGE_KEYS.networkEnabled) || '0') === '1';
+    }
+
+    function copyToClipboard(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(text);
+      }
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      return Promise.resolve();
+    }
+
+    function copyCode() {
+      copyToClipboard('882-941');
+      const btn = document.getElementById('copyIcon');
+      btn.setAttribute('data-icon', 'ion:checkmark-circle-outline');
+      btn.classList.replace('text-[#007AFF]', 'text-[#34C759]');
+      setTimeout(() => {
+        btn.setAttribute('data-icon', 'ion:copy-outline');
+        btn.classList.replace('text-[#34C759]', 'text-[#007AFF]');
+      }, 2000);
+    }
+
+    function getServerBaseUrl() {
+      return localStorage.getItem('hrb_server_base_url') || 'http://192.168.1.235:8080';
+    }
+
+    function syncConnectionInfo() {
+      const base = getServerBaseUrl();
+      const serverUrlLink = document.getElementById('serverUrlLink');
+      const obsUrlLink = document.getElementById('obsUrlLink');
+
+      if (serverUrlLink) {
+        serverUrlLink.textContent = base;
+        serverUrlLink.href = base;
+        serverUrlLink.target = '_blank';
+        serverUrlLink.rel = 'noopener noreferrer';
+      }
+
+      if (obsUrlLink) {
+        const obsUrl = `${base}/obs`;
+        obsUrlLink.textContent = obsUrl;
+        obsUrlLink.href = obsUrl;
+        obsUrlLink.target = '_blank';
+        obsUrlLink.rel = 'noopener noreferrer';
+      }
+
+      const copyServerBtn = document.getElementById('copyServerBtn');
+      if (copyServerBtn) {
+        copyServerBtn.onclick = () => copyToClipboard(base);
+      }
+
+      const copyObsBtn = document.getElementById('copyObsBtn');
+      if (copyObsBtn) {
+        copyObsBtn.onclick = () => copyToClipboard(`${base}/obs`);
+      }
+    }
+
+    const SCENE_IMAGE_KEY = 'hrb_scene_image_v1';
+    let pendingSceneImage = null;
+
+    function formatBytes(bytes) {
+      if (!bytes && bytes !== 0) return '';
+      const units = ['B', 'KB', 'MB'];
+      let size = bytes;
+      let idx = 0;
+      while (size >= 1024 && idx < units.length - 1) {
+        size /= 1024;
+        idx += 1;
+      }
+      return `${size.toFixed(idx === 0 ? 0 : 1)} ${units[idx]}`;
+    }
+
+    function syncSceneImagePreview(name, meta, dataUrl) {
+      const img = document.getElementById('sceneImagePreview');
+      const icon = document.getElementById('sceneImageIcon');
+      const nameEl = document.getElementById('sceneImageName');
+      const metaEl = document.getElementById('sceneImageMeta');
+      nameEl.textContent = name;
+      metaEl.textContent = meta;
+      if (dataUrl) {
+        img.src = dataUrl;
+        img.classList.remove('hidden');
+        icon.classList.add('hidden');
+      } else {
+        img.classList.add('hidden');
+        icon.classList.remove('hidden');
+      }
+    }
+
+    function loadSceneImageBadge() {
+      const badge = document.getElementById('sceneImageBadge');
+      if (!badge) return;
+      const raw = localStorage.getItem(SCENE_IMAGE_KEY);
+      if (!raw) {
+        badge.classList.add('hidden');
+        return;
+      }
+      badge.classList.remove('hidden');
+    }
+
+    function showImageSheet() {
+      const sheet = document.getElementById('imageSheet');
+      const overlay = document.getElementById('imageSheetOverlay');
+      const content = document.getElementById('imageSheetContent');
+      sheet.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        overlay.classList.remove('opacity-0');
+        overlay.classList.add('opacity-100');
+        content.classList.remove('translate-y-full');
+        content.classList.add('translate-y-0');
+      });
+    }
+
+    function hideImageSheet() {
+      const sheet = document.getElementById('imageSheet');
+      const overlay = document.getElementById('imageSheetOverlay');
+      const content = document.getElementById('imageSheetContent');
+      overlay.classList.remove('opacity-100');
+      overlay.classList.add('opacity-0');
+      content.classList.remove('translate-y-0');
+      content.classList.add('translate-y-full');
+      setTimeout(() => {
+        sheet.classList.add('hidden');
+      }, 300);
+    }
+
+    function toggleError() {
+      const banner = document.getElementById('errorBanner');
+      banner.classList.toggle('hidden');
+    }
+
+    function syncUI() {
+      const region = getRegion();
+      const networkEnabled = getNetworkEnabled();
+
+      const cnOfflineNotice = document.getElementById('cnOfflineNotice');
+      const networkOffNotice = document.getElementById('networkOffNotice');
+      const networkOnly = document.getElementById('networkOnly');
+      const addReceiverBtn = document.getElementById('addReceiverBtn');
+
+      const networkAllowed = region !== 'CN' && networkEnabled;
+
+      if (region === 'CN') {
+        cnOfflineNotice.classList.remove('hidden');
+        networkOffNotice.classList.add('hidden');
+      } else {
+        cnOfflineNotice.classList.add('hidden');
+        if (networkEnabled) {
+          networkOffNotice.classList.add('hidden');
+        } else {
+          networkOffNotice.classList.remove('hidden');
+        }
+      }
+
+      if (networkAllowed) {
+        networkOnly.classList.remove('hidden');
+        addReceiverBtn.classList.remove('opacity-40', 'pointer-events-none');
+        syncConnectionInfo();
+      } else {
+        networkOnly.classList.add('hidden');
+        addReceiverBtn.classList.add('opacity-40', 'pointer-events-none');
+      }
+    }
+
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEYS.region || e.key === STORAGE_KEYS.networkEnabled) {
+        syncUI();
+      }
+    });
+
+    addReceiverBtn.addEventListener('click', () => {
+      const region = getRegion();
+      const networkEnabled = getNetworkEnabled();
+      if (region === 'CN') {
+        alert('中国区单机版已禁用联网能力');
+        return;
+      }
+      if (!networkEnabled) {
+        alert('请先在「设置 → 联网功能」开启后再添加接收端');
+        return;
+      }
+      window.location.href = 'desktop-pairing.html';
+    });
+
+    syncUI();
+
+    const addImageMacroBtn = document.getElementById('addImageMacroBtn');
+    const imageSheetOverlay = document.getElementById('imageSheetOverlay');
+    const imageSheetCancel = document.getElementById('imageSheetCancel');
+    const imageSheetApply = document.getElementById('imageSheetApply');
+    const sceneImagePickBtn = document.getElementById('sceneImagePickBtn');
+    const sceneImageInput = document.getElementById('sceneImageInput');
+
+    if (addImageMacroBtn) {
+      addImageMacroBtn.addEventListener('click', () => {
+        pendingSceneImage = null;
+        syncSceneImagePreview('未选择图片', 'PNG/JPG，建议小于 2MB', null);
+        showImageSheet();
+      });
+    }
+
+    if (sceneImagePickBtn) {
+      sceneImagePickBtn.addEventListener('click', () => {
+        sceneImageInput.value = '';
+        sceneImageInput.click();
+      });
+    }
+
+    if (sceneImageInput) {
+      sceneImageInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          pendingSceneImage = {
+            name: file.name,
+            type: file.type,
+            size: file.size,
+            dataUrl: reader.result
+          };
+          syncSceneImagePreview(file.name, `${file.type || 'image'} · ${formatBytes(file.size)}`, reader.result);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    if (imageSheetOverlay) {
+      imageSheetOverlay.addEventListener('click', hideImageSheet);
+    }
+    if (imageSheetCancel) {
+      imageSheetCancel.addEventListener('click', hideImageSheet);
+    }
+    if (imageSheetApply) {
+      imageSheetApply.addEventListener('click', () => {
+        if (pendingSceneImage) {
+          localStorage.setItem(SCENE_IMAGE_KEY, JSON.stringify(pendingSceneImage));
+          loadSceneImageBadge();
+        }
+        hideImageSheet();
+      });
+    }
+
+    loadSceneImageBadge();
+
+    // Service Worker 注册
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Apple Watch 预览</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+    .animate-heartbeat { animation: heartbeat 0.8s infinite; }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.7; }
+      50% { transform: scale(1.05); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.7; }
+    }
+    .pulse-ring { animation: pulse-ring 2s infinite; }
+    .watch-screen {
+      background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
+    }
+</style>
+</head>
+<body class="bg-gray-900 flex items-center justify-center min-h-screen p-4">
+
+<!-- 页面容器 -->
+<div class="max-w-md mx-auto">
+  <h1 class="text-white text-center text-lg font-bold mb-6">Apple Watch 界面预览</h1>
+  <p class="text-gray-400 text-center text-xs mb-8">watchOS 11 独立应用界面</p>
+
+  <!-- Watch 设备展示区 -->
+  <div class="flex flex-wrap justify-center gap-8">
+
+    <!-- Watch 主界面 -->
+    <div class="flex flex-col items-center">
+      <p class="text-gray-500 text-[10px] mb-2">主界面</p>
+      <div class="w-[180px] h-[220px] bg-gray-800 rounded-[44px] p-2 relative shadow-2xl">
+        <!-- 表冠 -->
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-10 bg-gray-600 rounded-l-sm"></div>
+        <div class="absolute right-0 top-[65%] w-1.5 h-4 bg-gray-600 rounded-l-sm"></div>
+
+        <!-- 屏幕 -->
+        <div class="w-full h-full watch-screen rounded-[36px] p-3 flex flex-col">
+          <p class="text-white/40 text-[8px] text-center">14:32</p>
+
+          <!-- 心率显示 -->
+          <div class="flex-1 flex flex-col items-center justify-center">
+            <div class="relative mb-2">
+              <span class="iconify text-rose-500 text-3xl animate-heartbeat" data-icon="solar:heart-bold"></span>
+              <div class="absolute inset-0 rounded-full border border-rose-500/30 pulse-ring"></div>
+            </div>
+            <p class="text-white text-4xl font-black tabular-nums">128</p>
+            <p class="text-white/50 text-[10px]">BPM</p>
+          </div>
+
+          <!-- 区间条 -->
+          <div class="flex gap-0.5 h-1.5 rounded-full overflow-hidden mb-2">
+            <div class="flex-1 bg-blue-400/40"></div>
+            <div class="flex-1 bg-green-400 relative">
+              <div class="absolute right-1 top-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full shadow"></div>
+            </div>
+            <div class="flex-1 bg-yellow-400/40"></div>
+            <div class="flex-1 bg-rose-500/40"></div>
+          </div>
+          <p class="text-green-400 text-[8px] text-center">有氧燃脂</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Watch 会话控制 -->
+    <div class="flex flex-col items-center">
+      <p class="text-gray-500 text-[10px] mb-2">会话控制</p>
+      <div class="w-[180px] h-[220px] bg-gray-800 rounded-[44px] p-2 relative shadow-2xl">
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-10 bg-gray-600 rounded-l-sm"></div>
+        <div class="absolute right-0 top-[65%] w-1.5 h-4 bg-gray-600 rounded-l-sm"></div>
+
+        <div class="w-full h-full watch-screen rounded-[36px] p-3 flex flex-col">
+          <p class="text-white/40 text-[8px] text-center mb-2">会话进行中</p>
+
+          <div class="text-center mb-3">
+            <p class="text-white text-2xl font-black tabular-nums">00:45:32</p>
+            <p class="text-white/40 text-[8px]">已记录时长</p>
+          </div>
+
+          <div class="flex justify-center gap-2 mb-3">
+            <div class="text-center">
+              <p class="text-white text-lg font-bold">128</p>
+              <p class="text-white/40 text-[7px]">当前</p>
+            </div>
+            <div class="w-px bg-white/20"></div>
+            <div class="text-center">
+              <p class="text-white text-lg font-bold">118</p>
+              <p class="text-white/40 text-[7px]">均值</p>
+            </div>
+          </div>
+
+          <!-- 控制按钮 -->
+          <div class="flex gap-2 mt-auto">
+            <button class="flex-1 bg-yellow-500 rounded-xl py-2 flex items-center justify-center">
+              <span class="iconify text-white text-lg" data-icon="solar:pause-bold"></span>
+            </button>
+            <button class="flex-1 bg-rose-500 rounded-xl py-2 flex items-center justify-center">
+              <span class="iconify text-white text-lg" data-icon="solar:stop-bold"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Watch 设置界面 -->
+    <div class="flex flex-col items-center">
+      <p class="text-gray-500 text-[10px] mb-2">设置</p>
+      <div class="w-[180px] h-[220px] bg-gray-800 rounded-[44px] p-2 relative shadow-2xl">
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-10 bg-gray-600 rounded-l-sm"></div>
+        <div class="absolute right-0 top-[65%] w-1.5 h-4 bg-gray-600 rounded-l-sm"></div>
+
+        <div class="w-full h-full watch-screen rounded-[36px] p-2 flex flex-col overflow-hidden">
+          <p class="text-white text-[10px] font-bold text-center mb-2">设置</p>
+
+          <div class="space-y-1.5 overflow-y-auto hide-scrollbar">
+            <div class="bg-white/10 rounded-lg p-2 flex items-center justify-between">
+              <span class="text-white text-[9px]">心率来源</span>
+              <span class="text-blue-400 text-[8px]">Watch</span>
+            </div>
+            <div class="bg-white/10 rounded-lg p-2 flex items-center justify-between">
+              <span class="text-white text-[9px]">提醒震动</span>
+              <div class="w-6 h-3 bg-green-500 rounded-full relative">
+                <div class="absolute right-0.5 top-0.5 w-2 h-2 bg-white rounded-full"></div>
+              </div>
+            </div>
+            <div class="bg-white/10 rounded-lg p-2 flex items-center justify-between">
+              <span class="text-white text-[9px]">上限</span>
+              <span class="text-white/60 text-[8px]">150 BPM</span>
+            </div>
+            <div class="bg-white/10 rounded-lg p-2 flex items-center justify-between">
+              <span class="text-white text-[9px]">下限</span>
+              <span class="text-white/60 text-[8px]">60 BPM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Watch 警告状态 -->
+    <div class="flex flex-col items-center">
+      <p class="text-gray-500 text-[10px] mb-2">警告状态</p>
+      <div class="w-[180px] h-[220px] bg-gray-800 rounded-[44px] p-2 relative shadow-2xl">
+        <div class="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-10 bg-gray-600 rounded-l-sm"></div>
+        <div class="absolute right-0 top-[65%] w-1.5 h-4 bg-gray-600 rounded-l-sm"></div>
+
+        <div class="w-full h-full rounded-[36px] p-3 flex flex-col bg-gradient-to-b from-rose-900 to-rose-950">
+          <p class="text-rose-300 text-[8px] text-center">⚠️ 心率过高</p>
+
+          <div class="flex-1 flex flex-col items-center justify-center">
+            <span class="iconify text-rose-500 text-4xl animate-heartbeat" data-icon="solar:heart-bold"></span>
+            <p class="text-white text-5xl font-black tabular-nums mt-2">156</p>
+            <p class="text-rose-300 text-[10px]">超出上限</p>
+          </div>
+
+          <button class="w-full bg-white/20 rounded-xl py-2 text-white text-[10px] font-medium">
+            暂停提醒 30s
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 返回链接 -->
+  <div class="text-center mt-8">
+    <a href="4-设置.html" class="text-blue-400 text-sm">← 返回设置</a>
+  </div>
+</div>
+
+</body>
+</html>

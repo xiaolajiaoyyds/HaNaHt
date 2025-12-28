@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Developer Settings</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes pulse-orange {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+    .animate-pulse-warning { animation: pulse-orange 2s infinite; }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="bg-gray-200 flex justify-center items-center min-h-screen font-mono">
+<!-- iPhone 15 Pro Container -->
+<div class="w-[375px] h-[812px] bg-[#1C1C1E] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col text-gray-300">
+<!-- Header/Warning Bar -->
+<header class="h-14 flex items-center justify-between px-4 bg-orange-500/10 border-b border-orange-500/30 flex-shrink-0">
+<div class="flex items-center space-x-2">
+<span class="iconify w-5 h-5 text-orange-500 animate-pulse-warning" data-icon="heroicons:bolt-20-solid"></span>
+<h1 class="text-xs font-bold text-orange-500 tracking-tighter">ENGINEERING MODE V2.4</h1>
+</div>
+<a href="4-设置.html" class="text-[10px] bg-orange-500 text-black px-2 py-0.5 rounded font-bold uppercase">Exit</a>
+</header>
+<!-- Content Area -->
+<main class="flex-1 overflow-y-auto hide-scrollbar p-3 space-y-4">
+<!-- Simulation Source -->
+<section class="space-y-2">
+<div class="flex items-center justify-between px-1">
+<h2 class="text-[10px] font-bold text-gray-500 uppercase">Input Simulation</h2>
+<span class="text-[10px] text-green-500">SOURCE: VIRTUAL_BPM</span>
+</div>
+<div class="bg-gray-900 border border-gray-800 rounded-lg p-3 space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xs">Mock Heart Rate</span>
+<span class="text-xs text-orange-500 font-bold" id="bpm-val">72 BPM</span>
+</div>
+<input class="w-full h-1.5 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-orange-500" max="200" min="40" type="range" value="72"/>
+<div class="grid grid-cols-2 gap-2 text-[10px]">
+<button class="bg-gray-800 border border-gray-700 py-1.5 rounded hover:bg-gray-700">Sine Wave</button>
+<button class="bg-orange-500/20 border border-orange-500/50 text-orange-500 py-1.5 rounded">Fixed Step</button>
+</div>
+</div>
+</section>
+<!-- Latency Monitor -->
+<section class="space-y-2">
+<h2 class="text-[10px] font-bold text-gray-500 uppercase px-1">Network &amp; Latency (E2E)</h2>
+<div class="bg-black rounded-lg p-3 border border-gray-800">
+<div class="w-full h-24" id="latencyChart"></div>
+<div class="grid grid-cols-3 mt-2 border-t border-gray-800 pt-2 text-center">
+<div>
+<p class="text-[9px] text-gray-500">RTT</p>
+<p class="text-xs font-bold text-blue-400">12ms</p>
+</div>
+<div>
+<p class="text-[9px] text-gray-500">Jitter</p>
+<p class="text-xs font-bold text-purple-400">±2ms</p>
+</div>
+<div>
+<p class="text-[9px] text-gray-500">Loss</p>
+<p class="text-xs font-bold text-green-400">0.0%</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Broadcast Panel -->
+<section class="space-y-2">
+<h2 class="text-[10px] font-bold text-gray-500 uppercase px-1">Broadcast Interface</h2>
+<div class="bg-gray-900 border border-gray-800 rounded-lg divide-y divide-gray-800">
+<div class="p-3 flex items-center justify-between">
+<span class="text-xs">UDP Multi-cast (Port 8080)</span>
+<div class="w-8 h-4 bg-orange-500 rounded-full relative">
+<div class="absolute right-0.5 top-0.5 w-3 h-3 bg-white rounded-full"></div>
+</div>
+</div>
+<div class="p-3 flex items-center justify-between">
+<span class="text-xs">Websocket Relay</span>
+<div class="w-8 h-4 bg-gray-700 rounded-full relative">
+<div class="absolute left-0.5 top-0.5 w-3 h-3 bg-gray-400 rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Real-time Console Logs -->
+<section class="space-y-2">
+<div class="flex items-center justify-between px-1">
+<h2 class="text-[10px] font-bold text-gray-500 uppercase">System Logs</h2>
+<button class="text-[9px] text-blue-500">Clear</button>
+</div>
+<div class="bg-black border border-gray-800 rounded-lg p-2 h-32 overflow-y-auto text-[9px] font-mono leading-tight hide-scrollbar">
+<p class="text-gray-500">[2025-12-26 09:41:02] INIT_CORE_SERVICES: OK</p>
+<p class="text-green-500">[2025-12-26 09:41:03] BLE_CONN: DEVICE_ID_091xF CONNECTED</p>
+<p class="text-orange-500 italic">[2025-12-26 09:41:05] WARN: Jitter exceeds 5ms threshold</p>
+<p class="text-white">[2025-12-26 09:41:08] SOCKET: BROADCAST_PING sent</p>
+<p class="text-white">[2025-12-26 09:41:10] SOCKET: BROADCAST_PONG received</p>
+<p class="text-gray-500">[2025-12-26 09:41:12] HEARTBEAT: CPU 12%, MEM 84MB</p>
+</div>
+</section>
+<!-- Actions -->
+<div class="grid grid-cols-2 gap-3 pt-2">
+<button class="flex items-center justify-center space-x-2 bg-gray-800 py-3 rounded-xl border border-gray-700 active:scale-95 transition-transform">
+<span class="iconify text-gray-400" data-icon="heroicons:document-arrow-down-20-solid"></span>
+<span class="text-xs font-bold">Export .log</span>
+</button>
+<button class="flex items-center justify-center space-x-2 bg-gray-800 py-3 rounded-xl border border-gray-700 active:scale-95 transition-transform">
+<span class="iconify text-gray-400" data-icon="heroicons:arrow-path-20-solid"></span>
+<span class="text-xs font-bold">Reset State</span>
+</button>
+</div>
+</main>
+<!-- Footer Info -->
+<footer class="h-12 flex flex-col items-center justify-center bg-black/50 border-t border-gray-800 px-4 flex-shrink-0">
+<p class="text-[9px] text-gray-600">ID: DEV_7721_AF9 | KERNEL: 5.10.x-RT</p>
+<div class="w-32 h-1 bg-gray-800 rounded-full mt-2"></div>
+</footer>
+</div>
+<script>
+    const chartDom = document.getElementById('latencyChart');
+    const myChart = echarts.init(chartDom);
+    const option = {
+      grid: { left: 0, right: 0, top: 10, bottom: 0 },
+      xAxis: { type: 'category', show: false },
+      yAxis: { type: 'value', show: false, max: 20 },
+      series: [{
+        data: [12, 13, 11, 14, 12, 15, 12, 11, 13, 12, 14, 12, 12, 13, 11],
+        type: 'line',
+        smooth: true,
+        symbol: 'none',
+        lineStyle: { color: '#f97316', width: 2 },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(249, 115, 22, 0.3)' },
+            { offset: 1, color: 'transparent' }
+          ])
+        }
+      }]
+    };
+    myChart.setOption(option);
+    
+    // Simulate real-time update
+    setInterval(() => {
+      const newData = option.series[0].data;
+      newData.shift();
+      newData.push(Math.floor(Math.random() * 5) + 10);
+      myChart.setOption({ series: [{ data: newData }] });
+    }, 1000);
+  </script>
+</body>
+</html>

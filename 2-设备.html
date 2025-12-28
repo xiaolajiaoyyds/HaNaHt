@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>心率监测 - 设备管理</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/3/3.1.1/iconify.min.js"></script>
+<style>
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.5; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+      100% { transform: scale(0.95); opacity: 0.5; }
+    }
+    .animate-ring { animation: pulse-ring 2s infinite; }
+    @keyframes slideIn {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .animate-slide-in {
+      animation: slideIn 0.4s ease-out forwards;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .animate-spin {
+      animation: spin 1s linear infinite;
+    }
+  </style>
+</head>
+<body class="bg-[#F2F2F7] min-h-screen flex justify-center items-center p-4">
+<!-- iPhone 15 Pro Canvas -->
+<div class="w-[375px] h-[812px] bg-[#F2F2F7] rounded-[3rem] shadow-2xl border-[8px] border-gray-900 overflow-hidden relative flex flex-col">
+<!-- Header -->
+<header class="px-5 pt-14 pb-2 bg-[#F2F2F7]">
+<div class="flex items-center justify-between">
+<h1 class="text-[28px] font-bold text-black tracking-tight">设备</h1>
+<a href="device-pairing.html" class="w-8 h-8 flex items-center justify-center bg-blue-500 rounded-full shadow-sm">
+<span class="iconify text-white" data-icon="heroicons:plus-20-solid"></span>
+</a>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-5 space-y-5 pb-4">
+<!-- 空状态 (默认隐藏，可切换显示) -->
+<div class="hidden flex-col items-center justify-center py-12 px-8" id="emptyDeviceState">
+<div class="w-28 h-28 bg-blue-50 rounded-full flex items-center justify-center mb-6 relative">
+<span class="iconify text-blue-300 text-6xl" data-icon="heroicons:cpu-chip-20-solid"></span>
+<div class="absolute -bottom-1 -right-1 w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+<span class="iconify text-gray-400 text-lg" data-icon="heroicons:question-mark-circle-20-solid"></span>
+</div>
+</div>
+<h3 class="text-[20px] font-bold text-gray-800 mb-2">未发现设备</h3>
+<p class="text-[14px] text-gray-500 text-center mb-6 leading-relaxed">请添加您的心率监测设备，<br/>支持 BLE 蓝牙心率传感器</p>
+<a href="device-pairing.html" class="px-6 py-3 bg-blue-600 text-white rounded-2xl text-[15px] font-semibold flex items-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95 transition-transform">
+<span class="iconify" data-icon="heroicons:plus-20-solid"></span>
+添加设备
+</a>
+<button class="mt-4 text-[13px] text-gray-400 font-medium" onclick="toggleDeviceEmptyState()">切换展示状态</button>
+</div>
+
+<!-- 蓝牙错误状态 (默认隐藏) -->
+<div class="hidden flex-col items-center justify-center py-10 px-6" id="bluetoothErrorState">
+<div class="w-24 h-24 bg-orange-50 rounded-full flex items-center justify-center mb-6">
+<span class="iconify text-orange-400 text-5xl" data-icon="material-symbols:bluetooth-disabled"></span>
+</div>
+<h3 class="text-[20px] font-bold text-gray-800 mb-2">蓝牙未开启</h3>
+<p class="text-[14px] text-gray-500 text-center mb-4 leading-relaxed">请开启蓝牙以搜索和连接<br/>心率监测设备</p>
+<div class="w-full bg-white rounded-2xl p-4 mb-6 border border-gray-100">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+<span class="iconify text-blue-500 text-xl" data-icon="material-symbols:bluetooth"></span>
+</div>
+<div>
+<p class="text-[14px] font-medium text-gray-800">蓝牙</p>
+<p class="text-[12px] text-gray-400">前往系统设置开启</p>
+</div>
+</div>
+<button class="px-4 py-2 bg-blue-600 text-white text-[13px] font-semibold rounded-xl active:scale-95 transition-transform" onclick="openBluetoothSettings()">
+开启
+</button>
+</div>
+</div>
+<div class="bg-amber-50 rounded-xl p-3 border border-amber-100 flex items-start gap-2 mb-4">
+<span class="iconify w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" data-icon="heroicons:light-bulb-20-solid"></span>
+<p class="text-[11px] text-amber-700 leading-relaxed">提示：部分设备需要在蓝牙设置中手动配对后才能被本应用识别</p>
+</div>
+<button class="text-[13px] text-gray-400 font-medium" onclick="toggleBluetoothErrorState()">切换展示状态</button>
+</div>
+
+<!-- 设备列表容器 -->
+<div id="deviceContent" class="space-y-5">
+<!-- Connected Device Card -->
+<section class="animate-slide-in" style="animation-delay: 0.1s;">
+<p class="text-[13px] font-semibold text-[#8E8E93] uppercase mb-2 px-2">当前连接</p>
+<div class="bg-white rounded-2xl p-4 shadow-sm flex items-center justify-between border border-transparent active:scale-[0.98] transition-transform">
+<div class="flex items-center space-x-4">
+<div class="relative">
+<div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+<span class="iconify text-blue-600 text-2xl" data-icon="heroicons:cpu-chip-20-solid"></span>
+</div>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full"></div>
+</div>
+<div>
+<h3 class="font-bold text-[17px] text-black">Polar H10</h3>
+<p class="text-[13px] text-[#8E8E93]">胸带式 · 正在监测</p>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<div class="flex items-center space-x-1 text-green-500">
+<span class="iconify" data-icon="heroicons:signal-20-solid"></span>
+<span class="text-[12px] font-medium">强</span>
+</div>
+<span class="text-[12px] text-[#8E8E93] mt-1">84% 电量</span>
+</div>
+</div>
+</section>
+<!-- Device List (Inset Grouped) -->
+<section class="animate-slide-in" style="animation-delay: 0.2s;">
+<p class="text-[13px] font-semibold text-[#8E8E93] uppercase mb-2 px-2">可用来源</p>
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-transparent">
+<!-- Item 1 - Apple Watch -->
+<div class="flex items-center p-4 active:bg-gray-100 transition-colors group cursor-pointer" id="watchItem" onclick="reconnectDevice('watch')">
+<span class="iconify text-[#8E8E93] text-xl" data-icon="heroicons:device-tablet-20-solid" id="watchIcon"></span>
+<!-- Loading Spinner -->
+<div class="w-5 h-5 hidden" id="watchSpinner">
+<div class="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+</div>
+<div class="flex-1 ml-4 border-b border-gray-100 py-4 -my-4 h-full flex items-center">
+<span class="text-[17px] text-black font-medium">Apple Watch S9</span>
+<span class="ml-auto text-[15px]" id="watchStatus">
+<span class="text-[#8E8E93]" id="watchDisconnected">断开连接</span>
+<span class="text-blue-500 hidden" id="watchConnecting">连接中...</span>
+<span class="text-green-500 hidden" id="watchConnected">已连接</span>
+</span>
+<span class="iconify text-gray-300 ml-2" data-icon="heroicons:chevron-right-20-solid"></span>
+</div>
+</div>
+<!-- Item 2 - AirPods -->
+<div class="flex items-center p-4 active:bg-gray-100 transition-colors cursor-pointer" id="airpodsItem" onclick="reconnectDevice('airpods')">
+<span class="iconify text-[#8E8E93] text-xl" data-icon="heroicons:musical-note-20-solid" id="airpodsIcon"></span>
+<div class="w-5 h-5 hidden" id="airpodsSpinner">
+<div class="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+</div>
+<div class="flex-1 ml-4 py-4 -my-4 h-full flex items-center">
+<span class="text-[17px] text-black font-medium">AirPods Pro</span>
+<span class="ml-auto text-[15px]" id="airpodsStatus">
+<span class="text-[#8E8E93]" id="airpodsDisconnected">未连接</span>
+<span class="text-blue-500 hidden" id="airpodsConnecting">连接中...</span>
+<span class="text-green-500 hidden" id="airpodsConnected">已连接</span>
+</span>
+<span class="iconify text-gray-300 ml-2" data-icon="heroicons:chevron-right-20-solid"></span>
+</div>
+</div>
+</div>
+</section>
+<!-- Priority Settings (Pro Feature) -->
+<section class="animate-slide-in" style="animation-delay: 0.3s;">
+<div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="text-sm font-bold text-gray-700">设备优先级</span>
+<span class="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded font-bold">PRO</span>
+</div>
+<button class="text-[10px] text-blue-600 font-medium">管理</button>
+</div>
+<!-- Auto Switch Toggle -->
+<div class="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
+<div>
+<span class="text-xs font-semibold text-gray-700">自动切换优先来源</span>
+<p class="text-[10px] text-gray-500 mt-0.5">断连或不可用时回退到下一来源</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" checked=""/>
+<div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-500"></div>
+</label>
+</div>
+<!-- Priority List -->
+<div class="space-y-2">
+<div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-xl">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-[#FFD700] rounded-full flex items-center justify-center text-[10px] font-bold text-white">1</div>
+<span class="text-xs font-medium text-gray-700">Polar H10</span>
+<span class="text-[9px] bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full font-medium">当前连接</span>
+</div>
+<span class="text-[10px] text-gray-400">胸带式</span>
+</div>
+<div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-xl">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center text-[10px] font-bold text-white">2</div>
+<span class="text-xs font-medium text-gray-700">AirPods Pro</span>
+</div>
+<span class="text-[10px] text-gray-400">可选</span>
+</div>
+<div class="flex items-center justify-between p-2.5 bg-gray-50 rounded-xl">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-amber-600 rounded-full flex items-center justify-center text-[10px] font-bold text-white">3</div>
+<span class="text-xs font-medium text-gray-700">Apple Watch S9</span>
+</div>
+<span class="text-[10px] text-gray-400">备用</span>
+</div>
+</div>
+<!-- Edit Button -->
+<button class="w-full mt-4 py-2.5 bg-blue-500 text-white text-xs font-semibold rounded-xl active:opacity-80 transition-opacity">
+调整优先级顺序
+</button>
+</div>
+</section>
+<!-- Add Device Actions -->
+<section class="grid grid-cols-2 gap-3 animate-slide-in" style="animation-delay: 0.4s;">
+<a href="device-pairing.html" class="bg-blue-600 hover:bg-blue-700 active:scale-95 transition-all text-white rounded-2xl p-4 flex flex-col items-center justify-center space-y-2 shadow-lg shadow-blue-500/20">
+<span class="iconify text-2xl" data-icon="heroicons:qr-code-20-solid"></span>
+<span class="text-[15px] font-bold">快速添加</span>
+</a>
+<a href="device-pairing.html" class="bg-white active:scale-95 transition-all rounded-2xl p-4 flex flex-col items-center justify-center space-y-2 shadow-sm border border-transparent">
+<span class="iconify text-2xl text-blue-600" data-icon="heroicons:plus-circle-20-solid"></span>
+<span class="text-[15px] font-bold text-black">手动添加</span>
+</a>
+</section>
+<!-- Compatibility Info Banner -->
+<section class="animate-slide-in" style="animation-delay: 0.5s;">
+<div class="bg-[#E5E5EA] rounded-2xl p-4">
+<div class="flex items-start space-x-3">
+<span class="iconify text-gray-500 mt-1" data-icon="heroicons:information-circle-20-solid"></span>
+<div>
+<p class="text-[13px] font-semibold text-black">设备兼容性说明</p>
+<p class="text-[12px] text-[#8E8E93] mt-1 leading-snug">
+                支持所有标准 BLE (蓝牙低功耗) 心率传感器。如有连接问题，请尝试开启"系统-蓝牙"权限或重置设备。
+              </p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+    <!-- Tab Bar -->
+    <nav class="h-20 bg-white/80 backdrop-blur-md border-t border-gray-200 flex justify-around items-center px-4 pb-4">
+      <a href="1-今天.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+        <span class="iconify text-2xl" data-icon="heroicons:calendar-days-solid"></span>
+        <span class="text-[10px] font-medium">今天</span>
+      </a>
+      <a href="2-设备.html" class="flex flex-col items-center space-y-1 text-blue-500">
+        <span class="iconify text-2xl" data-icon="heroicons:cpu-chip-20-solid"></span>
+        <span class="text-[10px] font-medium">设备</span>
+      </a>
+      <a href="3-广播.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+        <span class="iconify text-2xl" data-icon="solar:graph-up-bold-duotone"></span>
+        <span class="text-[10px] font-medium">广播</span>
+      </a>
+      <a href="4-设置.html" class="flex flex-col items-center space-y-1 text-gray-400 hover:text-blue-500 transition-colors">
+        <span class="iconify text-2xl" data-icon="heroicons:cog-8-tooth-20-solid"></span>
+        <span class="text-[10px] font-medium">设置</span>
+      </a>
+    </nav>
+<!-- Home Indicator -->
+<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-black rounded-full"></div>
+
+<!-- Toast -->
+<div class="absolute bottom-24 left-1/2 -translate-x-1/2 bg-gray-900/90 text-white text-[14px] px-5 py-2.5 rounded-full font-medium opacity-0 transition-opacity pointer-events-none" id="toast">
+设备已连接
+</div>
+</div>
+<script>
+    // 空状态切换
+    function toggleDeviceEmptyState() {
+      const emptyState = document.getElementById('emptyDeviceState');
+      const bluetoothError = document.getElementById('bluetoothErrorState');
+      const deviceContent = document.getElementById('deviceContent');
+      if (emptyState.classList.contains('hidden')) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        bluetoothError.classList.add('hidden');
+        bluetoothError.classList.remove('flex');
+        deviceContent.classList.add('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+        deviceContent.classList.remove('hidden');
+      }
+    }
+
+    // 蓝牙错误状态切换
+    function toggleBluetoothErrorState() {
+      const emptyState = document.getElementById('emptyDeviceState');
+      const bluetoothError = document.getElementById('bluetoothErrorState');
+      const deviceContent = document.getElementById('deviceContent');
+      if (bluetoothError.classList.contains('hidden')) {
+        bluetoothError.classList.remove('hidden');
+        bluetoothError.classList.add('flex');
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+        deviceContent.classList.add('hidden');
+      } else {
+        bluetoothError.classList.add('hidden');
+        bluetoothError.classList.remove('flex');
+        deviceContent.classList.remove('hidden');
+      }
+    }
+
+    // 打开蓝牙设置
+    function openBluetoothSettings() {
+      showToast('正在跳转系统设置...');
+      // 模拟跳转
+    }
+
+    // 设备重连功能
+    function reconnectDevice(device) {
+      const icon = document.getElementById(device + 'Icon');
+      const spinner = document.getElementById(device + 'Spinner');
+
+      if (device === 'watch') {
+        // 显示连接中状态
+        icon.classList.add('hidden');
+        spinner.classList.remove('hidden');
+        document.getElementById('watchDisconnected').classList.add('hidden');
+        document.getElementById('watchConnecting').classList.remove('hidden');
+
+        // 模拟连接过程
+        setTimeout(() => {
+          spinner.classList.add('hidden');
+          icon.classList.remove('hidden');
+          document.getElementById('watchConnecting').classList.add('hidden');
+          document.getElementById('watchConnected').classList.remove('hidden');
+          showToast('Apple Watch 已连接');
+        }, 2000);
+      }
+
+      if (device === 'airpods') {
+        icon.classList.add('hidden');
+        spinner.classList.remove('hidden');
+        document.getElementById('airpodsDisconnected').classList.add('hidden');
+        document.getElementById('airpodsConnecting').classList.remove('hidden');
+
+        setTimeout(() => {
+          spinner.classList.add('hidden');
+          icon.classList.remove('hidden');
+          document.getElementById('airpodsConnecting').classList.add('hidden');
+          document.getElementById('airpodsConnected').classList.remove('hidden');
+          showToast('AirPods 已连接');
+        }, 1500);
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.remove('opacity-0');
+      setTimeout(() => {
+        toast.classList.add('opacity-0');
+      }, 2000);
+    }
+
+    // Service Worker 注册
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js');
+      });
+    }
+  </script>
+</body>
+</html>
