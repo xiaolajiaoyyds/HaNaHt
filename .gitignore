@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# IDE & Editor
+.trae/
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Tool cache
+.gemini-clipboard/
+
+# Vercel local
+.vercel/
+
+# Node (如果以后用到)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Build output
+dist/
+build/
